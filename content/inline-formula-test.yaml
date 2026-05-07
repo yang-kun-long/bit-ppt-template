@@ -1,0 +1,62 @@
+meta:
+  title: Inline Formula Test
+  subtitle: OMML in normal text boxes
+  author: BIT Template
+  advisor: Generator
+  date: 2026.05
+
+slides:
+  - layout: title
+
+  - layout: bullets
+    title: 要点页行内公式
+    lead: 本页验证 $\\theta$ 和 $p_{\\theta}(x)$ 是否能出现在普通正文。
+    bullets:
+      - 参数 $\\theta$ 通过梯度下降更新。
+      - 预测概率 $p_{\\theta}(x_i)$ 与标签 $y_i$ 共同决定损失。
+
+  - layout: claim
+    title: 结论页行内公式
+    claim: 当 $\\mathcal{L}(\\theta)$ 下降时，模型拟合能力通常增强。
+    evidence:
+      - 如果验证集误差 $E_{val}$ 上升，则可能发生过拟合。
+      - 正则项 $\\lambda\\|\\theta\\|_2^2$ 可以约束参数规模。
+
+  - layout: twoColumn
+    title: 两栏页行内公式
+    left:
+      title: 目标函数
+      bullets:
+        - 最小化 $\\mathcal{L}_{train}$。
+        - 监控 $\\mathcal{L}_{val}$。
+    right:
+      title: 评价指标
+      bullets:
+        - 准确率 $Acc$ 越高越好。
+        - 损失 $Loss$ 越低越好。
+
+  - layout: cards
+    title: 卡片页行内公式
+    cards:
+      - title: 梯度
+        text: 使用 $\\nabla_{\\theta} \\mathcal{L}$ 指导参数更新。
+      - title: 学习率
+        text: 学习率 $\\eta$ 控制每步更新幅度。
+      - title: 批大小
+        text: 批大小 $B$ 影响梯度估计方差。
+
+  - layout: quote
+    title: 引用页行内公式
+    quote: 优化的核心是找到使 $\\mathcal{L}(\\theta)$ 足够小的参数。
+    source: Inline formula test
+
+  - layout: imageText
+    title: 图文页行内公式
+    image: assets/bit-campus-photo.png
+    text:
+      - 在图文说明中也可以写 $x_i$ 和 $y_i$。
+      - 这种写法比公式图片更自然。
+
+  - layout: closing
+    title: 完成
+    subtitle: Inline formula test

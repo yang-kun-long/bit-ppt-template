@@ -1,0 +1,25 @@
+meta:
+  title: Invalid deck fixture
+  subtitle: Used to verify validation and repair prompts
+  author: BIT PPT Template Generator
+  date: 2026.05
+
+slides:
+  - layout: chart
+    title: 错误图表
+    type: bar
+    categories: [A, B, C]
+    series:
+      - name: Bad
+        values: [1, 2]
+
+  - layout: flowchart
+    title: 错误流程图
+    nodes:
+      - id: a
+        text: 开始
+      - id: b
+        text: 结束
+    edges:
+      - from: a
+        to: missing

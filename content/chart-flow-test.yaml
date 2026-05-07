@@ -1,0 +1,82 @@
+meta:
+  title: 图表与流程图能力测试
+  subtitle: Native PowerPoint flowchart and chart layouts
+  author: BIT PPT Template Generator
+  advisor: 北京理工大学
+  date: 2026.05
+
+slides:
+  - layout: title
+
+  - layout: flowchart
+    title: 方法流程图
+    nodes:
+      - id: input
+        text: 输入数据
+        note: 文本 / 图像 / 表格
+      - id: parse
+        text: 结构解析
+        note: 提取 claim 与 evidence
+      - id: plan
+        text: 页型规划
+        note: 选择 layout
+      - id: render
+        text: PPTX 生成
+        note: 形状 / 表格 / OMML
+      - id: check
+        text: 预检修复
+        note: 检查溢出
+        emphasis: true
+      - id: output
+        text: 可编辑输出
+        note: WPS / PowerPoint
+        emphasis: true
+    edges:
+      - from: input
+        to: parse
+      - from: parse
+        to: plan
+      - from: plan
+        to: render
+      - from: render
+        to: check
+      - from: check
+        to: output
+    note: 流程图使用 PowerPoint 原生形状和箭头，可继续编辑。
+
+  - layout: chart
+    title: 柱状图：不同方案指标对比
+    type: bar
+    categories: [Dataset A, Dataset B, Dataset C, Dataset D]
+    valueAxisTitle: Accuracy
+    series:
+      - name: Baseline
+        values: [81.2, 83.5, 84.1, 82.4]
+      - name: Ours
+        values: [85.6, 87.2, 88.0, 86.5]
+    caption: 原生 PowerPoint 柱状图，可在 WPS / PowerPoint 中编辑数据。
+
+  - layout: chart
+    title: 折线图：训练过程变化
+    type: line
+    categories: [Epoch 1, Epoch 2, Epoch 3, Epoch 4, Epoch 5]
+    valueAxisTitle: Loss
+    series:
+      - name: Train
+        values: [0.92, 0.71, 0.55, 0.44, 0.39]
+      - name: Valid
+        values: [0.98, 0.78, 0.63, 0.57, 0.52]
+    caption: 折线图适合展示训练损失、指标趋势或时间序列。
+
+  - layout: chart
+    title: 饼图：错误类型分布
+    type: pie
+    categories: [识别错误, 定位错误, 格式错误, 其他]
+    series:
+      - name: Error Types
+        values: [42, 27, 18, 13]
+    caption: 饼图适合少量类别占比，不建议用于精细数值比较。
+
+  - layout: closing
+    title: 谢谢
+    subtitle: 图表与流程图测试完成

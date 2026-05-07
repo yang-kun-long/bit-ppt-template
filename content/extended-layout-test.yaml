@@ -1,0 +1,120 @@
+meta:
+  title: Extended Layout Test
+  subtitle: Academic defense semantic layouts
+  author: BIT Template
+  advisor: Generator
+  date: 2026.05
+
+slides:
+  - layout: title
+
+  - layout: problemSolution
+    title: 问题-方案-收益
+    problem:
+      title: AI 直接生成 PPT 不稳定
+      bullets:
+        - 版式漂移明显
+        - 长文本容易溢出
+        - 公式 $p_\theta(x)$ 难以保持一致
+    solution:
+      title: 结构化内容 + 模板生成
+      bullets:
+        - AI 输出 YAML
+        - 模板控制视觉规则
+        - 公式写入 OMML
+    impact:
+      title: 稳定交付可编辑 PPT
+      bullets:
+        - 文本和形状可编辑
+        - 公式原生可编辑
+        - 支持 preflight 拆页
+
+  - layout: painOpportunity
+    title: 现状痛点与机会
+    status:
+      title: 现状
+      bullets:
+        - 大多数工具偏 Markdown 预览
+        - PPTX 可编辑性不足
+    pain:
+      title: 痛点
+      bullets:
+        - 学校模板难复刻
+        - 公式、表格和长文本容易出错
+    opportunity:
+      title: 机会
+      bullets:
+        - Agent 负责内容
+        - MCP 负责生成和校验
+
+  - layout: experimentDesign
+    title: 实验设计
+    dataset:
+      - 使用真实北理工 PPT 模板作为视觉参考
+      - 使用多种 AI 生成内容作为压力测试
+    variables:
+      - 版式类型
+      - 文本长度
+      - 公式复杂度 $\\mathcal{L}(\\theta)$
+    metrics:
+      - OMML 数量
+      - marker 残留数量
+      - preflight 拆页数量
+    baselines:
+      - SVG 公式方案
+      - 纯文本公式方案
+    procedure: [生成 YAML, preflight, 导出 PPTX, WPS 打开验证]
+
+  - layout: resultAnalysis
+    title: 结果分析
+    finding: OMML 方案解决了公式图片变形和行内公式割裂问题。
+    metrics:
+      - value: "0"
+        label: SVG 公式
+        note: 公式不再图片化
+      - value: "18"
+        label: OMath 对象
+        note: 来自 inline test
+      - value: "0"
+        label: Marker 残留
+        note: 后处理替换完成
+    analysis:
+      - 表格公式可以正常显示，暂定为可用能力。
+      - 公式容错可处理 $p_\\theta$ 和 $x_i$ 等常见写法。
+
+  - layout: riskMitigation
+    title: 风险与对策
+    items:
+      - risk: 复杂 LaTeX 语法转换失败
+        impact: 生成中断
+        mitigation: 返回公式定位和 repair prompt
+      - risk: 表格公式在不同 Office 中兼容性不同
+        impact: 局部显示异常
+        mitigation: 增加 WPS / PowerPoint 回归样例
+      - risk: 长表格内容过密
+        impact: 字号过小或拆页过多
+        mitigation: preflight 提前拆页并提示压缩内容
+
+  - layout: contribution
+    title: 主要贡献
+    items:
+      - title: 模板复刻
+        text: 抽取北理工视觉资产并形成可复用生成规则。
+      - title: 结构生成
+        text: 用 YAML schema 限定 AI 输出范围。
+      - title: 公式支持
+        text: 将 $\\mathcal{L}(\\theta)$ 写入为 Office Math。
+      - title: 溢出检测
+        text: 对 bullets、table、references 执行 preflight。
+
+  - layout: summary
+    title: 阶段小结
+    takeaway: 当前路线已经从“能生成 PPT”推进到“可稳定承接 AI 内容”。
+    points:
+      - 常用正文类型进一步语义化。
+      - 公式已从 SVG 图片升级为 OMML。
+      - 下一步可以封装为本地 MCP 工具。
+
+  - layout: closing
+    title: 完成
+    subtitle: Extended layout test

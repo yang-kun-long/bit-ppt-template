@@ -1,0 +1,112 @@
+meta:
+  title: 北理工正文页型扩展示例
+  subtitle: Architecture / ablation / case / image / code / appendix
+  author: BIT PPT Template Generator
+  advisor: 北京理工大学
+  date: 2026.05
+
+slides:
+  - layout: title
+
+  - layout: architecture
+    title: 模型驱动的 PPT 生成架构
+    layers:
+      - title: 输入层
+        components: [论文草稿, 实验结果, 图片素材, 用户约束]
+        note: 将非结构化材料整理为可验证的内容块。
+      - title: 规划层
+        components: [章节规划, 页型选择, 字段填充, 修复提示]
+        note: AI 只选择 layout 并填写 YAML，不直接操作 PowerPoint。
+      - title: 生成层
+        components: [溢出检测, 公式 OMML, 表格拆页, PPTX 写入]
+        note: 模板侧保证字号、位置、颜色和 $p_{\theta}(x_i)$ 等公式写入。
+      - title: 验证层
+        components: [结构检查, 版面预检, 人工复核]
+        note: 发现异常后回传给模型压缩或改写内容。
+
+  - layout: ablation
+    title: 消融实验页
+    baseline: 基线模型使用完整模块组合，目标函数为 $L(\theta)$。
+    items:
+      - factor: 检索增强
+        setting: 移除检索上下文
+        delta: "-6.2%"
+        conclusion: 长文档问题下降明显
+      - factor: 结构化规划
+        setting: 直接生成正文页
+        delta: "+3.8 overflow"
+        conclusion: 页面溢出风险上升
+      - factor: 公式写入
+        setting: OMML 替换为图片
+        delta: 可编辑性下降
+        conclusion: 小公式不适合图片
+      - factor: 表格拆页
+        setting: 关闭 preflight
+        delta: 2 页重叠
+        conclusion: 长表格必须预检
+
+  - layout: caseStudy
+    title: 案例分析页
+    image: assets/bit-campus-photo.png
+    caption: 示例图片区域，可替换为实验样本、系统截图或结果图。
+    context:
+      - 输入是一段包含公式、表格和图片引用的论文草稿。
+      - 目标是生成北理工答辩风格的可编辑 PPTX。
+    method:
+      - 先让模型选择正文类型，再填充短字段。
+      - 生成器负责固定版式、OMML 公式和溢出检测。
+    result:
+      - 输出可在 WPS / PowerPoint 中继续编辑。
+      - 版式一致性优于直接让模型写 PPT 代码。
+
+  - layout: imageGrid
+    title: 多图结果展示
+    images:
+      - path: assets/bit-campus-photo.png
+        caption: 输入样本
+      - path: assets/bit-campus-photo.png
+        caption: 中间特征
+      - path: assets/bit-campus-photo.png
+        caption: 预测结果
+      - path: assets/bit-campus-photo.png
+        caption: 误差区域
+      - path: assets/bit-campus-photo.png
+        caption: 对照方法
+      - path: assets/bit-campus-photo.png
+        caption: 本文方法
+
+  - layout: code
+    title: 算法伪代码页
+    language: Algorithm
+    code: |
+      Input: draft D, template layouts T
+      1. parse D into claims, evidence and assets
+      2. select layout t in T for each content block
+      3. generate YAML fields with concise text
+      4. run preflight and formula conversion
+      5. repair overflow until deck is valid
+    noteTitle: 关键约束
+    notes:
+      - 模型只产出结构化 YAML。
+      - 公式使用 OMML 写入，避免图片变形。
+      - 长列表、长表格和参考文献优先自动拆页。
+
+  - layout: appendix
+    title: 附录索引页
+    items:
+      - key: A1
+        title: 数据集细节
+        text: 样本来源、筛选规则和统计分布。
+      - key: A2
+        title: 超参数设置
+        text: 学习率、batch size 和训练轮数。
+      - key: A3
+        title: 更多公式
+        text: 包括 $p_{\theta}(x_i)$、$L(\theta)$ 与推导步骤。
+      - key: A4
+        title: 额外可视化
+        text: 多组实验结果图和失败案例。
+
+  - layout: closing
+    title: 谢谢
+    subtitle: 新增正文页型测试完成

@@ -1,0 +1,77 @@
+meta:
+  title: Overflow Test
+  subtitle: Preflight split detection
+  author: BIT Template
+  advisor: Generator
+  date: 2026.05
+
+slides:
+  - layout: title
+
+  - layout: bullets
+    title: 超长要点列表
+    lead: 这一页故意放入较多较长要点，用于验证生成器是否会在写入 PPTX 前自动拆页。
+    fontSize: 16
+    bullets:
+      - 这是一个很长的测试要点，用于模拟 AI 在没有约束时生成的段落式 bullet，它应当被估算为多行文本。
+      - 第二个测试要点同样偏长，包含中文、English words、数字 12345 和标点符号，用于测试混排宽度估计。
+      - 第三个测试要点继续占据空间，确保累计高度逐渐接近正文区域的安全阈值。
+      - 第四个测试要点继续制造溢出风险，生成器应该在达到阈值前把后续内容拆到下一页。
+      - 第五个测试要点用于确认 continuation slide 的标题会自动标记页码。
+      - 第六个测试要点用于确认拆页后仍然保留原始 layout 和视觉风格。
+      - 第七个测试要点用于确认长文本不会在同一页里互相覆盖。
+      - 第八个测试要点用于确认正文高度估算在保守阈值下生效。
+      - 第九个测试要点用于确认最后一页能够容纳剩余内容。
+      - 第十个测试要点用于确认输出 PPTX 仍然可以正常打开和编辑。
+
+  - layout: table
+    title: 超长表格
+    columns: [维度, 方案 A, 方案 B, 结论]
+    rows:
+      - [成本, 初期成本较低但后期维护成本较高, 初期建设成本中等但规则集中维护, 推荐方案 B]
+      - [稳定性, 依赖模型直接生成版式因此波动较大, 模板接管版式因此稳定性更高, 推荐方案 B]
+      - [可编辑性, 可能出现截图式页面或不可控元素, 原生 PPT 文本框和表格可编辑, 推荐方案 B]
+      - [扩展性, 新增页面类型需要重新提示模型, 新增 layout 即可复用, 推荐方案 B]
+      - [溢出处理, 依赖模型自觉控制长度, 生成器可在写入前检测和拆页, 推荐方案 B]
+      - [视觉一致性, 容易出现风格漂移, 统一使用北理工模板规则, 推荐方案 B]
+      - [协作方式, 设计和内容耦合在一次生成里, 内容和版式分离便于迭代, 推荐方案 B]
+      - [交付风险, 长文本容易遮挡和覆盖, preflight 可提前暴露风险, 推荐方案 B]
+      - [后续产品化, 难以验证每页是否合格, 可增加截图级回归检查, 推荐方案 B]
+      - [人工修改, 用户需要逐页检查是否有文字重叠和表格越界, 自动报告可以指出需要压缩或拆分的页面, 推荐方案 B]
+      - [模板复用, 每个新主题都重新生成样式会产生不一致, 固定 layout 后只替换内容即可保持一致, 推荐方案 B]
+      - [质量控制, 没有结构化中间表示时很难做程序检查, YAML schema 可以支持字段校验和布局规则校验, 推荐方案 B]
+      - [团队协作, 内容作者和模板作者职责混在一起, 内容作者只写 YAML 模板作者维护生成器, 推荐方案 B]
+
+  - layout: references
+    title: 超长参考文献
+    items:
+      - "Reference 1: a deliberately long bibliography item that should wrap into multiple lines in a fixed width box."
+      - "Reference 2: another deliberately long bibliography item with Chinese characters、English words and numbers 2026."
+      - "Reference 3: Office Open XML presentation structure and editable PowerPoint generation."
+      - "Reference 4: PptxGenJS documentation for creating text boxes, tables, images and shapes."
+      - "Reference 5: Layout preflight estimation for line wrapping and overflow prevention."
+      - "Reference 6: Academic presentation typography, spacing, visual hierarchy and defense deck design."
+      - "Reference 7: Structured YAML content generation for AI-assisted presentation authoring."
+      - "Reference 8: Conservative text measurement for mixed Chinese and English content."
+      - "Reference 9: Automatic page splitting for long bullet lists, references and table rows."
+      - "Reference 10: Future work on screenshot-based regression testing and repair prompts."
+      - "Reference 11: Long reference item for testing automatic continuation slides when bibliography content exceeds the safe writing area."
+      - "Reference 12: Another long reference item with enough words to wrap over multiple lines and trigger the conservative height estimator."
+      - "Reference 13: Structured presentation generation should expose preflight reports before writing final PowerPoint files."
+      - "Reference 14: Repair prompts can use overflow reports to ask the language model to shorten, split or reclassify content."
+      - "Reference 15: Academic templates should keep branding stable while allowing content to vary across research topics."
+      - "Reference 16: Native PPTX generation keeps text, tables and shapes editable after automatic layout processing."
+      - "Reference 17: Additional bibliography entry included solely to exceed the available reference page height."
+      - "Reference 18: Additional bibliography entry included solely to exceed the available reference page height."
+      - "Reference 19: Additional bibliography entry included solely to exceed the available reference page height."
+      - "Reference 20: Additional bibliography entry included solely to exceed the available reference page height."
+      - "Reference 21: Additional bibliography entry included solely to exceed the available reference page height."
+      - "Reference 22: Additional bibliography entry included solely to exceed the available reference page height."
+      - "Reference 23: Additional bibliography entry included solely to exceed the available reference page height."
+      - "Reference 24: Additional bibliography entry included solely to exceed the available reference page height."
+      - "Reference 25: Additional bibliography entry included solely to exceed the available reference page height."
+      - "Reference 26: Additional bibliography entry included solely to exceed the available reference page height."
+
+  - layout: closing
+    title: 完成
+    subtitle: Overflow preflight test

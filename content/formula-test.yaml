@@ -1,0 +1,31 @@
+meta:
+  title: Formula Test
+  subtitle: MathJax SVG formula rendering
+  author: BIT Template
+  advisor: Generator
+  date: 2026.05
+
+slides:
+  - layout: title
+
+  - layout: formula
+    title: 交叉熵损失
+    formula:
+      latex: "\\mathcal{L}(\\theta) = -\\frac{1}{n}\\sum_{i=1}^{n}\\sum_{k=1}^{K} y_{ik}\\log p_{\\theta,k}(x_i)"
+    caption: 多分类交叉熵目标函数
+    explanation:
+      - "$n$ 表示样本数量，$K$ 表示类别数量。"
+      - "$y_{ik}$ 是 one-hot 标签，$p_{\\theta,k}(x_i)$ 是模型预测概率。"
+
+  - layout: formula
+    title: 注意力机制
+    formula:
+      latex: "\\operatorname{Attention}(Q,K,V)=\\operatorname{softmax}\\left(\\frac{QK^{\\top}}{\\sqrt{d_k}}\\right)V"
+    caption: Scaled dot-product attention
+    explanation:
+      - "$Q$、$K$、$V$ 分别表示 query、key 和 value。"
+      - "$d_k$ 用于缩放点积，避免 softmax 梯度过小。"
+
+  - layout: closing
+    title: 完成
+    subtitle: Formula rendering test

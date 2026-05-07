@@ -1,0 +1,193 @@
+meta:
+  title: AI 科研助手探索结论与技术路线
+  subtitle: 从端到端 Agent 转向模型驱动 + 人类引导的 MCP 体系
+  author: AutoDL 团队
+  advisor: 北京理工大学
+  date: 2026.05
+
+slides:
+  - layout: title
+
+  - layout: agenda
+    title: 目录
+    items:
+      - 探索范围与项目分类
+      - 论文获取探索结果
+      - 代码执行与沙箱探索结果
+      - 数据集与图表生成探索结果
+      - 我们的技术路线
+
+  - layout: section
+    sectionNo: "01"
+    title: 探索范围与项目分类
+    subtitle: 从项目形态、自动化程度和交互方式建立对比框架
+
+  - layout: bullets
+    title: 核心发现与长列表拆页测试
+    lead: 调研发现，现有 AI 科研助手在自动化程度和人类控制权之间存在明显取舍。
+    fontSize: 15
+    bullets:
+      - 端到端 Agent 流程固定，适合演示，但学术伦理和可控性风险高。
+      - TUI / Web 工作台更符合人类引导理念，但需要用户切换到独立应用。
+      - 独立 MCP Server 具备跨客户端通用性，是值得优先投入的产品形态。
+      - 高校图书馆 session 复用可以绕开爬虫式全文获取的法律和体验问题。
+      - GPU 执行环境是面向机器学习复现实验的关键差异化能力。
+      - AI 生成 PPT 不应该直接生成代码，而应该生成稳定的结构化内容。
+      - 模板系统需要在生成阶段主动检测溢出，并在必要时自动拆页。
+      - 表格、长列表和参考文献是最容易破坏页面稳定性的三类内容。
+
+  - layout: claim
+    title: 单页核心结论
+    claim: AI 生成 PPT 的关键不是让模型学会排版，而是让模型只负责内容结构。
+    evidence:
+      - 模板负责字号、留白、页眉页脚和学校视觉规范。
+      - 生成器负责溢出检测、自动拆页和可编辑 PPTX 输出。
+      - AI 只需要选择合适 layout 并填入短内容。
+
+  - layout: twoColumn
+    title: 两栏观点页
+    left:
+      title: 传统做法
+      bullets:
+        - AI 直接写 PowerPoint 代码。
+        - 每次都需要重新解释版式要求。
+        - 长文本容易覆盖、溢出或风格漂移。
+    right:
+      title: 模板化做法
+      bullets:
+        - AI 只输出 YAML。
+        - 版式规则集中维护。
+        - 生成器自动处理拆页和缩放。
+
+  - layout: cards
+    title: 多观点卡片
+    cards:
+      - title: 内容结构
+        text: 用 YAML 限定字段，减少模型自由发挥导致的异常结构。
+      - title: 视觉规范
+        text: 北理工颜色、校徽、页眉和字号规则由模板统一控制。
+      - title: 可编辑输出
+        text: 文本框、表格和形状都是 PowerPoint 原生元素。
+      - title: 自动修复
+        text: 对长列表、宽表格和参考文献执行 preflight 检测。
+
+  - layout: table
+    title: 项目分类示例
+    columns: [类型, 项目, 交互方式, 自动化, 特点]
+    rows:
+      - [端到端自动化流水线, AI-Scientist / AgentLaboratory, CLI 命令启动, 全自动, 自动完成文献到论文流程]
+      - [TUI / Web 工作台, DeepScientist / Research-Claw, 终端 UI 或 Web, 半自动, 用户主导阶段推进]
+      - [对话式插件, claude-scholar / ScienceClaw, 对话驱动, 工具调用, 依赖 AI 客户端生态]
+      - [工业 R&D 框架, RD-Agent, Streamlit UI + CLI, 场景化, 偏工程应用]
+
+  - layout: comparison
+    title: 技术路线取舍
+    left:
+      label: 不优先做
+      title: 端到端 Agent
+      bullets:
+        - 流程封闭，用户难以介入
+        - 复现过程不可控
+        - 学术伦理风险更高
+    right:
+      label: 优先做
+      title: 独立 MCP Server
+      bullets:
+        - 跨 Claude、Cursor、Windsurf 等客户端
+        - 模型驱动，人类随时打断
+        - 更适合工具链和算力资源集成
+
+  - layout: timeline
+    title: 路线图
+    items:
+      - date: 阶段 1
+        title: 复刻模板
+        text: 固化北理工视觉规范。
+      - date: 阶段 2
+        title: 结构生成
+        text: 用 YAML 承接 AI 输出。
+      - date: 阶段 3
+        title: 溢出检测
+        text: 自动拆页与字号控制。
+      - date: 阶段 4
+        title: 内容修复
+        text: 回传模型压缩或重写。
+
+  - layout: process
+    title: AI 到 PPTX 的流程
+    steps:
+      - title: 规划
+        text: 选择章节和页面类型
+      - title: 写作
+        text: 生成符合 schema 的 YAML
+      - title: 检测
+        text: 估算文本和表格是否溢出
+      - title: 修复
+        text: 自动拆页或降字号
+      - title: 导出
+        text: 生成原生可编辑 PPTX
+
+  - layout: metrics
+    title: 关键指标页
+    metrics:
+      - value: 12+
+        label: 正文版式
+        note: 覆盖常见学术汇报页面
+      - value: 3
+        label: 拆页对象
+        note: bullets / table / references
+      - value: 0
+        label: LaTeX 依赖
+        note: 直接输出 PPTX
+      - value: 100%
+        label: 可编辑
+        note: 文本和形状均为原生对象
+
+  - layout: matrix
+    title: 方案判断矩阵
+    cells:
+      - title: 低成本 / 低控制
+        text: 简单 Markdown 幻灯片，适合快速预览，不适合稳定交付。
+      - title: 高成本 / 低控制
+        text: AI 直接操作 PPT，调试成本高且输出不稳定。
+      - title: 低成本 / 高控制
+        text: YAML 内容加代码模板，是当前推荐路线。
+      - title: 高成本 / 高控制
+        text: 完整设计系统和截图级校验，适合后续产品化阶段。
+
+  - layout: imageText
+    title: 北理工风格 PPT 模板生成器
+    image: assets/bit-campus-photo.png
+    text:
+      - 真实 PPTX 模板抽取视觉资产。
+      - YAML 负责内容结构，生成器负责版式稳定性。
+      - 输出原生 PPTX，文本、表格、形状都可继续编辑。
+
+  - layout: quote
+    title: 引用页
+    quote: 让模型生成结构化内容，让模板承担视觉和排版责任。
+    source: BIT PPT Template Generator
+
+  - layout: formula
+    title: 公式页
+    formula:
+      latex: "\\mathcal{L}(\\theta) = -\\sum_{i=1}^{n} y_i \\log p_{\\theta}(x_i)"
+    caption: 交叉熵损失函数示例
+    explanation:
+      - "$\\theta$ 表示模型参数，$p_{\\theta}(x_i)$ 表示样本预测概率。"
+      - 公式写入为 Office Math / OMML，简单行内公式也会和正文排在同一文本框中。
+
+  - layout: references
+    title: 参考文献与长文本拆页测试
+    items:
+      - Microsoft. Office Open XML File Formats specification and PowerPoint presentation structure.
+      - PptxGenJS project documentation. Generate editable PowerPoint presentations with JavaScript.
+      - 北京理工大学学术答辩 PPT 模板正式版，视觉风格与学校元素参考。
+      - AI content generation workflow: planner, slide writer, validator and repair loop.
+      - Markdown and structured data based slide generation, layout selection and overflow detection.
+      - Presentation design principles for academic defense decks, including typography, spacing and visual hierarchy.
+      - Automatic text wrapping approximation for mixed Chinese and English content in fixed-size slide boxes.
+
+  - layout: closing
+    title: 谢谢
+    subtitle: 敬请各位老师批评指正
