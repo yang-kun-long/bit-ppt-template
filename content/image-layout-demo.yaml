@@ -1,0 +1,64 @@
+meta:
+  title: 图片智能排版示例
+  subtitle: 超宽图上置、普通图片侧置与图像网格
+  author: BIT PPT Generator
+  date: 2026
+
+slides:
+  - layout: title
+
+  - layout: imageText
+    title: 超宽图：可采用上图下字
+    image:
+      path: assets/bit-campus-line.png
+      placement: auto
+      fit: contain
+    caption: 只有明显超宽的图像才自动上置，避免挤压正文区域。
+    text:
+      - 超宽图放在上方，横向信息更完整。
+      - 下方只放少量要点，避免正文拥挤。
+      - 普通横图不会自动切到上下布局。
+
+  - layout: imageText
+    title: 普通横图：默认保留侧图侧字
+    image:
+      path: assets/bit-campus-photo.png
+      placement: auto
+      fit: contain
+    caption: 普通 3:2 横图仍采用侧图侧字，正文空间更充足。
+    text:
+      - PPT 本身是 16:9，不应把普通横图都上置。
+      - 侧栏图像配合右侧说明，信息密度更稳。
+      - 如需上置，可手动设置 placement: top。
+
+  - layout: imageGrid
+    title: 图像网格：多图结果展示
+    images:
+      - path: assets/bit-campus-photo.png
+        caption: 校园照片
+      - path: assets/bit-campus-line.png
+        caption: 线稿图
+      - path: assets/bit-emblem-gray.png
+        caption: 灰色徽记
+      - path: assets/bit-seal-small.png
+        caption: 印章
+
+  - layout: caseStudy
+    title: 案例页：图片对象语法
+    image:
+      path: assets/bit-campus-photo.png
+      fit: cover
+    caption: caseStudy 也支持图片对象写法。
+    context:
+      - 输入只需要给本地图片路径。
+      - check 阶段会验证路径是否存在。
+    method:
+      - 生成器读取图片比例。
+      - 根据布局选择 cover 或 contain。
+    result:
+      - 输出仍是可编辑 PPTX。
+      - 文本、图像、形状保持 Office 对象。
+
+  - layout: closing
+    title: 谢谢
+    subtitle: 图片布局示例结束

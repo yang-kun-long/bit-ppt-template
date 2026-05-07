@@ -90,8 +90,157 @@ const assetRatio = {
   [assets.emblemGray]: 620 / 621,
 };
 
+const imageInfoCache = new Map();
+
 function asset(name) {
   return path.join(ROOT, "assets", name);
+}
+
+function resolveProjectPath(value, fallback) {
+  const source = normalizeText(value || fallback);
+  return path.isAbsolute(source) ? source : path.resolve(ROOT, source);
+}
+
+function normalizeImageSpec(value, fallback = "assets/bit-campus-photo.png") {
+  if (value && typeof value === "object" && !Array.isArray(value)) {
+    return {
+      path: resolveProjectPath(value.path || value.image || value.src, fallback),
+      fit: normalizeText(value.fit || value.sizing).toLowerCase(),
+      placement: normalizeText(value.placement || value.position).toLowerCase(),
+      alt: normalizeText(value.alt),
+    };
+  }
+  return {
+    path: resolveProjectPath(value, fallback),
+    fit: "",
+    placement: "",
+    alt: "",
+  };
+}
+
+function readPngDimensions(buffer) {
+  if (buffer.length < 24) return null;
+  if (buffer[0] !== 0x89 || buffer.toString("ascii", 1, 4) !== "PNG") return null;
+  return { width: buffer.readUInt32BE(16), height: buffer.readUInt32BE(20), format: "png" };
+}
+
+function readGifDimensions(buffer) {
+  if (buffer.length < 10) return null;
+  const signature = buffer.toString("ascii", 0, 6);
+  if (signature !== "GIF87a" && signature !== "GIF89a") return null;
+  return { width: buffer.readUInt16LE(6), height: buffer.readUInt16LE(8), format: "gif" };
+}
+
+function readJpegDimensions(buffer) {
+  if (buffer.length < 4 || buffer[0] !== 0xff || buffer[1] !== 0xd8) return null;
+  let offset = 2;
+  while (offset + 9 < buffer.length) {
+    while (buffer[offset] === 0xff) offset += 1;
+    const marker = buffer[offset];
+    offset += 1;
+    if (marker === 0xd9 || marker === 0xda) break;
+    const size = buffer.readUInt16BE(offset);
+    if (size < 2 || offset + size > buffer.length) break;
+    if ((marker >= 0xc0 && marker <= 0xc3) || (marker >= 0xc5 && marker <= 0xc7) || (marker >= 0xc9 && marker <= 0xcb) || (marker >= 0xcd && marker <= 0xcf)) {
+      return {
+        width: buffer.readUInt16BE(offset + 5),
+        height: buffer.readUInt16BE(offset + 3),
+        format: "jpeg",
+      };
+    }
+    offset += size;
+  }
+  return null;
+}
+
+function readWebpDimensions(buffer) {
+  if (buffer.length < 30 || buffer.toString("ascii", 0, 4) !== "RIFF" || buffer.toString("ascii", 8, 12) !== "WEBP") return null;
+  const chunk = buffer.toString("ascii", 12, 16);
+  if (chunk === "VP8X" && buffer.length >= 30) {
+    return {
+      width: 1 + buffer.readUIntLE(24, 3),
+      height: 1 + buffer.readUIntLE(27, 3),
+      format: "webp",
+    };
+  }
+  if (chunk === "VP8 " && buffer.length >= 30) {
+    return {
+      width: buffer.readUInt16LE(26) & 0x3fff,
+      height: buffer.readUInt16LE(28) & 0x3fff,
+      format: "webp",
+    };
+  }
+  if (chunk === "VP8L" && buffer.length >= 25) {
+    const bits = buffer.readUInt32LE(21);
+    return {
+      width: 1 + (bits & 0x3fff),
+      height: 1 + ((bits >> 14) & 0x3fff),
+      format: "webp",
+    };
+  }
+  return null;
+}
+
+function readImageDimensions(imagePath) {
+  if (imageInfoCache.has(imagePath)) return imageInfoCache.get(imagePath);
+  let result = null;
+  try {
+    const buffer = fs.readFileSync(imagePath);
+    result = readPngDimensions(buffer) || readJpegDimensions(buffer) || readGifDimensions(buffer) || readWebpDimensions(buffer);
+  } catch {
+    result = null;
+  }
+  imageInfoCache.set(imagePath, result);
+  return result;
+}
+
+function classifyImageRatio(ratio) {
+  if (!Number.isFinite(ratio) || ratio <= 0) return "unknown";
+  if (ratio >= 2.15) return "panoramic";
+  if (ratio >= 1.18) return "landscape";
+  if (ratio <= 0.52) return "tall";
+  if (ratio <= 0.84) return "portrait";
+  return "square";
+}
+
+function resolveImageInfo(value, fallback = "assets/bit-campus-photo.png") {
+  const spec = normalizeImageSpec(value, fallback);
+  const dimensions = readImageDimensions(spec.path);
+  const ratio = dimensions?.width && dimensions?.height
+    ? dimensions.width / dimensions.height
+    : assetRatio[spec.path] || 1;
+  return {
+    ...spec,
+    exists: fs.existsSync(spec.path),
+    width: dimensions?.width,
+    height: dimensions?.height,
+    format: dimensions?.format,
+    ratio,
+    orientation: classifyImageRatio(ratio),
+  };
+}
+
+function fitBoxToRatio(box, ratio = 1) {
+  let { x, y, w, h } = box;
+  const safeRatio = Number.isFinite(ratio) && ratio > 0 ? ratio : 1;
+  const boxRatio = w / h;
+  if (boxRatio > safeRatio) {
+    const fittedW = h * safeRatio;
+    x += (w - fittedW) / 2;
+    w = fittedW;
+  } else {
+    const fittedH = w / safeRatio;
+    y += (h - fittedH) / 2;
+    h = fittedH;
+  }
+  return { x, y, w, h };
+}
+
+function imageFitMode(image, fallback = "cover") {
+  const value = normalizeText(image?.fit).toLowerCase();
+  if (["contain", "fit", "inside"].includes(value)) return "contain";
+  if (["cover", "crop", "fill"].includes(value)) return "cover";
+  return fallback;
 }
 
 function readDeck(inputFile) {
@@ -358,6 +507,17 @@ function validateDeck(deck) {
     maxItems(slideIndex, pathName, value, max);
     if (Array.isArray(value)) value.forEach((item, idx) => maxText(slideIndex, `${pathName}[${idx}]`, item, textMax, "bullet"));
   };
+  const checkImage = (slideIndex, pathName, value) => {
+    if (value === undefined || value === null || value === "") return;
+    const image = resolveImageInfo(value);
+    if (!image.exists) {
+      add("error", slideIndex, pathName, `Image file does not exist: ${image.path}.`, `Fix ${pathName} to point to an existing image file.`);
+      return;
+    }
+    if (!image.width || !image.height) {
+      add("warning", slideIndex, pathName, `Image dimensions could not be read: ${image.path}.`, "Use PNG, JPEG, GIF, or WebP when automatic image layout is needed.");
+    }
+  };
 
   slides.forEach((slide, idx) => {
     const slideIndex = idx + 1;
@@ -444,6 +604,7 @@ function validateDeck(deck) {
         if (Array.isArray(slide.items)) slide.items.forEach((item, itemIdx) => ["factor", "setting", "delta", "conclusion"].forEach((key) => maxText(slideIndex, `items[${itemIdx}].${key}`, item[key], key === "conclusion" ? 28 : 18, key)));
         break;
       case "caseStudy":
+        checkImage(slideIndex, "image", slide.image);
         checkBullets(slideIndex, "context", slide.context, 2, 34);
         checkBullets(slideIndex, "method", slide.method, 2, 34);
         checkBullets(slideIndex, "result", slide.result, 2, 34);
@@ -451,7 +612,11 @@ function validateDeck(deck) {
         break;
       case "imageGrid":
         maxItems(slideIndex, "images", slide.images, 6);
-        if (Array.isArray(slide.images)) slide.images.forEach((image, imageIdx) => maxText(slideIndex, `images[${imageIdx}].caption`, image.caption, 16, "image caption"));
+        if (Array.isArray(slide.images)) slide.images.forEach((image, imageIdx) => {
+          checkImage(slideIndex, `images[${imageIdx}]`, image);
+          const caption = image && typeof image === "object" ? image.caption : "";
+          maxText(slideIndex, `images[${imageIdx}].caption`, caption, 16, "image caption");
+        });
         break;
       case "code":
         if (lineCount(slide.code || slide.algorithm) > 12) add("warning", slideIndex, "code", `Code block has ${lineCount(slide.code || slide.algorithm)} lines; recommended max is 12.`, "Summarize the code as pseudocode under 12 short lines.");
@@ -570,6 +735,7 @@ function validateDeck(deck) {
         if (Array.isArray(slide.items)) slide.items.forEach((item, itemIdx) => maxText(slideIndex, `items[${itemIdx}]`, item, 140, "reference"));
         break;
       case "imageText":
+        checkImage(slideIndex, "image", slide.image);
         checkBullets(slideIndex, "text", slide.text, 5, 38);
         break;
       default:
@@ -663,18 +829,9 @@ function addInlineMathText(slide, text, x, y, w, h, opts, ctx) {
 }
 
 function addImageFit(slide, imagePath, box, opts = {}) {
-  const ratio = assetRatio[imagePath] || opts.ratio || 1;
-  let { x, y, w, h } = box;
-  const boxRatio = w / h;
-  if (boxRatio > ratio) {
-    const fittedW = h * ratio;
-    x += (w - fittedW) / 2;
-    w = fittedW;
-  } else {
-    const fittedH = w / ratio;
-    y += (h - fittedH) / 2;
-    h = fittedH;
-  }
+  const dimensions = readImageDimensions(imagePath);
+  const ratio = opts.ratio || (dimensions?.width && dimensions?.height ? dimensions.width / dimensions.height : assetRatio[imagePath]) || 1;
+  const { x, y, w, h } = fitBoxToRatio(box, ratio);
   slide.addImage({ path: imagePath, x, y, w, h, transparency: opts.transparency || 0 });
 }
 
@@ -688,6 +845,34 @@ function addImageCover(slide, imagePath, box, opts = {}) {
     transparency: opts.transparency || 0,
     sizing: { type: "cover", x: box.x, y: box.y, w: box.w, h: box.h },
   });
+}
+
+function addImageInPanel(slide, image, box, opts = {}) {
+  const mode = imageFitMode(image, opts.fit || "cover");
+  if (mode === "contain") {
+    const imageBox = fitBoxToRatio(box, image.ratio);
+    const pad = opts.pad ?? 0.12;
+    slide.addShape("rect", {
+      x: imageBox.x - pad,
+      y: imageBox.y - pad,
+      w: imageBox.w + pad * 2,
+      h: imageBox.h + pad * 2,
+      fill: { color: opts.fill || theme.light },
+      line: { color: opts.line || theme.line, width: opts.lineWidth || 0.8 },
+    });
+    addImageFit(slide, image.path, imageBox, { ratio: image.ratio, transparency: opts.transparency || 0 });
+    return imageBox;
+  }
+  slide.addShape("rect", {
+    x: box.x,
+    y: box.y,
+    w: box.w,
+    h: box.h,
+    fill: { color: opts.fill || theme.light },
+    line: { color: opts.line || theme.line, width: opts.lineWidth || 0.8 },
+  });
+  addImageCover(slide, image.path, box, { transparency: opts.transparency || 0 });
+  return box;
 }
 
 function addCoverBrand(slide) {
@@ -1267,9 +1452,9 @@ function layoutCaseStudy(pptx, slideData, pageNo, ctx) {
   const slide = pptx.addSlide();
   addPageBrand(slide, pageNo);
   addTitle(slide, slideData.title || "案例分析", "CASE STUDY");
-  const imgPath = path.resolve(ROOT, slideData.image || "assets/bit-campus-photo.png");
-  slide.addShape("rect", { x: 0.86, y: 1.66, w: 4.55, h: 4.62, fill: { color: theme.light }, line: { color: theme.line, width: 0.8 } });
-  addImageCover(slide, imgPath, { x: 1.02, y: 1.84, w: 4.22, h: 3.16 });
+  const image = resolveImageInfo(slideData.image || "assets/bit-campus-photo.png");
+  image.fit = normalizeText(slideData.imageFit || slideData.fit || image.fit).toLowerCase();
+  addImageInPanel(slide, image, { x: 1.02, y: 1.84, w: 4.22, h: 3.16 }, { fit: "cover" });
   addInlineMathText(slide, slideData.caption || "", 1.02, 5.16, 4.22, 0.36, { fontSize: 9.5, color: theme.muted, align: "center" }, ctx);
   const blocks = [
     ["背景", slideData.context],
@@ -1301,10 +1486,10 @@ function layoutImageGrid(pptx, slideData, pageNo, ctx) {
     const row = Math.floor(idx / cols);
     const x = 0.9 + col * (cellW + gap);
     const y = 1.74 + row * (cellH + 0.36);
-    const imgPath = path.resolve(ROOT, item.path || item.image || "assets/bit-campus-photo.png");
-    slide.addShape("rect", { x, y, w: cellW, h: cellH, fill: { color: theme.light }, line: { color: theme.line, width: 0.75 } });
-    addImageCover(slide, imgPath, { x: x + 0.1, y: y + 0.1, w: cellW - 0.2, h: cellH - 0.48 });
-    addInlineMathText(slide, item.caption || "", x + 0.12, y + cellH - 0.32, cellW - 0.24, 0.18, { fontSize: 8.4, color: theme.muted, align: "center" }, ctx);
+    const image = resolveImageInfo(item || "assets/bit-campus-photo.png");
+    const caption = item && typeof item === "object" ? item.caption : "";
+    addImageInPanel(slide, image, { x: x + 0.1, y: y + 0.1, w: cellW - 0.2, h: cellH - 0.48 }, { fit: "cover", lineWidth: 0.75, pad: 0.1 });
+    addInlineMathText(slide, caption, x + 0.12, y + cellH - 0.32, cellW - 0.24, 0.18, { fontSize: 8.4, color: theme.muted, align: "center" }, ctx);
   });
 }
 
@@ -1572,13 +1757,69 @@ function addComparePanel(slide, data = {}, x, y, accent, fill, ctx) {
   addBulletList(slide, data.bullets || [], x + 0.42, y + 1.72, 4.34, 0.6, { fontSize: 13.5, color: accent }, ctx);
 }
 
+function chooseImageTextPlacement(slideData, image) {
+  const requested = normalizeText(slideData.imagePlacement || slideData.placement || image.placement).toLowerCase();
+  if (["top", "above", "wide", "bottomText", "bottom-text"].includes(requested)) return "top";
+  if (["side", "left", "right"].includes(requested)) return "side";
+  if (image.ratio >= 1.9) return "top";
+  return "side";
+}
+
+function addBulletGrid(slide, bullets, x, y, w, options = {}, ctx = null) {
+  const items = (Array.isArray(bullets) ? bullets : bullets ? [bullets] : []).slice(0, options.maxItems || 5);
+  if (!items.length) return;
+  const cols = Math.min(options.cols || (items.length <= 2 ? items.length : 3), items.length);
+  const gapX = options.gapX || 0.36;
+  const gapY = options.gapY || 0.48;
+  const colW = (w - gapX * (cols - 1)) / cols;
+  const size = options.fontSize || 11.4;
+  items.forEach((item, idx) => {
+    const col = idx % cols;
+    const row = Math.floor(idx / cols);
+    const left = x + col * (colW + gapX);
+    const top = y + row * gapY;
+    slide.addShape("ellipse", {
+      x: left,
+      y: top + 0.1,
+      w: 0.1,
+      h: 0.1,
+      fill: { color: options.color || theme.green },
+      line: { transparency: 100 },
+    });
+    const textOptions = {
+      fontSize: size,
+      color: options.textColor || theme.ink,
+      valign: "top",
+      fit: "shrink",
+    };
+    if (ctx) addInlineMathText(slide, item, left + 0.22, top, colW - 0.22, 0.36, textOptions, ctx);
+    else addText(slide, item, left + 0.22, top, colW - 0.22, 0.36, textOptions);
+  });
+}
+
 function layoutImageText(pptx, slideData, pageNo, ctx) {
   const slide = pptx.addSlide();
   addPageBrand(slide, pageNo);
   addTitle(slide, slideData.title, "VISUAL EXPLANATION");
-  const imgPath = path.resolve(ROOT, slideData.image || "assets/bit-campus-photo.png");
-  slide.addShape("rect", { x: 0.86, y: 1.68, w: 5.22, h: 4.48, fill: { color: theme.light }, line: { color: theme.line, width: 0.8 } });
-  addImageCover(slide, imgPath, { x: 1.02, y: 1.85, w: 4.9, h: 4.1 });
+  const image = resolveImageInfo(slideData.image || "assets/bit-campus-photo.png");
+  image.fit = normalizeText(slideData.imageFit || slideData.fit || image.fit).toLowerCase();
+  image.placement = normalizeText(slideData.imagePlacement || slideData.placement || image.placement).toLowerCase();
+  const placement = chooseImageTextPlacement(slideData, image);
+
+  if (placement === "top") {
+    addImageInPanel(slide, image, { x: 0.98, y: 1.58, w: 11.35, h: 3.52 }, { fit: "contain" });
+    if (slideData.caption) {
+      addInlineMathText(slide, slideData.caption, 1.02, 5.22, 11.18, 0.22, { fontSize: 9.2, color: theme.muted, align: "center" }, ctx);
+    }
+    addBulletGrid(slide, slideData.text || [], 1.02, slideData.caption ? 5.66 : 5.46, 11.18, { fontSize: 11.2 }, ctx);
+    return;
+  }
+
+  const sideFit = image.orientation === "portrait" || image.orientation === "tall" ? "contain" : "cover";
+  addImageInPanel(slide, image, { x: 1.02, y: 1.8, w: 4.9, h: 4.08 }, { fit: sideFit });
+  if (slideData.caption) {
+    addInlineMathText(slide, slideData.caption, 1.0, 6.04, 4.94, 0.22, { fontSize: 8.8, color: theme.muted, align: "center" }, ctx);
+  }
   addBulletList(slide, slideData.text || [], 6.82, 2.03, 5.15, 0.76, { fontSize: 16 }, ctx);
 }
 

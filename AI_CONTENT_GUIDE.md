@@ -509,11 +509,18 @@ slides. Quote strings containing a colon to avoid YAML parsing them as objects.
 ### `imageText`
 
 Image paths are relative to this package directory.
+Very wide images are placed above the text by default. Ordinary landscape,
+portrait, and square images stay in a side-by-side composition so the text
+area remains usable. Use `placement` and `fit` when the automatic choice needs
+to be overridden.
 
 ```yaml
 - layout: imageText
   title: 图文说明
-  image: assets/bit-campus-photo.png
+  image:
+    path: assets/bit-campus-photo.png
+    placement: auto # auto | top | side
+    fit: contain    # contain | cover
   text:
     - 说明一。
     - 说明二。
