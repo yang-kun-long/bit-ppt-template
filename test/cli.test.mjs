@@ -129,6 +129,14 @@ test("CLI check exits non-zero for invalid deck", async () => {
   assert.equal(payload.validation.errors.length, 2);
 });
 
+test("CLI check --strict exits non-zero on warnings", async () => {
+  const result = await runCli(["check", "content/formula-test.yaml", "--json", "--strict"]);
+  assert.notEqual(result.status, 0);
+  const payload = JSON.parse(result.stdout);
+  assert.equal(payload.validation.errors.length, 0);
+  assert.ok(payload.validation.warnings.length > 0);
+});
+
 test("generateDeckFile writes a PPTX", async () => {
   const output = tempFile("example.pptx");
   const result = await generateDeckFile(path.join(ROOT, "content", "example.yaml"), output.path);
@@ -203,4 +211,23 @@ test("CLI generate writes output for imageText object syntax", async () => {
   assert.equal(result.status, 0);
   assert.ok(fs.existsSync(output));
   assert.ok(fs.statSync(output).size > 1000);
+});
+
+test("CLI generate --json prints machine-readable result", async () => {
+  const output = tempFile("example-json.pptx");
+  const result = await runCli(["generate", "content/example.yaml", output.path, "--json"]);
+  assert.equal(result.status, 0);
+  assert.equal(result.stderr, "");
+  const payload = JSON.parse(result.stdout);
+  assert.equal(payload.validation.errors.length, 0);
+  assert.equal(payload.output, output.path);
+  assert.ok(fs.existsSync(output.path));
+});
+
+test("CLI generate --strict exits non-zero on warnings", async () => {
+  const output = tempFile("strict-warning.pptx");
+  const result = await runCli(["generate", "content/formula-test.yaml", output.path, "--strict"]);
+  assert.notEqual(result.status, 0);
+  assert.match(result.stderr, /strict mode/);
+  assert.equal(fs.existsSync(output.path), false);
 });

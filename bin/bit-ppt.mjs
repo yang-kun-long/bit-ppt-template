@@ -19,8 +19,8 @@ function printHelp() {
   console.log(`bit-ppt
 
 Usage:
-  bit-ppt generate <input.yaml> <output.pptx> [font options]
-  bit-ppt check <input.yaml> [--json]
+  bit-ppt generate <input.yaml> <output.pptx> [--json] [--strict] [font options]
+  bit-ppt check <input.yaml> [--json] [--strict]
   bit-ppt list-layouts [--json]
   bit-ppt guide [topic] [name] [--json]
 
@@ -31,6 +31,10 @@ Progressive guide:
   bit-ppt guide schema imageText --json
   bit-ppt guide example imageText
   bit-ppt guide writing-rules
+
+Quality options:
+  --json                  Print machine-readable JSON where supported
+  --strict                Treat validation warnings as failures
 
 Font options:
   --font-cn <name>        Chinese/CJK font, default: ${defaultFont.cn}
@@ -118,6 +122,7 @@ function parseOptions(args) {
   for (let idx = 0; idx < args.length; idx += 1) {
     const arg = args[idx];
     if (arg === "--json") options.json = true;
+    else if (arg === "--strict") options.strict = true;
     else if (arg === "--font-cn" || arg === "--font-cjk") options.fontCn = args[++idx];
     else if (arg === "--font-cn-light") options.fontCnLight = args[++idx];
     else if (arg === "--font-en" || arg === "--font-latin") options.fontEn = args[++idx];
@@ -146,6 +151,23 @@ function printCheck(result, asJson) {
     console.log("\nrepair prompt:");
     console.log(result.repairPrompt);
   }
+}
+
+function hasStrictFailure(result, options) {
+  return Boolean(options.strict && result.validation.warnings.length);
+}
+
+function applyCheckExitCode(result, options) {
+  if (result.validation.errors.length || hasStrictFailure(result, options)) {
+    process.exitCode = 1;
+  }
+}
+
+function makeStrictWarningError(result) {
+  const error = new Error("Deck validation warning(s) failed strict mode.");
+  error.validation = result.validation;
+  error.repairPrompt = result.repairPrompt;
+  return error;
 }
 
 function printGuide(command, name, asJson) {
@@ -229,14 +251,22 @@ async function main() {
     if (!input) throw new Error("Missing input YAML path.");
     const result = checkDeckFile(path.resolve(input));
     printCheck(result, options.json);
-    if (result.validation.errors.length) process.exitCode = 1;
+    applyCheckExitCode(result, options);
     return;
   }
 
   if (command === "generate") {
     const [input, output] = positional;
     if (!input || !output) throw new Error("Usage: bit-ppt generate <input.yaml> <output.pptx>");
+    if (options.strict) {
+      const strictCheck = checkDeckFile(path.resolve(input));
+      if (hasStrictFailure(strictCheck, options)) throw makeStrictWarningError(strictCheck);
+    }
     const result = await generateDeckFile(path.resolve(input), path.resolve(output), options);
+    if (options.json) {
+      printJson(result);
+      return;
+    }
     if (result.validation.warnings.length) {
       console.warn(`Validation warning(s): ${result.validation.warnings.length}`);
       console.warn(result.repairPrompt);
