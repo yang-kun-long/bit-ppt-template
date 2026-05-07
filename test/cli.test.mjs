@@ -78,6 +78,43 @@ test("CLI list-layouts --json prints JSON", async () => {
   assert.ok(layouts.includes("imageText"));
 });
 
+test("CLI help points to progressive guide commands", async () => {
+  const result = await runCli(["--help"]);
+  assert.equal(result.status, 0);
+  assert.match(result.stdout, /bit-ppt guide layout imageText/);
+  assert.match(result.stdout, /Progressive guide/);
+});
+
+test("CLI guide prints overview", async () => {
+  const result = await runCli(["guide"]);
+  assert.equal(result.status, 0);
+  assert.match(result.stdout, /BIT PPT Generator/);
+  assert.match(result.stdout, /Guided layouts/);
+});
+
+test("CLI guide layout returns focused text", async () => {
+  const result = await runCli(["guide", "layout", "imageText"]);
+  assert.equal(result.status, 0);
+  assert.match(result.stdout, /imageText/);
+  assert.match(result.stdout, /Very wide images/);
+});
+
+test("CLI guide schema --json returns layout schema", async () => {
+  const result = await runCli(["guide", "schema", "imageText", "--json"]);
+  assert.equal(result.status, 0);
+  const payload = JSON.parse(result.stdout);
+  assert.equal(payload.layout, "imageText");
+  assert.equal(payload.fields.image.required, true);
+});
+
+test("CLI guide example --json returns example deck fragment", async () => {
+  const result = await runCli(["guide", "example", "chart", "--json"]);
+  assert.equal(result.status, 0);
+  const payload = JSON.parse(result.stdout);
+  assert.equal(payload.layout, "chart");
+  assert.ok(Array.isArray(payload.categories));
+});
+
 test("CLI check --json exits successfully for valid deck", async () => {
   const result = await runCli(["check", "content/example.yaml", "--json"]);
   assert.equal(result.status, 0);

@@ -6,6 +6,14 @@ import {
   generateDeckFile,
   listLayouts,
 } from "../src/generate.mjs";
+import {
+  getGuideOverview,
+  getLayoutExample,
+  getLayoutGuide,
+  getLayoutSchema,
+  getWritingRules,
+  listGuideLayouts,
+} from "../src/layout-guides.mjs";
 
 function printHelp() {
   console.log(`bit-ppt
@@ -14,6 +22,15 @@ Usage:
   bit-ppt generate <input.yaml> <output.pptx> [font options]
   bit-ppt check <input.yaml> [--json]
   bit-ppt list-layouts [--json]
+  bit-ppt guide [topic] [name] [--json]
+
+Progressive guide:
+  bit-ppt guide
+  bit-ppt guide layouts
+  bit-ppt guide layout imageText
+  bit-ppt guide schema imageText --json
+  bit-ppt guide example imageText
+  bit-ppt guide writing-rules
 
 Font options:
   --font-cn <name>        Chinese/CJK font, default: ${defaultFont.cn}
@@ -21,6 +38,77 @@ Font options:
   --font-en <name>        Latin font, default: ${defaultFont.en}
   --font-serif <name>     Serif font, default: ${defaultFont.serif}
   --font-code <name>      Code font, default: ${defaultFont.code}
+`);
+}
+
+function printJson(value) {
+  console.log(JSON.stringify(value, null, 2));
+}
+
+function printGuideOverview(overview) {
+  console.log(`${overview.name}
+
+${overview.purpose}
+
+Workflow:
+${overview.workflow.map((item, idx) => `  ${idx + 1}. ${item}`).join("\n")}
+
+Guide commands:
+${overview.commands.map((item) => `  ${item}`).join("\n")}
+
+Guided layouts:
+  ${overview.guidedLayouts.join(", ")}
+`);
+}
+
+function printLayoutGuide(guide) {
+  console.log(`${guide.layout}
+
+Purpose:
+  ${guide.purpose}
+
+Use when:
+  ${guide.whenToUse}
+
+Fields:
+${Object.entries(guide.fields).map(([name, spec]) => {
+    const required = spec.required ? "required" : "optional";
+    const value = spec.value ? ` = ${spec.value}` : "";
+    return `  ${name}: ${spec.type}${value} (${required})`;
+  }).join("\n")}
+
+Limits:
+${Object.entries(guide.limits || {}).map(([name, spec]) => `  ${name}: ${Object.entries(spec).map(([key, value]) => `${key}=${value}`).join(", ")}`).join("\n") || "  none"}
+
+Notes:
+${guide.notes.map((item) => `  - ${item}`).join("\n")}
+`);
+}
+
+function printExample(example) {
+  console.log(JSON.stringify(example, null, 2));
+}
+
+function printWritingRules(rules) {
+  console.log(`Writing rules:
+${rules.map((item) => `  - ${item}`).join("\n")}
+`);
+}
+
+function printAvailableGuideLayouts() {
+  console.log(listGuideLayouts().join("\n"));
+}
+
+function printGuideHelp() {
+  console.log(`bit-ppt guide
+
+Usage:
+  bit-ppt guide
+  bit-ppt guide layouts
+  bit-ppt guide layout <name> [--json]
+  bit-ppt guide schema <name> --json
+  bit-ppt guide example <name> [--json]
+  bit-ppt guide writing-rules [--json]
 `);
 }
 
@@ -60,6 +148,62 @@ function printCheck(result, asJson) {
   }
 }
 
+function printGuide(command, name, asJson) {
+  if (!command) {
+    const overview = getGuideOverview();
+    if (asJson) printJson(overview);
+    else printGuideOverview(overview);
+    return;
+  }
+
+  if (command === "help" || command === "-h" || command === "--help") {
+    printGuideHelp();
+    return;
+  }
+
+  if (command === "layouts") {
+    const layouts = listGuideLayouts();
+    if (asJson) printJson(layouts);
+    else printAvailableGuideLayouts();
+    return;
+  }
+
+  if (command === "layout") {
+    if (!name) throw new Error("Usage: bit-ppt guide layout <name>");
+    const guide = getLayoutGuide(name);
+    if (!guide) throw new Error(`No guide available for layout: ${name}`);
+    if (asJson) printJson(guide);
+    else printLayoutGuide(guide);
+    return;
+  }
+
+  if (command === "schema") {
+    if (!name) throw new Error("Usage: bit-ppt guide schema <name>");
+    const schema = getLayoutSchema(name);
+    if (!schema) throw new Error(`No schema available for layout: ${name}`);
+    printJson(schema);
+    return;
+  }
+
+  if (command === "example") {
+    if (!name) throw new Error("Usage: bit-ppt guide example <name>");
+    const example = getLayoutExample(name);
+    if (!example) throw new Error(`No example available for layout: ${name}`);
+    if (asJson) printJson(example);
+    else printExample(example);
+    return;
+  }
+
+  if (command === "writing-rules") {
+    const rules = getWritingRules();
+    if (asJson) printJson(rules);
+    else printWritingRules(rules);
+    return;
+  }
+
+  throw new Error(`Unknown guide topic: ${command}`);
+}
+
 async function main() {
   const [command, ...rest] = process.argv.slice(2);
   const { options, positional } = parseOptions(rest);
@@ -72,6 +216,11 @@ async function main() {
     const layouts = listLayouts();
     if (options.json) console.log(JSON.stringify(layouts, null, 2));
     else console.log(layouts.join("\n"));
+    return;
+  }
+
+  if (command === "guide") {
+    printGuide(positional[0], positional[1], options.json);
     return;
   }
 
