@@ -82,6 +82,7 @@ test("CLI help points to progressive guide commands", async () => {
   const result = await runCli(["--help"]);
   assert.equal(result.status, 0);
   assert.match(result.stdout, /bit-ppt guide layout imageText/);
+  assert.match(result.stdout, /bit-ppt doctor/);
   assert.match(result.stdout, /Progressive guide/);
 });
 
@@ -113,6 +114,32 @@ test("CLI guide example --json returns example deck fragment", async () => {
   const payload = JSON.parse(result.stdout);
   assert.equal(payload.layout, "chart");
   assert.ok(Array.isArray(payload.categories));
+});
+
+test("CLI guide workflow --json returns agent workflow", async () => {
+  const result = await runCli(["guide", "workflow", "--json"]);
+  assert.equal(result.status, 0);
+  const payload = JSON.parse(result.stdout);
+  assert.ok(Array.isArray(payload));
+  assert.match(payload.join("\n"), /repairPrompt/);
+});
+
+test("CLI guide all --json returns overview and layout guides", async () => {
+  const result = await runCli(["guide", "all", "--json"]);
+  assert.equal(result.status, 0);
+  const payload = JSON.parse(result.stdout);
+  assert.equal(payload.overview.name, "BIT PPT Generator");
+  assert.ok(payload.layouts.imageText);
+  assert.ok(payload.layouts.chart);
+});
+
+test("CLI doctor --json reports environment status", async () => {
+  const result = await runCli(["doctor", "--json"]);
+  assert.equal(result.status, 0);
+  const payload = JSON.parse(result.stdout);
+  assert.equal(payload.ok, true);
+  assert.ok(payload.checks.some((item) => item.name === "fixture:example" && item.ok));
+  assert.ok(payload.checks.some((item) => item.name === "output:writable" && item.ok));
 });
 
 test("CLI check --json exits successfully for valid deck", async () => {

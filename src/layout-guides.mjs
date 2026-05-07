@@ -214,8 +214,22 @@ function getWritingRules() {
   return [...writingRules];
 }
 
+function getGuideWorkflow() {
+  return getGuideOverview().workflow;
+}
+
+function getAllGuides() {
+  return {
+    overview: getGuideOverview(),
+    writingRules: getWritingRules(),
+    layouts: Object.fromEntries(listGuideLayouts().map((layout) => [layout, getLayoutGuide(layout)])),
+  };
+}
+
 export {
+  getAllGuides,
   getGuideOverview,
+  getGuideWorkflow,
   getLayoutExample,
   getLayoutGuide,
   getLayoutSchema,

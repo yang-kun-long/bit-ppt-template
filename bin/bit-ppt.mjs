@@ -1,13 +1,18 @@
 #!/usr/bin/env node
+import fs from "node:fs";
+import os from "node:os";
 import path from "node:path";
 import {
+  ROOT,
   checkDeckFile,
   defaultFont,
   generateDeckFile,
   listLayouts,
 } from "../src/generate.mjs";
 import {
+  getAllGuides,
   getGuideOverview,
+  getGuideWorkflow,
   getLayoutExample,
   getLayoutGuide,
   getLayoutSchema,
@@ -23,9 +28,12 @@ Usage:
   bit-ppt check <input.yaml> [--json] [--strict]
   bit-ppt list-layouts [--json]
   bit-ppt guide [topic] [name] [--json]
+  bit-ppt doctor [--json]
 
 Progressive guide:
   bit-ppt guide
+  bit-ppt guide all --json
+  bit-ppt guide workflow --json
   bit-ppt guide layouts
   bit-ppt guide layout imageText
   bit-ppt guide schema imageText --json
@@ -103,16 +111,102 @@ function printAvailableGuideLayouts() {
   console.log(listGuideLayouts().join("\n"));
 }
 
+function printWorkflow(workflow) {
+  console.log(`Workflow:
+${workflow.map((item, idx) => `  ${idx + 1}. ${item}`).join("\n")}
+`);
+}
+
 function printGuideHelp() {
   console.log(`bit-ppt guide
 
 Usage:
   bit-ppt guide
+  bit-ppt guide all --json
+  bit-ppt guide workflow [--json]
   bit-ppt guide layouts
   bit-ppt guide layout <name> [--json]
   bit-ppt guide schema <name> --json
   bit-ppt guide example <name> [--json]
   bit-ppt guide writing-rules [--json]
+`);
+}
+
+function doctorCheck(name, ok, message, details = {}) {
+  return { name, ok, message, ...details };
+}
+
+function canImportPackage(packageName) {
+  try {
+    import.meta.resolve(packageName);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+function runDoctor() {
+  const checks = [];
+  const version = process.versions.node;
+  const major = Number(version.split(".")[0]);
+  checks.push(doctorCheck("node", major >= 18, `Node.js ${version}`, { version }));
+
+  ["pptxgenjs", "yaml", "jszip", "latex-to-omml"].forEach((packageName) => {
+    const available = canImportPackage(packageName);
+    checks.push(doctorCheck(`dependency:${packageName}`, available, available ? `${packageName} is available` : `${packageName} is missing`));
+  });
+
+  ["assets/bit-campus-photo.png", "assets/bit-campus-line.png", "content/example.yaml", "content/body-layout-test.yaml", "content/chart-flow-test.yaml"].forEach((relativePath) => {
+    const fileName = path.join(ROOT, relativePath);
+    checks.push(doctorCheck(`file:${relativePath}`, fs.existsSync(fileName), fs.existsSync(fileName) ? "found" : "missing", { path: fileName }));
+  });
+
+  [
+    ["fixture:example", "content/example.yaml"],
+    ["fixture:body-layouts", "content/body-layout-test.yaml"],
+    ["fixture:charts", "content/chart-flow-test.yaml"],
+  ].forEach(([name, relativePath]) => {
+    try {
+      const result = checkDeckFile(path.join(ROOT, relativePath));
+      checks.push(doctorCheck(name, result.validation.errors.length === 0, result.validation.errors.length ? "validation errors found" : "check passed", {
+        warnings: result.validation.warnings.length,
+        errors: result.validation.errors.length,
+      }));
+    } catch (error) {
+      checks.push(doctorCheck(name, false, error.message || String(error)));
+    }
+  });
+
+  try {
+    const outputDir = path.join(ROOT, "output");
+    fs.mkdirSync(outputDir, { recursive: true });
+    const probe = path.join(outputDir, `.bit-ppt-doctor-${process.pid}.tmp`);
+    fs.writeFileSync(probe, "ok");
+    fs.unlinkSync(probe);
+    checks.push(doctorCheck("output:writable", true, "output directory is writable", { path: outputDir }));
+  } catch (error) {
+    checks.push(doctorCheck("output:writable", false, error.message || String(error)));
+  }
+
+  const ok = checks.every((item) => item.ok);
+  return {
+    ok,
+    platform: process.platform,
+    arch: process.arch,
+    cwd: process.cwd(),
+    root: ROOT,
+    checks,
+  };
+}
+
+function printDoctor(result) {
+  console.log(`BIT PPT doctor: ${result.ok ? "ok" : "failed"}
+
+Root:
+  ${result.root}
+
+Checks:
+${result.checks.map((item) => `  ${item.ok ? "OK" : "FAIL"} ${item.name}: ${item.message}`).join("\n")}
 `);
 }
 
@@ -183,6 +277,20 @@ function printGuide(command, name, asJson) {
     return;
   }
 
+  if (command === "all") {
+    const guides = getAllGuides();
+    if (asJson) printJson(guides);
+    else printGuideOverview(guides.overview);
+    return;
+  }
+
+  if (command === "workflow") {
+    const workflow = getGuideWorkflow();
+    if (asJson) printJson(workflow);
+    else printWorkflow(workflow);
+    return;
+  }
+
   if (command === "layouts") {
     const layouts = listGuideLayouts();
     if (asJson) printJson(layouts);
@@ -243,6 +351,14 @@ async function main() {
 
   if (command === "guide") {
     printGuide(positional[0], positional[1], options.json);
+    return;
+  }
+
+  if (command === "doctor") {
+    const result = runDoctor();
+    if (options.json) printJson(result);
+    else printDoctor(result);
+    if (!result.ok) process.exitCode = 1;
     return;
   }
 
