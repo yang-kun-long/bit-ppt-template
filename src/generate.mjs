@@ -4,7 +4,17 @@ import { createRequire } from "node:module";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import JSZip from "jszip";
 import pptxgen from "pptxgenjs";
-import YAML from "yaml";
+import { listLayouts as coreListLayouts } from "./core/layouts.mjs";
+import {
+  expandSlidesWithReport,
+  getSpeakerNotesValue,
+  hasKnownPlaceholderRatio,
+  normalizeSpeakerNotes,
+  normalizeText,
+  resolvePlaceholderRatio,
+} from "./core/preflight.mjs";
+import { checkDeck as coreCheckDeck, validateDeck as coreValidateDeck } from "./core/validation.mjs";
+import { parseDeckYaml } from "./core/yaml-parse.mjs";
 const require = createRequire(import.meta.url);
 const { latexToOMML } = require("latex-to-omml");
 
@@ -35,53 +45,6 @@ const font = {
 const defaultFont = { ...font };
 
 const INCH_PT = 72;
-const OVERFLOW_GUARD = 0.9;
-const SUPPORTED_LAYOUTS = new Set([
-  "title",
-  "agenda",
-  "section",
-  "bullets",
-  "claim",
-  "twoColumn",
-  "cards",
-  "table",
-  "comparison",
-  "timeline",
-  "process",
-  "architecture",
-  "ablation",
-  "caseStudy",
-  "imageGrid",
-  "code",
-  "appendix",
-  "flowchart",
-  "chart",
-  "problemSolution",
-  "painOpportunity",
-  "experimentDesign",
-  "resultAnalysis",
-  "riskMitigation",
-  "contribution",
-  "summary",
-  "metrics",
-  "matrix",
-  "quote",
-  "formula",
-  "references",
-  "imageText",
-  "closing",
-]);
-
-const CHART_TYPES = new Set(["bar", "line", "pie", "doughnut", "scatter", "area"]);
-const PLACEHOLDER_ASPECT_RATIOS = {
-  "16:9": 16 / 9,
-  "4:3": 4 / 3,
-  "3:2": 3 / 2,
-  "1:1": 1,
-  "4:5": 4 / 5,
-  "3:4": 3 / 4,
-  "9:16": 9 / 16,
-};
 
 const assets = {
   campusLine: asset("bit-campus-line.png"),
@@ -250,58 +213,6 @@ function resolveImageInfo(value, fallback = "assets/bit-campus-photo.png") {
   };
 }
 
-function hasKnownPlaceholderRatio(value) {
-  const ratio = normalizeText(value).toLowerCase();
-  if (!ratio || ratio === "auto" || ratio === "unknown") return false;
-  if (PLACEHOLDER_ASPECT_RATIOS[ratio]) return true;
-  const colon = ratio.match(/^(\d+(?:\.\d+)?):(\d+(?:\.\d+)?)$/);
-  if (colon) return Number(colon[1]) > 0 && Number(colon[2]) > 0;
-  const numeric = Number(ratio);
-  return Number.isFinite(numeric) && numeric > 0;
-}
-
-function resolvePlaceholderRatio(value, fallback = 16 / 9) {
-  const ratio = normalizeText(value).toLowerCase();
-  if (PLACEHOLDER_ASPECT_RATIOS[ratio]) return PLACEHOLDER_ASPECT_RATIOS[ratio];
-  const colon = ratio.match(/^(\d+(?:\.\d+)?):(\d+(?:\.\d+)?)$/);
-  if (colon) {
-    const w = Number(colon[1]);
-    const h = Number(colon[2]);
-    if (w > 0 && h > 0) return w / h;
-  }
-  const numeric = Number(ratio);
-  if (Number.isFinite(numeric) && numeric > 0) return numeric;
-  return fallback;
-}
-
-function imagePlaceholderNeedsVariants(slide) {
-  if (!slide || slide.layout !== "imageText") return false;
-  const image = resolveImageInfo(slide.image);
-  if (!image.placeholder || !image.uncertainRatio) return false;
-  if (slide.placeholderVariants === false) return false;
-  if (slide.image && typeof slide.image === "object" && slide.image.variants === false) return false;
-  return true;
-}
-
-function splitImagePlaceholderSlide(slide) {
-  if (!imagePlaceholderNeedsVariants(slide)) return [slide];
-  const baseImage = slide.image && typeof slide.image === "object" && !Array.isArray(slide.image) ? slide.image : { mode: "placeholder" };
-  return [
-    {
-      ...clone(slide),
-      title: `${slide.title || "图文说明"}（横图方案）`,
-      image: { ...baseImage, mode: "placeholder", aspectRatio: "16:9", placement: "top", variants: false },
-      placement: "top",
-    },
-    {
-      ...clone(slide),
-      title: `${slide.title || "图文说明"}（侧图方案）`,
-      image: { ...baseImage, mode: "placeholder", aspectRatio: "4:3", placement: "side", variants: false },
-      placement: "side",
-    },
-  ];
-}
-
 function fitBoxToRatio(box, ratio = 1) {
   let { x, y, w, h } = box;
   const safeRatio = Number.isFinite(ratio) && ratio > 0 ? ratio : 1;
@@ -327,31 +238,7 @@ function imageFitMode(image, fallback = "cover") {
 
 function readDeck(inputFile) {
   const raw = fs.readFileSync(inputFile, "utf8");
-  return YAML.parse(raw);
-}
-
-function normalizeText(value) {
-  if (value === null || value === undefined) return "";
-  if (typeof value === "string") return value;
-  if (typeof value === "number" || typeof value === "boolean") return String(value);
-  if (Array.isArray(value)) return value.map(normalizeText).join(" ");
-  if (typeof value === "object") {
-    return Object.entries(value)
-      .map(([key, val]) => `${key}: ${normalizeText(val)}`)
-      .join(" ");
-  }
-  return String(value);
-}
-
-function getSpeakerNotesValue(slide) {
-  if (!slide || typeof slide !== "object") return undefined;
-  return slide.speakerNotes ?? slide.speaker_notes ?? slide.speakerScript ?? slide.speaker_script;
-}
-
-function normalizeSpeakerNotes(value) {
-  if (value === null || value === undefined) return "";
-  if (Array.isArray(value)) return value.map(normalizeText).filter(Boolean).join("\n");
-  return normalizeText(value).replace(/\r\n?/g, "\n").trim();
+  return parseDeckYaml(raw, inputFile);
 }
 
 function addSpeakerNotes(pptx, slideData) {
@@ -366,10 +253,6 @@ function normalizeLatex(value) {
     .replace(/\\\\([A-Za-z]+)/g, "\\$1")
     .replace(/([_^])\\([A-Za-z]+)(?![A-Za-z{])/g, "$1{\\$2}")
     .replace(/([_^])([A-Za-z0-9])(?![A-Za-z0-9{])/g, "$1{$2}");
-}
-
-function clone(value) {
-  return JSON.parse(JSON.stringify(value));
 }
 
 function normalizeFonts(fonts = {}) {
@@ -444,427 +327,6 @@ function estimateText(text, boxW, fontSize, opts = {}) {
 
 function estimateBulletHeight(text, boxW, fontSize) {
   return estimateText(text, Math.max(0.5, boxW - 0.34), fontSize, { lineHeight: 1.22 }).height + 0.14;
-}
-
-function splitBulletsSlide(slide) {
-  const bullets = slide.bullets || [];
-  const fontSize = slide.fontSize || 16;
-  const startY = slide.lead ? 2.92 : 1.72;
-  const available = 6.62 - startY;
-  const chunks = [];
-  let chunk = [];
-  let used = 0;
-  for (const bullet of bullets) {
-    const h = estimateBulletHeight(bullet, 10.4, fontSize);
-    if (chunk.length && used + h > available * OVERFLOW_GUARD) {
-      chunks.push(chunk);
-      chunk = [];
-      used = 0;
-    }
-    chunk.push(bullet);
-    used += h;
-  }
-  if (chunk.length) chunks.push(chunk);
-  if (chunks.length <= 1) return [slide];
-  return chunks.map((items, idx) => ({
-    ...clone(slide),
-    title: `${slide.title || "要点"}（${idx + 1}/${chunks.length}）`,
-    lead: idx === 0 ? slide.lead : undefined,
-    bullets: items,
-  }));
-}
-
-function estimateTableRowHeight(row, colW, fontSize) {
-  const heights = row.map((cell, idx) => estimateText(cell, colW[idx] || colW[0], fontSize, { lineHeight: 1.16, marginPt: 10 }).height + 0.16);
-  return Math.max(0.42, ...heights);
-}
-
-function splitTableSlide(slide) {
-  const columns = slide.columns || [];
-  const rows = slide.rows || [];
-  const fontSize = rows.length > 5 ? 8.5 : 10;
-  const tableW = 11.82;
-  const colW = columns.map(() => tableW / Math.max(1, columns.length));
-  const available = 4.95 - 0.5;
-  const chunks = [];
-  let chunk = [];
-  let used = 0;
-  for (const row of rows) {
-    const h = estimateTableRowHeight(row, colW, fontSize);
-    if (chunk.length && used + h > available * OVERFLOW_GUARD) {
-      chunks.push(chunk);
-      chunk = [];
-      used = 0;
-    }
-    chunk.push(row);
-    used += h;
-  }
-  if (chunk.length) chunks.push(chunk);
-  if (chunks.length <= 1) return [slide];
-  return chunks.map((items, idx) => ({
-    ...clone(slide),
-    title: `${slide.title || "表格"}（${idx + 1}/${chunks.length}）`,
-    rows: items,
-  }));
-}
-
-function splitReferencesSlide(slide) {
-  const items = slide.items || [];
-  const fontSize = slide.fontSize || 9.5;
-  const available = 4.95;
-  const chunks = [];
-  let chunk = [];
-  let used = 0;
-  for (const item of items) {
-    const h = estimateText(item, 11.1, fontSize, { lineHeight: 1.18 }).height + 0.11;
-    if (chunk.length && used + h > available * OVERFLOW_GUARD) {
-      chunks.push(chunk);
-      chunk = [];
-      used = 0;
-    }
-    chunk.push(item);
-    used += h;
-  }
-  if (chunk.length) chunks.push(chunk);
-  if (chunks.length <= 1) return [slide];
-  return chunks.map((itemsChunk, idx) => ({
-    ...clone(slide),
-    title: `${slide.title || "参考文献"}（${idx + 1}/${chunks.length}）`,
-    items: itemsChunk,
-  }));
-}
-
-function expandSlides(slides = []) {
-  return expandSlidesWithReport(slides).slides;
-}
-
-function expandSlidesWithReport(slides = []) {
-  const report = [];
-  const expanded = [];
-  slides.forEach((slide, index) => {
-    let parts;
-    if (slide.layout === "bullets") parts = splitBulletsSlide(slide);
-    else if (slide.layout === "table") parts = splitTableSlide(slide);
-    else if (slide.layout === "references") parts = splitReferencesSlide(slide);
-    else if (slide.layout === "imageText") parts = splitImagePlaceholderSlide(slide);
-    else parts = [slide];
-    if (parts.length > 1) {
-      report.push({
-        slideIndex: index + 1,
-        layout: slide.layout,
-        title: slide.title || slide.layout,
-        action: imagePlaceholderNeedsVariants(slide) ? "placeholderVariants" : "split",
-        parts: parts.length,
-      });
-    }
-    expanded.push(...parts);
-  });
-  return { slides: expanded, report };
-}
-
-function charCount(value) {
-  return [...normalizeText(value)].length;
-}
-
-function lineCount(value) {
-  const text = normalizeText(value);
-  if (!text) return 0;
-  return text.split(/\r?\n/).length;
-}
-
-function makeIssue(level, slideIndex, pathName, message, repair) {
-  return { level, slideIndex, path: pathName, message, repair };
-}
-
-function validateDeck(deck) {
-  const issues = [];
-  const slides = Array.isArray(deck?.slides) ? deck.slides : [];
-  const add = (level, slideIndex, pathName, message, repair) => issues.push(makeIssue(level, slideIndex, pathName, message, repair));
-  if (!deck || typeof deck !== "object") {
-    return {
-      errors: [makeIssue("error", 0, "deck", "Input must be a YAML object.", "Rewrite the deck as an object with meta and slides.")],
-      warnings: [],
-      repairPrompt: "deck: Rewrite the deck as an object with meta and slides.",
-    };
-  }
-  if (!Array.isArray(deck.slides)) {
-    add("error", 0, "slides", "`slides` must be an array.", "Return a top-level `slides` array.");
-  }
-
-  const maxText = (slideIndex, pathName, value, max, label = "text") => {
-    if (value === undefined || value === null || value === "") return;
-    const length = charCount(value);
-    if (length > max) add("warning", slideIndex, pathName, `${label} is ${length} chars; recommended max is ${max}.`, `Shorten ${pathName} to ${max} characters or split the slide.`);
-  };
-  const maxItems = (slideIndex, pathName, value, max) => {
-    if (!Array.isArray(value)) return;
-    if (value.length > max) add("warning", slideIndex, pathName, `${pathName} has ${value.length} items; recommended max is ${max}.`, `Keep only the strongest ${max} items or split into multiple slides.`);
-  };
-  const requireArray = (slideIndex, pathName, value) => {
-    if (value !== undefined && !Array.isArray(value)) add("error", slideIndex, pathName, `${pathName} must be an array.`, `Rewrite ${pathName} as a YAML list.`);
-  };
-  const checkBullets = (slideIndex, pathName, value, max = 5, textMax = 34) => {
-    requireArray(slideIndex, pathName, value);
-    maxItems(slideIndex, pathName, value, max);
-    if (Array.isArray(value)) value.forEach((item, idx) => maxText(slideIndex, `${pathName}[${idx}]`, item, textMax, "bullet"));
-  };
-  const checkImage = (slideIndex, pathName, value, options = {}) => {
-    if (value === undefined || value === null || value === "") return;
-    const image = resolveImageInfo(value);
-    if (image.placeholder) {
-      if (!image.prompt) add("warning", slideIndex, pathName, "Image placeholder has no prompt or description.", `Add ${pathName}.prompt so the placeholder tells the user what image to add later.`);
-      else maxText(slideIndex, `${pathName}.prompt`, image.prompt, 160, "image placeholder prompt");
-      if (image.uncertainRatio && !options.variants) add("warning", slideIndex, pathName, "Image placeholder aspect ratio is unknown.", "Set aspectRatio to 16:9, 4:3, 1:1, or 3:4.");
-      return;
-    }
-    if (!image.exists) {
-      add("error", slideIndex, pathName, `Image file does not exist: ${image.path}.`, `Fix ${pathName} to point to an existing image file.`);
-      return;
-    }
-    if (!image.width || !image.height) {
-      add("warning", slideIndex, pathName, `Image dimensions could not be read: ${image.path}.`, "Use PNG, JPEG, GIF, or WebP when automatic image layout is needed.");
-    }
-  };
-
-  slides.forEach((slide, idx) => {
-    const slideIndex = idx + 1;
-    if (!slide || typeof slide !== "object") {
-      add("error", slideIndex, "slide", "Each slide must be an object.", "Rewrite this slide as a YAML object with a `layout` field.");
-      return;
-    }
-    if (!SUPPORTED_LAYOUTS.has(slide.layout)) {
-      add("error", slideIndex, "layout", `Unknown layout: ${slide.layout || "(missing)"}.`, `Use one of: ${[...SUPPORTED_LAYOUTS].join(", ")}.`);
-      return;
-    }
-    maxText(slideIndex, "title", slide.title, 24, "title");
-    const speakerNotesRaw = getSpeakerNotesValue(slide);
-    if (speakerNotesRaw !== undefined) {
-      if (typeof speakerNotesRaw !== "string" && !Array.isArray(speakerNotesRaw)) {
-        add("warning", slideIndex, "speakerNotes", "speakerNotes should be a string block or an array of short strings.", "Rewrite speakerNotes as a YAML block scalar or string list.");
-      }
-      const speakerNotes = normalizeSpeakerNotes(speakerNotesRaw);
-      maxText(slideIndex, "speakerNotes", speakerNotes, 1200, "speaker notes");
-      if (lineCount(speakerNotes) > 30) add("warning", slideIndex, "speakerNotes", `speakerNotes has ${lineCount(speakerNotes)} lines; recommended max is 30.`, "Shorten the speaker script or split it across slides.");
-    }
-
-    switch (slide.layout) {
-      case "agenda":
-        checkBullets(slideIndex, "items", slide.items, 7, 24);
-        break;
-      case "section":
-        maxText(slideIndex, "subtitle", slide.subtitle, 42, "subtitle");
-        break;
-      case "bullets":
-        maxText(slideIndex, "lead", slide.lead, 58, "lead");
-        checkBullets(slideIndex, "bullets", slide.bullets, 8, 38);
-        break;
-      case "claim":
-        maxText(slideIndex, "claim", slide.claim, 54, "claim");
-        checkBullets(slideIndex, "evidence", slide.evidence, 5, 38);
-        break;
-      case "twoColumn":
-        ["left", "right"].forEach((side) => {
-          maxText(slideIndex, `${side}.title`, slide[side]?.title, 16, "column title");
-          maxText(slideIndex, `${side}.text`, slide[side]?.text, 105, "column text");
-          checkBullets(slideIndex, `${side}.bullets`, slide[side]?.bullets, 5, 34);
-        });
-        break;
-      case "cards":
-        maxItems(slideIndex, "cards", slide.cards, 6);
-        if (Array.isArray(slide.cards)) slide.cards.forEach((card, cardIdx) => {
-          maxText(slideIndex, `cards[${cardIdx}].title`, card.title, 14, "card title");
-          maxText(slideIndex, `cards[${cardIdx}].text`, card.text, 52, "card text");
-        });
-        break;
-      case "table":
-        requireArray(slideIndex, "columns", slide.columns);
-        requireArray(slideIndex, "rows", slide.rows);
-        if (Array.isArray(slide.columns) && slide.columns.length > 5) add("warning", slideIndex, "columns", `Table has ${slide.columns.length} columns; recommended max is 5.`, "Split wide tables by columns or use multiple slides.");
-        if (Array.isArray(slide.rows)) slide.rows.forEach((row, rowIdx) => {
-          if (!Array.isArray(row)) add("error", slideIndex, `rows[${rowIdx}]`, "Each table row must be an array.", `Rewrite rows[${rowIdx}] as a YAML list.`);
-          else row.forEach((cell, cellIdx) => maxText(slideIndex, `rows[${rowIdx}][${cellIdx}]`, cell, 42, "table cell"));
-        });
-        break;
-      case "comparison":
-        ["left", "right"].forEach((side) => {
-          maxText(slideIndex, `${side}.title`, slide[side]?.title, 18, "comparison title");
-          checkBullets(slideIndex, `${side}.bullets`, slide[side]?.bullets, 5, 32);
-        });
-        break;
-      case "timeline":
-        maxItems(slideIndex, "items", slide.items, 6);
-        if (Array.isArray(slide.items)) slide.items.forEach((item, itemIdx) => {
-          maxText(slideIndex, `items[${itemIdx}].title`, item.title, 10, "timeline title");
-          maxText(slideIndex, `items[${itemIdx}].text`, item.text, 24, "timeline text");
-        });
-        break;
-      case "process":
-        maxItems(slideIndex, "steps", slide.steps, 5);
-        if (Array.isArray(slide.steps)) slide.steps.forEach((step, stepIdx) => {
-          maxText(slideIndex, `steps[${stepIdx}].title`, step.title, 8, "step title");
-          maxText(slideIndex, `steps[${stepIdx}].text`, step.text, 24, "step text");
-        });
-        break;
-      case "architecture":
-        maxItems(slideIndex, "layers", slide.layers, 4);
-        if (Array.isArray(slide.layers)) slide.layers.forEach((layer, layerIdx) => {
-          maxText(slideIndex, `layers[${layerIdx}].title`, layer.title, 8, "layer title");
-          maxItems(slideIndex, `layers[${layerIdx}].components`, layer.components, 5);
-          if (Array.isArray(layer.components)) layer.components.forEach((component, compIdx) => maxText(slideIndex, `layers[${layerIdx}].components[${compIdx}]`, component, 10, "component label"));
-          maxText(slideIndex, `layers[${layerIdx}].note`, layer.note, 44, "layer note");
-        });
-        break;
-      case "ablation":
-        maxText(slideIndex, "baseline", slide.baseline, 58, "baseline");
-        maxItems(slideIndex, "items", slide.items, 6);
-        if (Array.isArray(slide.items)) slide.items.forEach((item, itemIdx) => ["factor", "setting", "delta", "conclusion"].forEach((key) => maxText(slideIndex, `items[${itemIdx}].${key}`, item[key], key === "conclusion" ? 28 : 18, key)));
-        break;
-      case "caseStudy":
-        checkImage(slideIndex, "image", slide.image);
-        checkBullets(slideIndex, "context", slide.context, 2, 34);
-        checkBullets(slideIndex, "method", slide.method, 2, 34);
-        checkBullets(slideIndex, "result", slide.result, 2, 34);
-        maxText(slideIndex, "caption", slide.caption, 40, "caption");
-        break;
-      case "imageGrid":
-        maxItems(slideIndex, "images", slide.images, 6);
-        if (Array.isArray(slide.images)) slide.images.forEach((image, imageIdx) => {
-          checkImage(slideIndex, `images[${imageIdx}]`, image);
-          const caption = image && typeof image === "object" ? image.caption : "";
-          maxText(slideIndex, `images[${imageIdx}].caption`, caption, 16, "image caption");
-        });
-        break;
-      case "code":
-        if (lineCount(slide.code || slide.algorithm) > 12) add("warning", slideIndex, "code", `Code block has ${lineCount(slide.code || slide.algorithm)} lines; recommended max is 12.`, "Summarize the code as pseudocode under 12 short lines.");
-        normalizeText(slide.code || slide.algorithm).split(/\r?\n/).forEach((line, lineIdx) => maxText(slideIndex, `code line ${lineIdx + 1}`, line, 72, "code line"));
-        checkBullets(slideIndex, "notes", slide.notes, 5, 32);
-        break;
-      case "appendix":
-        maxItems(slideIndex, "items", slide.items, 8);
-        if (Array.isArray(slide.items)) slide.items.forEach((item, itemIdx) => {
-          maxText(slideIndex, `items[${itemIdx}].title`, item.title, 14, "appendix title");
-          maxText(slideIndex, `items[${itemIdx}].text`, item.text, 42, "appendix text");
-        });
-        break;
-      case "flowchart": {
-        requireArray(slideIndex, "nodes", slide.nodes);
-        if (!Array.isArray(slide.nodes) || !slide.nodes.length) add("error", slideIndex, "nodes", "Flowchart requires at least one node.", "Add a `nodes` list with id and text fields.");
-        maxItems(slideIndex, "nodes", slide.nodes, 10);
-        const ids = new Set();
-        if (Array.isArray(slide.nodes)) slide.nodes.forEach((node, nodeIdx) => {
-          const id = node.id || String(nodeIdx + 1);
-          if (ids.has(id)) add("error", slideIndex, `nodes[${nodeIdx}].id`, `Duplicate flowchart node id: ${id}.`, "Use unique ids for every flowchart node.");
-          ids.add(id);
-          maxText(slideIndex, `nodes[${nodeIdx}].text`, node.text || node.label, 12, "flowchart node text");
-          maxText(slideIndex, `nodes[${nodeIdx}].note`, node.note, 22, "flowchart node note");
-        });
-        if (Array.isArray(slide.edges)) slide.edges.forEach((edge, edgeIdx) => {
-          if (!ids.has(edge.from)) add("error", slideIndex, `edges[${edgeIdx}].from`, `Unknown flowchart edge source: ${edge.from}.`, "Point edge.from to an existing node id.");
-          if (!ids.has(edge.to)) add("error", slideIndex, `edges[${edgeIdx}].to`, `Unknown flowchart edge target: ${edge.to}.`, "Point edge.to to an existing node id.");
-        });
-        maxText(slideIndex, "note", slide.note, 56, "flowchart note");
-        break;
-      }
-      case "chart": {
-        const type = normalizeText(slide.type || "bar").toLowerCase();
-        if (!CHART_TYPES.has(type)) add("error", slideIndex, "type", `Unsupported chart type: ${slide.type}.`, "Use chart type bar, line, pie, doughnut, scatter, or area.");
-        const categories = slide.categories || slide.labels || [];
-        if (!Array.isArray(categories) || !categories.length) add("error", slideIndex, "categories", "Chart requires categories or labels.", "Add a `categories` list whose length matches every series values list.");
-        maxItems(slideIndex, "categories", categories, type === "pie" || type === "doughnut" ? 6 : 8);
-        if (Array.isArray(categories)) categories.forEach((category, catIdx) => maxText(slideIndex, `categories[${catIdx}]`, category, 18, "category label"));
-        if (slide.series !== undefined && !Array.isArray(slide.series)) add("error", slideIndex, "series", "`series` must be an array.", "Rewrite chart series as a YAML list.");
-        if (!Array.isArray(slide.series) && slide.values === undefined) add("error", slideIndex, "series", "Chart requires `series` or shortcut `values`.", "Add `series` with numeric values, or add a single `values` list.");
-        const seriesList = Array.isArray(slide.series) ? slide.series : slide.values !== undefined ? [{ name: slide.name || "Series", values: slide.values }] : [];
-        seriesList.forEach((series, seriesIdx) => {
-          maxText(slideIndex, `series[${seriesIdx}].name`, series.name, 16, "series name");
-          if (!Array.isArray(series.values)) add("error", slideIndex, `series[${seriesIdx}].values`, "Chart series values must be an array.", `Rewrite series[${seriesIdx}].values as a numeric list.`);
-          else {
-            if (Array.isArray(categories) && categories.length && series.values.length !== categories.length) add("error", slideIndex, `series[${seriesIdx}].values`, `Series has ${series.values.length} values but categories has ${categories.length}.`, "Make every chart series have the same number of values as categories.");
-            series.values.forEach((value, valueIdx) => {
-              if (!Number.isFinite(Number(value))) add("error", slideIndex, `series[${seriesIdx}].values[${valueIdx}]`, `Chart value is not numeric: ${value}.`, "Use numeric chart values only.");
-            });
-          }
-        });
-        maxText(slideIndex, "caption", slide.caption, 58, "chart caption");
-        break;
-      }
-      case "problemSolution":
-        ["problem", "solution", "impact"].forEach((key) => {
-          maxText(slideIndex, `${key}.title`, slide[key]?.title, 12, `${key} title`);
-          checkBullets(slideIndex, `${key}.bullets`, slide[key]?.bullets, 4, 26);
-        });
-        break;
-      case "painOpportunity":
-        ["status", "pain", "opportunity"].forEach((key) => {
-          maxText(slideIndex, `${key}.title`, slide[key]?.title, 12, `${key} title`);
-          checkBullets(slideIndex, `${key}.bullets`, slide[key]?.bullets, 4, 30);
-        });
-        break;
-      case "experimentDesign":
-        ["dataset", "variables", "metrics", "baselines"].forEach((key) => checkBullets(slideIndex, key, Array.isArray(slide[key]) ? slide[key] : slide[key] ? [slide[key]] : [], 4, 26));
-        maxItems(slideIndex, "procedure", slide.procedure, 5);
-        break;
-      case "resultAnalysis":
-        maxText(slideIndex, "finding", slide.finding, 52, "finding");
-        maxItems(slideIndex, "metrics", slide.metrics, 3);
-        checkBullets(slideIndex, "analysis", slide.analysis, 4, 38);
-        break;
-      case "riskMitigation":
-        maxItems(slideIndex, "items", slide.items, 5);
-        if (Array.isArray(slide.items)) slide.items.forEach((item, itemIdx) => ["risk", "impact", "mitigation"].forEach((key) => maxText(slideIndex, `items[${itemIdx}].${key}`, item[key], 28, key)));
-        break;
-      case "contribution":
-        maxItems(slideIndex, "items", slide.items, 4);
-        if (Array.isArray(slide.items)) slide.items.forEach((item, itemIdx) => {
-          maxText(slideIndex, `items[${itemIdx}].title`, item.title, 14, "contribution title");
-          maxText(slideIndex, `items[${itemIdx}].text`, item.text, 44, "contribution text");
-        });
-        break;
-      case "summary":
-        maxText(slideIndex, "takeaway", slide.takeaway, 52, "takeaway");
-        checkBullets(slideIndex, "points", slide.points, 5, 36);
-        break;
-      case "metrics":
-        maxItems(slideIndex, "metrics", slide.metrics, 4);
-        if (Array.isArray(slide.metrics)) slide.metrics.forEach((metric, metricIdx) => {
-          maxText(slideIndex, `metrics[${metricIdx}].value`, metric.value, 8, "metric value");
-          maxText(slideIndex, `metrics[${metricIdx}].label`, metric.label, 12, "metric label");
-          maxText(slideIndex, `metrics[${metricIdx}].note`, metric.note, 30, "metric note");
-        });
-        break;
-      case "matrix":
-        maxItems(slideIndex, "cells", slide.cells, 4);
-        if (Array.isArray(slide.cells)) slide.cells.forEach((cell, cellIdx) => {
-          maxText(slideIndex, `cells[${cellIdx}].title`, cell.title, 18, "matrix title");
-          maxText(slideIndex, `cells[${cellIdx}].text`, cell.text, 52, "matrix text");
-        });
-        break;
-      case "quote":
-        maxText(slideIndex, "quote", slide.quote, 70, "quote");
-        break;
-      case "formula":
-        if (!slide.formula || (typeof slide.formula === "object" && !slide.formula.latex)) add("warning", slideIndex, "formula", "Formula slide has no formula.", "Add formula.latex or change the slide layout.");
-        checkBullets(slideIndex, "explanation", slide.explanation || slide.notes, 4, 48);
-        break;
-      case "references":
-        requireArray(slideIndex, "items", slide.items);
-        if (Array.isArray(slide.items)) slide.items.forEach((item, itemIdx) => maxText(slideIndex, `items[${itemIdx}]`, item, 140, "reference"));
-        break;
-      case "imageText":
-        checkImage(slideIndex, "image", slide.image, { variants: imagePlaceholderNeedsVariants(slide) });
-        checkBullets(slideIndex, "text", slide.text, 5, 38);
-        break;
-      default:
-        break;
-    }
-  });
-
-  const errors = issues.filter((item) => item.level === "error");
-  const warnings = issues.filter((item) => item.level === "warning");
-  const repairPrompt = issues.length
-    ? issues.map((item) => `Slide ${item.slideIndex} ${item.path}: ${item.repair || item.message}`).join("\n")
-    : "";
-  return { errors, warnings, repairPrompt };
 }
 
 function addText(slide, text, x, y, w, h, opts = {}) {
@@ -2140,22 +1602,15 @@ function createDeck(deck, options = {}) {
 }
 
 function listLayouts() {
-  return [...SUPPORTED_LAYOUTS];
+  return coreListLayouts();
+}
+
+function validateDeck(deck) {
+  return coreValidateDeck(deck, { resolveImageInfo });
 }
 
 function checkDeck(deck) {
-  const validation = validateDeck(deck);
-  const preflightOnly = expandSlidesWithReport(deck.slides || []);
-  return {
-    inputSlides: (deck.slides || []).length,
-    outputSlides: preflightOnly.slides.length,
-    actions: preflightOnly.report,
-    validation: {
-      errors: validation.errors,
-      warnings: validation.warnings,
-    },
-    repairPrompt: validation.repairPrompt,
-  };
+  return coreCheckDeck(deck, { resolveImageInfo });
 }
 
 function checkDeckFile(input) {

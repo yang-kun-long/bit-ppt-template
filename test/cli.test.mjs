@@ -17,6 +17,10 @@ import {
   listLayouts,
   validateDeck,
 } from "../src/generate.mjs";
+import {
+  PPTX_MIME,
+  createBitPptHttpServer,
+} from "../src/http-server.mjs";
 
 const execFileAsync = promisify(execFile);
 const CLI = path.join(ROOT, "bin", "bit-ppt.mjs");
@@ -66,6 +70,19 @@ async function withMcpClient(callback) {
     return await callback(client);
   } finally {
     await client.close();
+  }
+}
+
+async function withHttpServer(callback, options = {}) {
+  const server = createBitPptHttpServer(options);
+  await new Promise((resolve) => server.listen(0, "127.0.0.1", resolve));
+  try {
+    const address = server.address();
+    return await callback(`http://127.0.0.1:${address.port}`);
+  } finally {
+    await new Promise((resolve, reject) => {
+      server.close((error) => error ? reject(error) : resolve());
+    });
   }
 }
 
@@ -224,6 +241,113 @@ test("CLI check --json exits successfully for valid deck", async () => {
   assert.equal(result.status, 0);
   const payload = JSON.parse(result.stdout);
   assert.equal(payload.validation.errors.length, 0);
+});
+
+test("HTTP /check matches checkDeck for raw YAML", async () => {
+  await withHttpServer(async (baseUrl) => {
+    const deck = {
+      slides: [
+        {
+          layout: "imageText",
+          title: "HTTP check",
+          image: {
+            mode: "placeholder",
+            prompt: "A generated diagram placeholder.",
+          },
+          text: ["Use shared validation."],
+        },
+      ],
+    };
+    const deckYaml = YAML.stringify(deck);
+    const response = await fetch(`${baseUrl}/check`, {
+      method: "POST",
+      headers: { "content-type": "application/yaml" },
+      body: deckYaml,
+    });
+    assert.equal(response.status, 200);
+    assert.deepEqual(await response.json(), checkDeck(deck));
+  });
+});
+
+test("HTTP /check returns line and column for YAML syntax errors", async () => {
+  await withHttpServer(async (baseUrl) => {
+    const response = await fetch(`${baseUrl}/check`, {
+      method: "POST",
+      headers: { "content-type": "application/yaml" },
+      body: "slides:\n  - layout bullets\n    title: Broken\n",
+    });
+    assert.equal(response.status, 400);
+    const payload = await response.json();
+    assert.match(payload.error, /line \d+, column \d+/);
+    assert.equal(payload.syntax.errors[0].level, "error");
+    assert.ok(Number.isInteger(payload.syntax.errors[0].line));
+    assert.ok(Number.isInteger(payload.syntax.errors[0].column));
+    assert.match(payload.syntax.errors[0].context, /layout bullets/);
+    assert.match(payload.repairPrompt, /Fix the YAML syntax first/);
+  });
+});
+
+test("HTTP /generate returns a valid PPTX download", async () => {
+  await withHttpServer(async (baseUrl) => {
+    const deckYaml = YAML.stringify({
+      meta: {
+        title: "HTTP PPTX",
+      },
+      slides: [
+        {
+          layout: "bullets",
+          title: "HTTP 生成",
+          bullets: ["上传 YAML。", "下载 PPTX。"],
+        },
+      ],
+    });
+    const response = await fetch(`${baseUrl}/generate`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ deckYaml, outputName: "http-test" }),
+    });
+    assert.equal(response.status, 200);
+    assert.equal(response.headers.get("content-type"), PPTX_MIME);
+    assert.match(response.headers.get("content-disposition"), /http-test\.pptx/);
+    const buffer = Buffer.from(await response.arrayBuffer());
+    assert.ok(buffer.length > 1000);
+    const zip = await JSZip.loadAsync(buffer);
+    assert.ok(zip.file("ppt/presentation.xml"));
+  });
+});
+
+test("HTTP token auth protects check and generate when configured", async () => {
+  await withHttpServer(async (baseUrl) => {
+    const deckYaml = YAML.stringify({
+      slides: [
+        {
+          layout: "bullets",
+          title: "Auth check",
+          bullets: ["Protected endpoint."],
+        },
+      ],
+    });
+    const health = await fetch(`${baseUrl}/health`);
+    assert.equal((await health.json()).authRequired, true);
+
+    const unauthorized = await fetch(`${baseUrl}/check`, {
+      method: "POST",
+      headers: { "content-type": "application/yaml" },
+      body: deckYaml,
+    });
+    assert.equal(unauthorized.status, 401);
+
+    const authorized = await fetch(`${baseUrl}/check`, {
+      method: "POST",
+      headers: {
+        "authorization": "Bearer test-token",
+        "content-type": "application/yaml",
+      },
+      body: deckYaml,
+    });
+    assert.equal(authorized.status, 200);
+    assert.equal((await authorized.json()).validation.errors.length, 0);
+  }, { authToken: "test-token" });
 });
 
 test("CLI check exits non-zero for invalid deck", async () => {

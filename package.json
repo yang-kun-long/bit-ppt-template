@@ -14,10 +14,12 @@
   ],
   "bin": {
     "bit-ppt": "bin/bit-ppt.mjs",
-    "bit-ppt-mcp": "bin/bit-ppt-mcp.mjs"
+    "bit-ppt-mcp": "bin/bit-ppt-mcp.mjs",
+    "bit-ppt-http": "bin/bit-ppt-http.mjs"
   },
   "scripts": {
     "test": "node --test",
+    "serve": "node bin/bit-ppt-http.mjs",
     "build:ppt": "node bin/bit-ppt.mjs generate content/example.yaml output/example.pptx",
     "check:ppt": "node bin/bit-ppt.mjs check content/example.yaml --json",
     "build:body-layouts": "node bin/bit-ppt.mjs generate content/body-layout-test.yaml output/body-layout-test.pptx",

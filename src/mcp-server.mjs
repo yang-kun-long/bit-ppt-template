@@ -3,7 +3,7 @@ import path from "node:path";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import * as z from "zod/v4";
-import YAML from "yaml";
+import { parseDeckYaml } from "./core/yaml-parse.mjs";
 import {
   ROOT,
   checkDeck,
@@ -40,8 +40,8 @@ function resolveLocalPath(value) {
 }
 
 function loadDeckArgs(args) {
-  if (args.deckYaml) return YAML.parse(args.deckYaml);
-  if (args.inputPath) return YAML.parse(fs.readFileSync(resolveLocalPath(args.inputPath), "utf8"));
+  if (args.deckYaml) return parseDeckYaml(args.deckYaml, "deckYaml");
+  if (args.inputPath) return parseDeckYaml(fs.readFileSync(resolveLocalPath(args.inputPath), "utf8"), args.inputPath);
   throw new Error("Provide either inputPath or deckYaml.");
 }
 

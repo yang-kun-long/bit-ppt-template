@@ -76,25 +76,15 @@ node bin/bit-ppt.mjs generate content/example.yaml output/example.pptx --json --
 
 ## Release Targets
 
-本仓库采用单主干、多入口策略。CLI、MCP 和未来在线服务都应复用同一套核心生成逻辑。
+本仓库采用单主干、多入口策略。CLI、MCP 和 Node HTTP 服务都复用同一套核心生成逻辑。
 
 当前状态：
 
 - CLI：已支持，入口为 `bit-ppt` 或 `node bin/bit-ppt.mjs`
 - MCP：已支持，入口为 `bit-ppt-mcp` 或 `node bin/bit-ppt-mcp.mjs`
-- Cloudflare Worker / HTTP API：已有可运行 spike，当前只支持 `/health` 和 `/check`
+- Node HTTP API：已支持，入口为 `bit-ppt-http` 或 `node bin/bit-ppt-http.mjs`
 
 当前包仍设置为 `private: true`，`v0.2.0` 先作为本地和 Git tag 里程碑，不直接发布 npm。
-
-Worker spike 位于 `workers/bit-ppt-worker`，用于验证未来在线服务的 API 形态。
-它目前不生成 PPTX，也不支持 OMML，仅做 YAML 解析、基础校验和占位图预检：
-
-```powershell
-cd workers/bit-ppt-worker
-npm install
-npm run check
-npm run dev
-```
 
 ## CLI 命令
 
@@ -105,6 +95,7 @@ bit-ppt list-layouts [--json]
 bit-ppt guide [topic] [name] [--json]
 bit-ppt doctor [--json]
 bit-ppt-mcp
+bit-ppt-http
 ```
 
 常用命令：
@@ -166,6 +157,93 @@ MCP 客户端配置示例：
   "inputPath": "content/example.yaml",
   "outputPath": "output/example-from-mcp.pptx",
   "strict": true
+}
+```
+
+## Node HTTP API
+
+项目提供一个轻量 Node HTTP 服务，用于上传 YAML 并下载生成的 PPTX。
+
+本地启动：
+
+```powershell
+npm run serve
+```
+
+或指定地址：
+
+```powershell
+node bin/bit-ppt-http.mjs --host 127.0.0.1 --port 3000
+```
+
+公网部署时建议配置 token 和生成并发上限：
+
+```powershell
+$env:BIT_PPT_TOKEN="change-this-token"
+$env:BIT_PPT_MAX_GENERATE_CONCURRENCY="1"
+npm run serve
+```
+
+Linux systemd 可设置同名环境变量。设置 `BIT_PPT_TOKEN` 后，`/check`
+和 `/generate` 必须携带：
+
+```http
+Authorization: Bearer change-this-token
+```
+
+端点：
+
+- `GET /health`
+- `POST /check`
+- `POST /generate`
+
+请求体支持 raw YAML，或 JSON：
+
+```json
+{
+  "deckYaml": "slides:\n  - layout: bullets\n    title: Demo\n    bullets:\n      - Upload YAML\n      - Download PPTX\n",
+  "outputName": "demo"
+}
+```
+
+PowerShell 示例：
+
+```powershell
+Invoke-RestMethod `
+  -Method Post `
+  -Uri http://127.0.0.1:3000/check `
+  -ContentType "application/json" `
+  -Headers @{ Authorization = "Bearer change-this-token" } `
+  -Body '{"deckYaml":"slides:\n  - layout: bullets\n    title: Demo\n    bullets:\n      - Upload YAML\n"}'
+
+Invoke-WebRequest `
+  -Method Post `
+  -Uri http://127.0.0.1:3000/generate `
+  -ContentType "application/json" `
+  -Headers @{ Authorization = "Bearer change-this-token" } `
+  -Body '{"deckYaml":"slides:\n  - layout: bullets\n    title: Demo\n    bullets:\n      - Upload YAML\n      - Download PPTX\n","outputName":"demo"}' `
+  -OutFile output/demo.pptx
+```
+
+YAML 语法错误会返回结构化诊断，适合网页直接展示给用户复制回大模型：
+
+```json
+{
+  "error": "deckYaml syntax error at line 2, column 5: ...",
+  "syntax": {
+    "errors": [
+      {
+        "level": "error",
+        "code": "MULTILINE_IMPLICIT_KEY",
+        "message": "Implicit keys need to be on a single line",
+        "line": 2,
+        "column": 5,
+        "context": "1 | slides:\n2 |   - layout bullets\n3 |     title: Broken",
+        "pointer": "    ^"
+      }
+    ]
+  },
+  "repairPrompt": "deckYaml syntax error at line 2, column 5: ...\nFix the YAML syntax first, then keep the deck schema unchanged."
 }
 ```
 
@@ -464,7 +542,11 @@ npm pack --dry-run
 
 ```text
 bin/bit-ppt.mjs          CLI 入口
+bin/bit-ppt-http.mjs     Node HTTP 入口
+bin/bit-ppt-mcp.mjs      MCP 入口
+src/core/                纯校验和预检 core
 src/generate.mjs         核心生成器
+src/http-server.mjs      Node HTTP 服务
 src/layout-guides.mjs    面向 AI 的结构化 guide
 content/                 示例 YAML 和测试 fixture
 assets/                  BIT 风格素材
@@ -479,5 +561,5 @@ AGENTS.md                给 coding agent 的项目交接说明
 - 不依赖 Pandoc、LaTeX、Beamer
 - 不把整页幻灯片渲染成截图
 - 优先生成可编辑 PPTX 对象
-- CLI、未来 MCP 和其他集成都复用同一套核心实现
+- CLI、MCP、Node HTTP 和其他集成都复用同一套核心实现
 - 对 AI 友好：结构化 guide、JSON 输出、strict 模式、repairPrompt
