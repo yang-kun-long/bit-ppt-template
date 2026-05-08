@@ -5,6 +5,7 @@ import path from "node:path";
 import { execFile } from "node:child_process";
 import { promisify } from "node:util";
 import test from "node:test";
+import JSZip from "jszip";
 import YAML from "yaml";
 import {
   ROOT,
@@ -82,6 +83,7 @@ test("CLI help points to progressive guide commands", async () => {
   const result = await runCli(["--help"]);
   assert.equal(result.status, 0);
   assert.match(result.stdout, /bit-ppt guide layout imageText/);
+  assert.match(result.stdout, /bit-ppt guide speaker-notes/);
   assert.match(result.stdout, /bit-ppt doctor/);
   assert.match(result.stdout, /Progressive guide/);
 });
@@ -106,6 +108,16 @@ test("CLI guide schema --json returns layout schema", async () => {
   const payload = JSON.parse(result.stdout);
   assert.equal(payload.layout, "imageText");
   assert.equal(payload.fields.image.required, true);
+  assert.equal(payload.commonFields.speakerNotes.type, "string | string[]");
+});
+
+test("CLI guide speaker-notes returns focused guide", async () => {
+  const result = await runCli(["guide", "speaker-notes", "--json"]);
+  assert.equal(result.status, 0);
+  const payload = JSON.parse(result.stdout);
+  assert.equal(payload.topic, "speaker-notes");
+  assert.equal(payload.fields.speakerNotes.type, "string | string[]");
+  assert.match(payload.notes.join("\n"), /plain text/);
 });
 
 test("CLI guide example --json returns example deck fragment", async () => {
@@ -170,6 +182,33 @@ test("generateDeckFile writes a PPTX", async () => {
   assert.equal(result.validation.errors.length, 0);
   assert.ok(fs.existsSync(result.output));
   assert.ok(fs.statSync(result.output).size > 1000);
+});
+
+test("generateDeckFile writes speaker notes into notes slides", async () => {
+  const deckFile = writeYamlDeck({
+    meta: {
+      title: "Speaker notes test",
+    },
+    slides: [
+      {
+        layout: "bullets",
+        title: "备注测试",
+        bullets: ["页面正文保持可编辑。"],
+        speakerNotes: [
+          "第一段演讲稿会写入 PowerPoint 备注区。",
+          "公式先按粗文字保留：$L(\\theta)$。",
+        ],
+      },
+    ],
+  });
+  const output = path.join(deckFile.dir, "speaker-notes.pptx");
+  const result = await generateDeckFile(deckFile.path, output);
+  assert.equal(result.validation.errors.length, 0);
+
+  const zip = await JSZip.loadAsync(fs.readFileSync(result.output));
+  const notesXml = await zip.file("ppt/notesSlides/notesSlide1.xml").async("string");
+  assert.match(notesXml, /第一段演讲稿/);
+  assert.match(notesXml, /\$L\(\\theta\)\$/);
 });
 
 test("validateDeck reports missing image paths", () => {

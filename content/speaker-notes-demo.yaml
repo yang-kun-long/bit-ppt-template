@@ -1,0 +1,30 @@
+meta:
+  title: 演讲者备注示例
+  subtitle: speakerNotes demo
+  author: BIT PPT Template Generator
+  date: 2026.05
+
+slides:
+  - layout: title
+    speakerNotes: |
+      开场先说明这是一份备注功能演示。
+      备注内容不会显示在幻灯片画布上，只会进入 PowerPoint/WPS 的备注区。
+
+  - layout: bullets
+    title: 备注功能验证
+    lead: 每页可以携带独立演讲稿。
+    bullets:
+      - 页面正文仍然是可编辑文本框。
+      - 备注通过 speakerNotes 写入真实 notesSlide。
+      - 备注中的公式暂时按普通文本保留，例如 $L(\theta)$。
+    speakerNotes:
+      - 这一页重点展示 speakerNotes 的字符串数组写法。
+      - 打开 PPT 后，在备注区应该能看到这两段演讲稿。
+      - 公式示例 $L(\theta)$ 目前保留为普通文本，后续再做备注 OMML。
+
+  - layout: closing
+    title: 谢谢
+    subtitle: 备注演示结束
+    speakerNotes: |
+      最后一页也有独立备注。
+      可以用于提醒答辩收尾、致谢和引导提问。

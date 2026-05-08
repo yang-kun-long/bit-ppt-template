@@ -1,9 +1,34 @@
 const writingRules = [
   "Keep slide text short and concrete; use validation warnings as rewrite hints.",
   "Prefer editable PPTX objects: text boxes, shapes, tables, charts, OMML formulas, and native images.",
+  "Use `speakerNotes` for presenter scripts; these notes are written to the PPTX notes pane, not the slide canvas.",
   "Use local image paths relative to the project root unless an integration provides assets separately.",
   "Run `bit-ppt check <deck.yaml> --json` before generation and use `repairPrompt` to revise content.",
 ];
+
+const speakerNotesGuide = {
+  topic: "speaker-notes",
+  purpose: "Add PowerPoint/WPS speaker notes to any slide without rendering them on the slide canvas.",
+  fields: {
+    speakerNotes: { type: "string | string[]", required: false },
+  },
+  aliases: ["speaker_notes", "speakerScript", "speaker_script"],
+  limits: {
+    speakerNotes: { recommendedChars: 1200, recommendedLines: 30 },
+  },
+  notes: [
+    "Use a YAML block scalar for paragraph-style presenter scripts.",
+    "Use a string list when the script is naturally segmented into short beats.",
+    "Formula text in speaker notes is kept as plain text for now, for example `$L(\\theta)$`.",
+    "`notes` remains layout-specific slide content in some layouts; use `speakerNotes` for the actual notes pane.",
+  ],
+  example: {
+    layout: "bullets",
+    title: "核心观点",
+    bullets: ["输出是可编辑 PPTX。"],
+    speakerNotes: "这一页先解释为什么选择 YAML 到 PPTX 的路线。\n公式暂时按普通文本保留，例如 $L(\\theta)$。",
+  },
+};
 
 const layoutGuides = {
   imageText: {
@@ -177,6 +202,7 @@ function getLayoutSchema(layout) {
   if (!guide) return null;
   return {
     layout: guide.layout,
+    commonFields: speakerNotesGuide.fields,
     fields: guide.fields,
     limits: guide.limits,
   };
@@ -204,10 +230,15 @@ function getGuideOverview() {
       "bit-ppt guide layout <name>",
       "bit-ppt guide schema <name> --json",
       "bit-ppt guide example <name>",
+      "bit-ppt guide speaker-notes",
       "bit-ppt guide writing-rules",
     ],
     guidedLayouts: listGuideLayouts(),
   };
+}
+
+function getSpeakerNotesGuide() {
+  return { ...speakerNotesGuide };
 }
 
 function getWritingRules() {
@@ -221,6 +252,7 @@ function getGuideWorkflow() {
 function getAllGuides() {
   return {
     overview: getGuideOverview(),
+    speakerNotes: getSpeakerNotesGuide(),
     writingRules: getWritingRules(),
     layouts: Object.fromEntries(listGuideLayouts().map((layout) => [layout, getLayoutGuide(layout)])),
   };
@@ -233,6 +265,7 @@ export {
   getLayoutExample,
   getLayoutGuide,
   getLayoutSchema,
+  getSpeakerNotesGuide,
   getWritingRules,
   listGuideLayouts,
 };

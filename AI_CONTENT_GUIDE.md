@@ -29,6 +29,25 @@ slides:
 For cross-platform decks, use a commonly installed CJK font such as
 `Noto Sans CJK SC` or `Source Han Sans SC`, or pass `--font-cn` in the CLI.
 
+## Speaker Notes
+
+Every slide may include `speakerNotes` for the PowerPoint/WPS notes pane. These
+notes are not rendered on the slide canvas.
+
+```yaml
+- layout: bullets
+  title: 核心观点
+  bullets:
+    - 输出是可编辑 PPTX。
+  speakerNotes: |
+    这一页先解释为什么选择 YAML 到 PPTX 的路线。
+    Formula text is kept as plain text in notes for now: $L(\theta)$.
+```
+
+Use a block string for paragraph-style scripts, or a short string list when the
+script is naturally segmented. Keep notes concise; very long scripts are
+reported as validation warnings.
+
 ## Supported Layouts
 
 - `title`

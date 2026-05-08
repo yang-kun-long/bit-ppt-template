@@ -261,6 +261,24 @@ function normalizeText(value) {
   return String(value);
 }
 
+function getSpeakerNotesValue(slide) {
+  if (!slide || typeof slide !== "object") return undefined;
+  return slide.speakerNotes ?? slide.speaker_notes ?? slide.speakerScript ?? slide.speaker_script;
+}
+
+function normalizeSpeakerNotes(value) {
+  if (value === null || value === undefined) return "";
+  if (Array.isArray(value)) return value.map(normalizeText).filter(Boolean).join("\n");
+  return normalizeText(value).replace(/\r\n?/g, "\n").trim();
+}
+
+function addSpeakerNotes(pptx, slideData) {
+  const notes = normalizeSpeakerNotes(getSpeakerNotesValue(slideData));
+  if (!notes) return;
+  const renderedSlide = pptx.slides?.[pptx.slides.length - 1];
+  if (renderedSlide && typeof renderedSlide.addNotes === "function") renderedSlide.addNotes(notes);
+}
+
 function normalizeLatex(value) {
   return normalizeText(value)
     .replace(/\\\\([A-Za-z]+)/g, "\\$1")
@@ -530,6 +548,15 @@ function validateDeck(deck) {
       return;
     }
     maxText(slideIndex, "title", slide.title, 24, "title");
+    const speakerNotesRaw = getSpeakerNotesValue(slide);
+    if (speakerNotesRaw !== undefined) {
+      if (typeof speakerNotesRaw !== "string" && !Array.isArray(speakerNotesRaw)) {
+        add("warning", slideIndex, "speakerNotes", "speakerNotes should be a string block or an array of short strings.", "Rewrite speakerNotes as a YAML block scalar or string list.");
+      }
+      const speakerNotes = normalizeSpeakerNotes(speakerNotesRaw);
+      maxText(slideIndex, "speakerNotes", speakerNotes, 1200, "speaker notes");
+      if (lineCount(speakerNotes) > 30) add("warning", slideIndex, "speakerNotes", `speakerNotes has ${lineCount(speakerNotes)} lines; recommended max is 30.`, "Shorten the speaker script or split it across slides.");
+    }
 
     switch (slide.layout) {
       case "agenda":
@@ -1963,6 +1990,7 @@ function createDeck(deck, options = {}) {
       default:
         throw new Error(`Unknown slide layout: ${slide.layout}`);
     }
+    addSpeakerNotes(pptx, slide);
   }
   return { pptx, preflight: preflight.report, equations: ctx.equations, fonts: resolvedFonts };
 }

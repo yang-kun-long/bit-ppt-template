@@ -106,6 +106,7 @@ node bin/bit-ppt.mjs guide layouts
 node bin/bit-ppt.mjs guide layout imageText
 node bin/bit-ppt.mjs guide schema chart --json
 node bin/bit-ppt.mjs guide example flowchart --json
+node bin/bit-ppt.mjs guide speaker-notes
 node bin/bit-ppt.mjs guide writing-rules
 node bin/bit-ppt.mjs guide all --json
 ```
@@ -128,6 +129,9 @@ node bin/bit-ppt.mjs guide all --json
 - `flowchart`
 - `table`
 - `formula`
+
+通用字段可通过 `guide speaker-notes` 渐进式查询；`guide schema <layout> --json`
+也会在 `commonFields` 中返回 `speakerNotes`。
 
 完整写作约束见 [AI_CONTENT_GUIDE.md](AI_CONTENT_GUIDE.md)。
 
@@ -159,6 +163,26 @@ slides:
 
   - layout: closing
     title: 谢谢
+```
+
+每页都可以添加 PowerPoint/WPS 演讲者备注。备注不会出现在页面画布上，会写入 PPT 的备注区：
+
+```yaml
+- layout: bullets
+  title: 核心观点
+  bullets:
+    - 输出是可编辑 PPTX。
+  speakerNotes: |
+    这一页先解释为什么选择 YAML 到 PPTX 的路线。
+    公式暂时按普通文本保留，例如 $L(\theta)$。
+```
+
+也可以用字符串数组：
+
+```yaml
+speakerNotes:
+  - 第一段演讲稿。
+  - 第二段演讲稿。
 ```
 
 ## 字体

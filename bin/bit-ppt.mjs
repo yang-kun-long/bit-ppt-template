@@ -16,6 +16,7 @@ import {
   getLayoutExample,
   getLayoutGuide,
   getLayoutSchema,
+  getSpeakerNotesGuide,
   getWritingRules,
   listGuideLayouts,
 } from "../src/layout-guides.mjs";
@@ -38,6 +39,7 @@ Progressive guide:
   bit-ppt guide layout imageText
   bit-ppt guide schema imageText --json
   bit-ppt guide example imageText
+  bit-ppt guide speaker-notes
   bit-ppt guide writing-rules
 
 Quality options:
@@ -107,6 +109,32 @@ ${rules.map((item) => `  - ${item}`).join("\n")}
 `);
 }
 
+function printSpeakerNotesGuide(guide) {
+  console.log(`Speaker notes
+
+Purpose:
+  ${guide.purpose}
+
+Fields:
+${Object.entries(guide.fields).map(([name, spec]) => {
+    const required = spec.required ? "required" : "optional";
+    return `  ${name}: ${spec.type} (${required})`;
+  }).join("\n")}
+
+Aliases:
+  ${guide.aliases.join(", ")}
+
+Limits:
+${Object.entries(guide.limits || {}).map(([name, spec]) => `  ${name}: ${Object.entries(spec).map(([key, value]) => `${key}=${value}`).join(", ")}`).join("\n")}
+
+Notes:
+${guide.notes.map((item) => `  - ${item}`).join("\n")}
+
+Example:
+${JSON.stringify(guide.example, null, 2)}
+`);
+}
+
 function printAvailableGuideLayouts() {
   console.log(listGuideLayouts().join("\n"));
 }
@@ -128,6 +156,7 @@ Usage:
   bit-ppt guide layout <name> [--json]
   bit-ppt guide schema <name> --json
   bit-ppt guide example <name> [--json]
+  bit-ppt guide speaker-notes [--json]
   bit-ppt guide writing-rules [--json]
 `);
 }
@@ -288,6 +317,13 @@ function printGuide(command, name, asJson) {
     const workflow = getGuideWorkflow();
     if (asJson) printJson(workflow);
     else printWorkflow(workflow);
+    return;
+  }
+
+  if (command === "speaker-notes") {
+    const guide = getSpeakerNotesGuide();
+    if (asJson) printJson(guide);
+    else printSpeakerNotesGuide(guide);
     return;
   }
 
