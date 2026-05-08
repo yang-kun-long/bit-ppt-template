@@ -74,6 +74,18 @@ node bin/bit-ppt.mjs check content/formula-test.yaml --json --strict
 node bin/bit-ppt.mjs generate content/example.yaml output/example.pptx --json --strict
 ```
 
+## Release Targets
+
+本仓库采用单主干、多入口策略。CLI、MCP 和未来在线服务都应复用同一套核心生成逻辑。
+
+当前状态：
+
+- CLI：已支持，入口为 `bit-ppt` 或 `node bin/bit-ppt.mjs`
+- MCP：已支持，入口为 `bit-ppt-mcp` 或 `node bin/bit-ppt-mcp.mjs`
+- Cloudflare Worker / HTTP API：计划中，当前版本尚未实现
+
+当前包仍设置为 `private: true`，`v0.2.0` 先作为本地和 Git tag 里程碑，不直接发布 npm。
+
 ## CLI 命令
 
 ```text
