@@ -5,6 +5,8 @@ import path from "node:path";
 import { execFile } from "node:child_process";
 import { promisify } from "node:util";
 import test from "node:test";
+import { Client } from "@modelcontextprotocol/sdk/client/index.js";
+import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
 import JSZip from "jszip";
 import YAML from "yaml";
 import {
@@ -18,6 +20,7 @@ import {
 
 const execFileAsync = promisify(execFile);
 const CLI = path.join(ROOT, "bin", "bit-ppt.mjs");
+const MCP_CLI = path.join(ROOT, "bin", "bit-ppt-mcp.mjs");
 
 async function runCli(args, options = {}) {
   try {
@@ -50,6 +53,22 @@ function writeYamlDeck(deck) {
   return file;
 }
 
+async function withMcpClient(callback) {
+  const transport = new StdioClientTransport({
+    command: process.execPath,
+    args: [MCP_CLI],
+    cwd: ROOT,
+    stderr: "pipe",
+  });
+  const client = new Client({ name: "bit-ppt-test-client", version: "1.0.0" });
+  await client.connect(transport);
+  try {
+    return await callback(client);
+  } finally {
+    await client.close();
+  }
+}
+
 test("listLayouts includes core and image layouts", () => {
   const layouts = listLayouts();
   assert.ok(layouts.includes("title"));
@@ -77,6 +96,42 @@ test("CLI list-layouts --json prints JSON", async () => {
   assert.equal(result.status, 0);
   const layouts = JSON.parse(result.stdout);
   assert.ok(layouts.includes("imageText"));
+});
+
+test("MCP server exposes core tools", async () => {
+  await withMcpClient(async (client) => {
+    const result = await client.listTools();
+    const names = result.tools.map((tool) => tool.name);
+    assert.ok(names.includes("list_layouts"));
+    assert.ok(names.includes("validate_deck"));
+    assert.ok(names.includes("preflight_deck"));
+    assert.ok(names.includes("generate_pptx"));
+    assert.ok(names.includes("get_guide"));
+  });
+});
+
+test("MCP preflight_deck accepts raw YAML", async () => {
+  await withMcpClient(async (client) => {
+    const deckYaml = YAML.stringify({
+      slides: [
+        {
+          layout: "imageText",
+          title: "Placeholder",
+          image: {
+            mode: "placeholder",
+            prompt: "A generated diagram placeholder.",
+          },
+          text: ["Use placeholder first."],
+        },
+      ],
+    });
+    const result = await client.callTool({
+      name: "preflight_deck",
+      arguments: { deckYaml },
+    });
+    assert.equal(result.structuredContent.outputSlides, 2);
+    assert.equal(result.structuredContent.actions[0].action, "placeholderVariants");
+  });
 });
 
 test("CLI help points to progressive guide commands", async () => {

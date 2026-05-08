@@ -209,7 +209,7 @@ function runDoctor() {
   const major = Number(version.split(".")[0]);
   checks.push(doctorCheck("node", major >= 18, `Node.js ${version}`, { version }));
 
-  ["pptxgenjs", "yaml", "jszip", "latex-to-omml"].forEach((packageName) => {
+  ["pptxgenjs", "yaml", "jszip", "latex-to-omml", "@modelcontextprotocol/sdk", "zod"].forEach((packageName) => {
     const available = canImportPackage(packageName);
     checks.push(doctorCheck(`dependency:${packageName}`, available, available ? `${packageName} is available` : `${packageName} is missing`));
   });

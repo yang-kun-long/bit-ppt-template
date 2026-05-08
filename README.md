@@ -82,6 +82,7 @@ bit-ppt check <input.yaml> [--json] [--strict]
 bit-ppt list-layouts [--json]
 bit-ppt guide [topic] [name] [--json]
 bit-ppt doctor [--json]
+bit-ppt-mcp
 ```
 
 常用命令：
@@ -94,6 +95,57 @@ node bin/bit-ppt.mjs doctor --json
 ```
 
 `doctor` 会检查 Node 版本、依赖、关键素材、示例 deck、输出目录可写性。
+
+## MCP Server
+
+项目同时提供 stdio MCP 入口，供 Codex、Claude Code 等本地 agent 调用。
+MCP 只是 adapter，仍复用 CLI 背后的同一套生成和校验函数。
+
+本地运行：
+
+```powershell
+node bin/bit-ppt-mcp.mjs
+```
+
+全局链接后：
+
+```powershell
+bit-ppt-mcp
+```
+
+MCP 客户端配置示例：
+
+```json
+{
+  "mcpServers": {
+    "bit-ppt": {
+      "command": "node",
+      "args": ["D:/atuodl/presentation-slide/bit-ppt-template/bin/bit-ppt-mcp.mjs"],
+      "cwd": "D:/atuodl/presentation-slide/bit-ppt-template"
+    }
+  }
+}
+```
+
+提供的 MCP tools：
+
+- `list_layouts`
+- `get_guide`
+- `validate_deck`
+- `preflight_deck`
+- `get_repair_prompt`
+- `generate_pptx`
+
+`validate_deck`、`preflight_deck` 和 `get_repair_prompt` 支持 `inputPath`
+或 `deckYaml`。`generate_pptx` 使用文件路径：
+
+```json
+{
+  "inputPath": "content/example.yaml",
+  "outputPath": "output/example-from-mcp.pptx",
+  "strict": true
+}
+```
 
 ## 给 AI Agent 的渐进式 Guide
 

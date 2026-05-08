@@ -13,7 +13,8 @@
     "AI_CONTENT_GUIDE.md"
   ],
   "bin": {
-    "bit-ppt": "bin/bit-ppt.mjs"
+    "bit-ppt": "bin/bit-ppt.mjs",
+    "bit-ppt-mcp": "bin/bit-ppt-mcp.mjs"
   },
   "scripts": {
     "test": "node --test",
@@ -25,8 +26,10 @@
     "check:charts": "node bin/bit-ppt.mjs check content/chart-flow-test.yaml --json"
   },
   "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.29.0",
     "latex-to-omml": "^2.1.1",
     "pptxgenjs": "^4.0.1",
-    "yaml": "^2.8.4"
+    "yaml": "^2.8.4",
+    "zod": "^4.4.3"
   }
 }
