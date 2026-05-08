@@ -43,6 +43,20 @@ Invoke-RestMethod `
   -Body '{"deckYaml":"slides:\n  - layout: imageText\n    title: Worker 占位图\n    image:\n      mode: placeholder\n      prompt: 一张流程图。\n    text:\n      - 先在线校验。\n"}'
 ```
 
+## Deploy
+
+After `npx wrangler login`:
+
+```powershell
+npm run deploy
+```
+
+Then test the deployed URL:
+
+```powershell
+Invoke-RestMethod https://<worker-url>/health
+```
+
 ## Notes
 
 This worker does not import `src/generate.mjs` yet because the current Node
