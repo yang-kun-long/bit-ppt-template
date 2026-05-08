@@ -84,6 +84,7 @@ test("CLI help points to progressive guide commands", async () => {
   assert.equal(result.status, 0);
   assert.match(result.stdout, /bit-ppt guide layout imageText/);
   assert.match(result.stdout, /bit-ppt guide speaker-notes/);
+  assert.match(result.stdout, /bit-ppt guide image-placeholder/);
   assert.match(result.stdout, /bit-ppt doctor/);
   assert.match(result.stdout, /Progressive guide/);
 });
@@ -118,6 +119,15 @@ test("CLI guide speaker-notes returns focused guide", async () => {
   assert.equal(payload.topic, "speaker-notes");
   assert.equal(payload.fields.speakerNotes.type, "string | string[]");
   assert.match(payload.notes.join("\n"), /plain text/);
+});
+
+test("CLI guide image-placeholder returns focused guide", async () => {
+  const result = await runCli(["guide", "image-placeholder", "--json"]);
+  assert.equal(result.status, 0);
+  const payload = JSON.parse(result.stdout);
+  assert.equal(payload.topic, "image-placeholder");
+  assert.match(payload.fields.image.type, /placeholder/);
+  assert.match(payload.notes.join("\n"), /imageText/);
 });
 
 test("CLI guide example --json returns example deck fragment", async () => {
@@ -225,6 +235,54 @@ test("validateDeck reports missing image paths", () => {
   const validation = validateDeck(deck);
   assert.equal(validation.errors.length, 1);
   assert.match(validation.errors[0].message, /Image file does not exist/);
+});
+
+test("imageText placeholder expands uncertain ratio into layout variants", () => {
+  const deck = {
+    slides: [
+      {
+        layout: "imageText",
+        title: "Placeholder image",
+        image: {
+          mode: "placeholder",
+          prompt: "A workflow diagram showing YAML, validation, and PPTX generation.",
+        },
+        text: ["Use a placeholder first."],
+      },
+    ],
+  };
+  const result = checkDeck(deck);
+  assert.equal(result.validation.errors.length, 0);
+  assert.equal(result.validation.warnings.length, 0);
+  assert.equal(result.inputSlides, 1);
+  assert.equal(result.outputSlides, 2);
+  assert.equal(result.actions[0].action, "placeholderVariants");
+});
+
+test("generateDeckFile writes editable image placeholder text", async () => {
+  const deckFile = writeYamlDeck({
+    slides: [
+      {
+        layout: "imageText",
+        title: "Placeholder image",
+        image: {
+          mode: "placeholder",
+          aspectRatio: "16:9",
+          placement: "top",
+          prompt: "A clean architecture diagram for the PPT generator.",
+        },
+        text: ["The user can replace this placeholder later."],
+      },
+    ],
+  });
+  const output = path.join(deckFile.dir, "placeholder-image.pptx");
+  const result = await generateDeckFile(deckFile.path, output);
+  assert.equal(result.validation.errors.length, 0);
+
+  const zip = await JSZip.loadAsync(fs.readFileSync(result.output));
+  const slideXml = await zip.file("ppt/slides/slide1.xml").async("string");
+  assert.match(slideXml, /待补图片/);
+  assert.match(slideXml, /A clean architecture diagram/);
 });
 
 test("imageText accepts object image syntax for landscape and side placement", () => {

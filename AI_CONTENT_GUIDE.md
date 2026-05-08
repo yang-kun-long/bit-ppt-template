@@ -48,6 +48,28 @@ Use a block string for paragraph-style scripts, or a short string list when the
 script is naturally segmented. Keep notes concise; very long scripts are
 reported as validation warnings.
 
+## Image Placeholders
+
+When the user has no image yet or cannot upload images, do not invent local
+paths. Use an editable placeholder with a concrete image prompt.
+
+```yaml
+- layout: imageText
+  title: 系统架构示意
+  image:
+    mode: placeholder
+    aspectRatio: "16:9"
+    placement: top
+    prompt: 展示 YAML 输入、结构校验、PPTX 生成、OMML 后处理的流程图。
+  text:
+    - 用户后续可在 WPS / PowerPoint 中替换占位框。
+```
+
+If `imageText.image.aspectRatio` is omitted, `auto`, or `unknown`, preflight
+creates two candidate slides: a top-image layout and a side-image layout. This
+lets the user keep whichever page fits the eventual image. Placeholder images
+are supported by `imageText`, `caseStudy`, and `imageGrid`.
+
 ## Supported Layouts
 
 - `title`

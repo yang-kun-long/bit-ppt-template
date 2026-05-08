@@ -1,0 +1,59 @@
+meta:
+  title: 图片占位模式示例
+  subtitle: Placeholder image mode
+  author: BIT PPT Template Generator
+  date: 2026.05
+
+slides:
+  - layout: title
+
+  - layout: imageText
+    title: 暂无图片时的候选页
+    image:
+      mode: placeholder
+      prompt: 展示 YAML 输入、结构校验、PPTX 生成、OMML 后处理和人工替换图片的流程图。
+    text:
+      - 用户暂时没有图片时，也可以先生成完整 PPT 草稿。
+      - 比例未知时，预检会自动生成横图方案和侧图方案。
+      - 后续用户在 WPS 或 PowerPoint 中替换占位框即可。
+
+  - layout: imageText
+    title: 明确横图比例的占位页
+    image:
+      mode: placeholder
+      aspectRatio: "16:9"
+      placement: top
+      prompt: 一张用于论文答辩的系统架构横图，包含输入、生成、校验、输出四个模块。
+    text:
+      - 明确比例后只生成一页。
+      - 占位框内保留图片描述和建议比例。
+
+  - layout: caseStudy
+    title: 案例图占位
+    image:
+      mode: placeholder
+      aspectRatio: "4:3"
+      prompt: 一个展示生成前后 PPT 页面差异的对比截图。
+    caption: 后续可替换为真实系统截图。
+    context:
+      - 用户不方便上传截图。
+    method:
+      - 先用图片描述占位。
+    result:
+      - PPT 结构完整，图片后补。
+
+  - layout: imageGrid
+    title: 多图占位
+    images:
+      - mode: placeholder
+        aspectRatio: "1:1"
+        prompt: 输入样本截图
+        caption: 输入
+      - mode: placeholder
+        aspectRatio: "1:1"
+        prompt: 中间结果截图
+        caption: 中间结果
+      - mode: placeholder
+        aspectRatio: "1:1"
+        prompt: 输出 PPT 页面截图
+        caption: 输出

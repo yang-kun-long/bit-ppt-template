@@ -107,6 +107,7 @@ node bin/bit-ppt.mjs guide layout imageText
 node bin/bit-ppt.mjs guide schema chart --json
 node bin/bit-ppt.mjs guide example flowchart --json
 node bin/bit-ppt.mjs guide speaker-notes
+node bin/bit-ppt.mjs guide image-placeholder
 node bin/bit-ppt.mjs guide writing-rules
 node bin/bit-ppt.mjs guide all --json
 ```
@@ -132,6 +133,8 @@ node bin/bit-ppt.mjs guide all --json
 
 通用字段可通过 `guide speaker-notes` 渐进式查询；`guide schema <layout> --json`
 也会在 `commonFields` 中返回 `speakerNotes`。
+
+暂无图片时可通过 `guide image-placeholder` 查询占位图写法。
 
 完整写作约束见 [AI_CONTENT_GUIDE.md](AI_CONTENT_GUIDE.md)。
 
@@ -300,6 +303,32 @@ node bin/bit-ppt.mjs list-layouts
 
 ```powershell
 node bin/bit-ppt.mjs generate content/image-layout-demo.yaml output/image-layout-demo.pptx
+```
+
+暂无图片时，可以让 AI 生成图片描述并写入可编辑占位框：
+
+```yaml
+- layout: imageText
+  title: 系统架构示意
+  image:
+    mode: placeholder
+    aspectRatio: "16:9" # 也可省略；未知比例会生成候选页
+    placement: top
+    prompt: 展示 YAML 输入、结构校验、PPTX 生成、OMML 后处理的流程图。
+  text:
+    - 用户后续可在 WPS / PowerPoint 中替换占位框。
+```
+
+如果 `imageText` 的占位图没有明确 `aspectRatio`，预检会自动生成两页候选：
+
+- 横图方案：上图下文
+- 侧图方案：左图右文
+
+占位图也支持 `caseStudy` 和 `imageGrid`。示例：
+
+```powershell
+node bin/bit-ppt.mjs check content/placeholder-image-demo.yaml --json
+node bin/bit-ppt.mjs generate content/placeholder-image-demo.yaml output/placeholder-image-demo.pptx
 ```
 
 ## 公式

@@ -2,6 +2,7 @@ const writingRules = [
   "Keep slide text short and concrete; use validation warnings as rewrite hints.",
   "Prefer editable PPTX objects: text boxes, shapes, tables, charts, OMML formulas, and native images.",
   "Use `speakerNotes` for presenter scripts; these notes are written to the PPTX notes pane, not the slide canvas.",
+  "When an image is unavailable, use `image.mode: placeholder` with a concrete prompt instead of inventing a local file path.",
   "Use local image paths relative to the project root unless an integration provides assets separately.",
   "Run `bit-ppt check <deck.yaml> --json` before generation and use `repairPrompt` to revise content.",
 ];
@@ -30,6 +31,39 @@ const speakerNotesGuide = {
   },
 };
 
+const imagePlaceholderGuide = {
+  topic: "image-placeholder",
+  purpose: "Describe missing images with editable placeholders that users can replace later.",
+  whenToUse: "Use when the user has no image yet, cannot upload images, or wants AI to draft an image prompt inside the deck.",
+  fields: {
+    image: { type: "{ mode: placeholder, prompt, aspectRatio?, placement?, variants? }", required: true },
+    prompt: { type: "string", required: true },
+    aspectRatio: { type: "16:9 | 4:3 | 3:2 | 1:1 | 3:4 | 9:16 | auto", required: false },
+    placement: { type: "top | side | auto", required: false },
+    variants: { type: "boolean", required: false },
+  },
+  limits: {
+    prompt: { recommendedChars: 160 },
+  },
+  notes: [
+    "This is a common image object mode, not a standalone slide layout.",
+    "Supported by imageText, caseStudy, and imageGrid.",
+    "Use `aspectRatio` when the likely image shape is known.",
+    "For imageText with unknown aspect ratio, leave it as auto so preflight emits top and side variants.",
+    "The generated placeholder is editable PowerPoint text and shapes, not a raster image.",
+  ],
+  example: {
+    layout: "imageText",
+    title: "系统架构示意",
+    image: {
+      mode: "placeholder",
+      aspectRatio: "auto",
+      prompt: "A clean architecture diagram showing YAML input, validation, PPTX generation, and OMML post-processing.",
+    },
+    text: ["用户后续可替换占位图。"],
+  },
+};
+
 const layoutGuides = {
   imageText: {
     layout: "imageText",
@@ -38,18 +72,21 @@ const layoutGuides = {
     fields: {
       layout: { type: "literal", required: true, value: "imageText" },
       title: { type: "string", required: true },
-      image: { type: "string | { path, placement, fit }", required: true },
+      image: { type: "string | { path, placement, fit } | { mode: placeholder, prompt, aspectRatio?, placement? }", required: true },
       caption: { type: "string", required: false },
       text: { type: "string[]", required: true },
     },
     limits: {
       text: { maxItems: 5, recommendedChars: 38 },
+      imagePrompt: { recommendedChars: 160 },
     },
     notes: [
       "Very wide images are automatically placed above the text.",
       "Ordinary landscape, portrait, and square images stay side-by-side so text space remains usable.",
       "`placement: top` or `placement: side` overrides automatic placement.",
       "`fit: contain` avoids cropping; `fit: cover` fills the image box.",
+      "If no image is available, set `image.mode: placeholder` and provide a prompt for the future image.",
+      "When placeholder aspectRatio is omitted or `auto`, imageText preflight creates top and side layout variants for user selection.",
     ],
     example: {
       layout: "imageText",
@@ -231,6 +268,7 @@ function getGuideOverview() {
       "bit-ppt guide schema <name> --json",
       "bit-ppt guide example <name>",
       "bit-ppt guide speaker-notes",
+      "bit-ppt guide image-placeholder",
       "bit-ppt guide writing-rules",
     ],
     guidedLayouts: listGuideLayouts(),
@@ -239,6 +277,10 @@ function getGuideOverview() {
 
 function getSpeakerNotesGuide() {
   return { ...speakerNotesGuide };
+}
+
+function getImagePlaceholderGuide() {
+  return { ...imagePlaceholderGuide };
 }
 
 function getWritingRules() {
@@ -253,6 +295,7 @@ function getAllGuides() {
   return {
     overview: getGuideOverview(),
     speakerNotes: getSpeakerNotesGuide(),
+    imagePlaceholder: getImagePlaceholderGuide(),
     writingRules: getWritingRules(),
     layouts: Object.fromEntries(listGuideLayouts().map((layout) => [layout, getLayoutGuide(layout)])),
   };
@@ -262,6 +305,7 @@ export {
   getAllGuides,
   getGuideOverview,
   getGuideWorkflow,
+  getImagePlaceholderGuide,
   getLayoutExample,
   getLayoutGuide,
   getLayoutSchema,

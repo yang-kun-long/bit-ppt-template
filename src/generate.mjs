@@ -73,6 +73,15 @@ const SUPPORTED_LAYOUTS = new Set([
 ]);
 
 const CHART_TYPES = new Set(["bar", "line", "pie", "doughnut", "scatter", "area"]);
+const PLACEHOLDER_ASPECT_RATIOS = {
+  "16:9": 16 / 9,
+  "4:3": 4 / 3,
+  "3:2": 3 / 2,
+  "1:1": 1,
+  "4:5": 4 / 5,
+  "3:4": 3 / 4,
+  "9:16": 9 / 16,
+};
 
 const assets = {
   campusLine: asset("bit-campus-line.png"),
@@ -103,8 +112,13 @@ function resolveProjectPath(value, fallback) {
 
 function normalizeImageSpec(value, fallback = "assets/bit-campus-photo.png") {
   if (value && typeof value === "object" && !Array.isArray(value)) {
+    const mode = normalizeText(value.mode || value.type).toLowerCase();
+    const placeholder = mode === "placeholder" || value.placeholder === true || value.noImage === true;
     return {
-      path: resolveProjectPath(value.path || value.image || value.src, fallback),
+      path: placeholder ? "" : resolveProjectPath(value.path || value.image || value.src, fallback),
+      placeholder,
+      prompt: normalizeText(value.prompt || value.description || value.imagePrompt || value.alt),
+      aspectRatio: normalizeText(value.aspectRatio || value.ratio || value.size).toLowerCase(),
       fit: normalizeText(value.fit || value.sizing).toLowerCase(),
       placement: normalizeText(value.placement || value.position).toLowerCase(),
       alt: normalizeText(value.alt),
@@ -112,6 +126,9 @@ function normalizeImageSpec(value, fallback = "assets/bit-campus-photo.png") {
   }
   return {
     path: resolveProjectPath(value, fallback),
+    placeholder: false,
+    prompt: "",
+    aspectRatio: "",
     fit: "",
     placement: "",
     alt: "",
@@ -205,6 +222,19 @@ function classifyImageRatio(ratio) {
 
 function resolveImageInfo(value, fallback = "assets/bit-campus-photo.png") {
   const spec = normalizeImageSpec(value, fallback);
+  if (spec.placeholder) {
+    const ratio = resolvePlaceholderRatio(spec.aspectRatio);
+    return {
+      ...spec,
+      exists: true,
+      width: undefined,
+      height: undefined,
+      format: "placeholder",
+      ratio,
+      orientation: classifyImageRatio(ratio),
+      uncertainRatio: !hasKnownPlaceholderRatio(spec.aspectRatio),
+    };
+  }
   const dimensions = readImageDimensions(spec.path);
   const ratio = dimensions?.width && dimensions?.height
     ? dimensions.width / dimensions.height
@@ -218,6 +248,58 @@ function resolveImageInfo(value, fallback = "assets/bit-campus-photo.png") {
     ratio,
     orientation: classifyImageRatio(ratio),
   };
+}
+
+function hasKnownPlaceholderRatio(value) {
+  const ratio = normalizeText(value).toLowerCase();
+  if (!ratio || ratio === "auto" || ratio === "unknown") return false;
+  if (PLACEHOLDER_ASPECT_RATIOS[ratio]) return true;
+  const colon = ratio.match(/^(\d+(?:\.\d+)?):(\d+(?:\.\d+)?)$/);
+  if (colon) return Number(colon[1]) > 0 && Number(colon[2]) > 0;
+  const numeric = Number(ratio);
+  return Number.isFinite(numeric) && numeric > 0;
+}
+
+function resolvePlaceholderRatio(value, fallback = 16 / 9) {
+  const ratio = normalizeText(value).toLowerCase();
+  if (PLACEHOLDER_ASPECT_RATIOS[ratio]) return PLACEHOLDER_ASPECT_RATIOS[ratio];
+  const colon = ratio.match(/^(\d+(?:\.\d+)?):(\d+(?:\.\d+)?)$/);
+  if (colon) {
+    const w = Number(colon[1]);
+    const h = Number(colon[2]);
+    if (w > 0 && h > 0) return w / h;
+  }
+  const numeric = Number(ratio);
+  if (Number.isFinite(numeric) && numeric > 0) return numeric;
+  return fallback;
+}
+
+function imagePlaceholderNeedsVariants(slide) {
+  if (!slide || slide.layout !== "imageText") return false;
+  const image = resolveImageInfo(slide.image);
+  if (!image.placeholder || !image.uncertainRatio) return false;
+  if (slide.placeholderVariants === false) return false;
+  if (slide.image && typeof slide.image === "object" && slide.image.variants === false) return false;
+  return true;
+}
+
+function splitImagePlaceholderSlide(slide) {
+  if (!imagePlaceholderNeedsVariants(slide)) return [slide];
+  const baseImage = slide.image && typeof slide.image === "object" && !Array.isArray(slide.image) ? slide.image : { mode: "placeholder" };
+  return [
+    {
+      ...clone(slide),
+      title: `${slide.title || "图文说明"}（横图方案）`,
+      image: { ...baseImage, mode: "placeholder", aspectRatio: "16:9", placement: "top", variants: false },
+      placement: "top",
+    },
+    {
+      ...clone(slide),
+      title: `${slide.title || "图文说明"}（侧图方案）`,
+      image: { ...baseImage, mode: "placeholder", aspectRatio: "4:3", placement: "side", variants: false },
+      placement: "side",
+    },
+  ];
 }
 
 function fitBoxToRatio(box, ratio = 1) {
@@ -464,13 +546,14 @@ function expandSlidesWithReport(slides = []) {
     if (slide.layout === "bullets") parts = splitBulletsSlide(slide);
     else if (slide.layout === "table") parts = splitTableSlide(slide);
     else if (slide.layout === "references") parts = splitReferencesSlide(slide);
+    else if (slide.layout === "imageText") parts = splitImagePlaceholderSlide(slide);
     else parts = [slide];
     if (parts.length > 1) {
       report.push({
         slideIndex: index + 1,
         layout: slide.layout,
         title: slide.title || slide.layout,
-        action: "split",
+        action: imagePlaceholderNeedsVariants(slide) ? "placeholderVariants" : "split",
         parts: parts.length,
       });
     }
@@ -525,9 +608,15 @@ function validateDeck(deck) {
     maxItems(slideIndex, pathName, value, max);
     if (Array.isArray(value)) value.forEach((item, idx) => maxText(slideIndex, `${pathName}[${idx}]`, item, textMax, "bullet"));
   };
-  const checkImage = (slideIndex, pathName, value) => {
+  const checkImage = (slideIndex, pathName, value, options = {}) => {
     if (value === undefined || value === null || value === "") return;
     const image = resolveImageInfo(value);
+    if (image.placeholder) {
+      if (!image.prompt) add("warning", slideIndex, pathName, "Image placeholder has no prompt or description.", `Add ${pathName}.prompt so the placeholder tells the user what image to add later.`);
+      else maxText(slideIndex, `${pathName}.prompt`, image.prompt, 160, "image placeholder prompt");
+      if (image.uncertainRatio && !options.variants) add("warning", slideIndex, pathName, "Image placeholder aspect ratio is unknown.", "Set aspectRatio to 16:9, 4:3, 1:1, or 3:4.");
+      return;
+    }
     if (!image.exists) {
       add("error", slideIndex, pathName, `Image file does not exist: ${image.path}.`, `Fix ${pathName} to point to an existing image file.`);
       return;
@@ -762,7 +851,7 @@ function validateDeck(deck) {
         if (Array.isArray(slide.items)) slide.items.forEach((item, itemIdx) => maxText(slideIndex, `items[${itemIdx}]`, item, 140, "reference"));
         break;
       case "imageText":
-        checkImage(slideIndex, "image", slide.image);
+        checkImage(slideIndex, "image", slide.image, { variants: imagePlaceholderNeedsVariants(slide) });
         checkBullets(slideIndex, "text", slide.text, 5, 38);
         break;
       default:
@@ -874,8 +963,63 @@ function addImageCover(slide, imagePath, box, opts = {}) {
   });
 }
 
+function placeholderAspectLabel(image) {
+  const label = normalizeText(image.aspectRatio);
+  if (label && label !== "auto" && label !== "unknown") return label;
+  return `${image.ratio.toFixed(2)}:1`;
+}
+
+function addImagePlaceholder(slide, image, box, opts = {}) {
+  const fill = opts.fill || "F8FBF9";
+  const line = opts.line || theme.green;
+  slide.addShape("rect", {
+    x: box.x,
+    y: box.y,
+    w: box.w,
+    h: box.h,
+    fill: { color: fill },
+    line: { color: line, width: opts.lineWidth || 1.0, dashType: "dash" },
+  });
+  slide.addShape("line", { x: box.x, y: box.y, w: box.w, h: box.h, line: { color: theme.line, width: 0.6, transparency: 20 } });
+  slide.addShape("line", { x: box.x + box.w, y: box.y, w: -box.w, h: box.h, line: { color: theme.line, width: 0.6, transparency: 20 } });
+  addText(slide, "待补图片", box.x + 0.18, box.y + 0.22, box.w - 0.36, 0.32, {
+    fontSize: Math.min(16, Math.max(10, box.w * 2.25)),
+    bold: true,
+    color: theme.green,
+    align: "center",
+    fit: "shrink",
+  });
+  addText(slide, `建议比例 ${placeholderAspectLabel(image)}`, box.x + 0.18, box.y + 0.62, box.w - 0.36, 0.22, {
+    fontSize: 8.8,
+    color: theme.muted,
+    align: "center",
+    fontFace: font.en,
+    fit: "shrink",
+  });
+  const prompt = image.prompt || image.alt || "请替换为与本页主题匹配的图片。";
+  addText(slide, prompt, box.x + 0.28, box.y + Math.min(1.02, box.h * 0.38), box.w - 0.56, Math.max(0.34, box.h - 1.22), {
+    fontSize: Math.min(11, Math.max(7.5, box.w * 1.35)),
+    color: theme.ink,
+    align: "center",
+    valign: "mid",
+    fit: "shrink",
+  });
+}
+
 function addImageInPanel(slide, image, box, opts = {}) {
   const mode = imageFitMode(image, opts.fit || "cover");
+  if (image.placeholder) {
+    const placeholderBox = mode === "contain" ? fitBoxToRatio(box, image.ratio) : box;
+    const pad = mode === "contain" ? opts.pad ?? 0.12 : 0;
+    const outerBox = {
+      x: placeholderBox.x - pad,
+      y: placeholderBox.y - pad,
+      w: placeholderBox.w + pad * 2,
+      h: placeholderBox.h + pad * 2,
+    };
+    addImagePlaceholder(slide, image, outerBox, opts);
+    return outerBox;
+  }
   if (mode === "contain") {
     const imageBox = fitBoxToRatio(box, image.ratio);
     const pad = opts.pad ?? 0.12;
