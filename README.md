@@ -82,9 +82,19 @@ node bin/bit-ppt.mjs generate content/example.yaml output/example.pptx --json --
 
 - CLI：已支持，入口为 `bit-ppt` 或 `node bin/bit-ppt.mjs`
 - MCP：已支持，入口为 `bit-ppt-mcp` 或 `node bin/bit-ppt-mcp.mjs`
-- Cloudflare Worker / HTTP API：计划中，当前版本尚未实现
+- Cloudflare Worker / HTTP API：已有可运行 spike，当前只支持 `/health` 和 `/check`
 
 当前包仍设置为 `private: true`，`v0.2.0` 先作为本地和 Git tag 里程碑，不直接发布 npm。
+
+Worker spike 位于 `workers/bit-ppt-worker`，用于验证未来在线服务的 API 形态。
+它目前不生成 PPTX，也不支持 OMML，仅做 YAML 解析、基础校验和占位图预检：
+
+```powershell
+cd workers/bit-ppt-worker
+npm install
+npm run check
+npm run dev
+```
 
 ## CLI 命令
 

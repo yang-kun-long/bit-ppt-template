@@ -1,5 +1,7 @@
 node_modules/
 output/
+dist/
+.wrangler/
 
 .env
 .env.*
