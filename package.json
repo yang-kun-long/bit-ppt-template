@@ -1,9 +1,13 @@
 {
-  "name": "bit-ppt-template",
-  "version": "0.2.0",
-  "private": true,
+  "name": "bit-ppt-generator",
+  "version": "0.3.0",
+  "description": "LaTeX-free Beijing Institute of Technology style PPTX generator with Web UI, CLI, and MCP entrypoints.",
+  "license": "MIT",
   "type": "module",
   "main": "src/generate.mjs",
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  },
   "files": [
     "bin",
     "src",
@@ -13,6 +17,7 @@
     "AI_CONTENT_GUIDE.md"
   ],
   "bin": {
+    "bit-ppt-generator": "bin/bit-ppt-http.mjs",
     "bit-ppt": "bin/bit-ppt.mjs",
     "bit-ppt-mcp": "bin/bit-ppt-mcp.mjs",
     "bit-ppt-http": "bin/bit-ppt-http.mjs"
@@ -33,5 +38,13 @@
     "pptxgenjs": "^4.0.1",
     "yaml": "^2.8.4",
     "zod": "^4.4.3"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yang-kun-long/bit-ppt-template.git"
+  },
+  "bugs": {
+    "url": "https://github.com/yang-kun-long/bit-ppt-template/issues"
+  },
+  "homepage": "https://github.com/yang-kun-long/bit-ppt-template#readme"
 }

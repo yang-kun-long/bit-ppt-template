@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
+import crypto from "node:crypto";
 import { execFile } from "node:child_process";
 import { promisify } from "node:util";
 import test from "node:test";
@@ -84,6 +85,25 @@ async function withHttpServer(callback, options = {}) {
       server.close((error) => error ? reject(error) : resolve());
     });
   }
+}
+
+function base64UrlEncode(value) {
+  return Buffer.from(value).toString("base64").replaceAll("+", "-").replaceAll("/", "_").replaceAll("=", "");
+}
+
+function signedAuthToken(secret, payload = {}) {
+  const now = Math.floor(Date.now() / 1000);
+  const header = base64UrlEncode(JSON.stringify({ alg: "HS256", typ: "JWT" }));
+  const body = base64UrlEncode(JSON.stringify({
+    sub: "test-user",
+    aud: "bit-ppt",
+    iat: now,
+    exp: now + 300,
+    ...payload,
+  }));
+  const input = `${header}.${body}`;
+  const sig = crypto.createHmac("sha256", secret).update(input).digest("base64url");
+  return `${input}.${sig}`;
 }
 
 test("listLayouts includes core and image layouts", () => {
@@ -348,6 +368,89 @@ test("HTTP token auth protects check and generate when configured", async () => 
     assert.equal(authorized.status, 200);
     assert.equal((await authorized.json()).validation.errors.length, 0);
   }, { authToken: "test-token" });
+});
+
+test("HTTP signed auth token is accepted when configured", async () => {
+  const secret = "signed-test-secret";
+  await withHttpServer(async (baseUrl) => {
+    const deckYaml = YAML.stringify({
+      slides: [
+        {
+          layout: "bullets",
+          title: "Signed auth check",
+          bullets: ["Protected endpoint."],
+        },
+      ],
+    });
+    const health = await fetch(`${baseUrl}/health`);
+    const healthPayload = await health.json();
+    assert.equal(healthPayload.authRequired, true);
+    assert.equal(healthPayload.signedAuthRequired, true);
+
+    const emptyBearer = await fetch(`${baseUrl}/check`, {
+      method: "POST",
+      headers: {
+        "authorization": "Bearer ",
+        "content-type": "application/yaml",
+      },
+      body: deckYaml,
+    });
+    assert.equal(emptyBearer.status, 401);
+
+    const authorized = await fetch(`${baseUrl}/check`, {
+      method: "POST",
+      headers: {
+        "authorization": `Bearer ${signedAuthToken(secret)}`,
+        "content-type": "application/yaml",
+      },
+      body: deckYaml,
+    });
+    assert.equal(authorized.status, 200);
+    assert.equal((await authorized.json()).validation.errors.length, 0);
+  }, { authSigningSecret: secret });
+});
+
+test("HTTP BIT login issues signed token for protected endpoints", async () => {
+  const secret = "bit-login-test-secret";
+  await withHttpServer(async (baseUrl) => {
+    const page = await fetch(`${baseUrl}/`);
+    assert.equal(page.status, 200);
+    assert.match(await page.text(), /BIT PPT Generator/);
+
+    const badLogin = await fetch(`${baseUrl}/auth/bit-login`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ username: "u", password: "wrong" }),
+    });
+    assert.equal(badLogin.status, 401);
+
+    const login = await fetch(`${baseUrl}/auth/bit-login`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ username: "u", password: "right" }),
+    });
+    assert.equal(login.status, 200);
+    const session = await login.json();
+    assert.equal(session.tokenType, "Bearer");
+    assert.ok(session.token);
+
+    const deckYaml = YAML.stringify({
+      slides: [{ layout: "bullets", title: "BIT login", bullets: ["ok"] }],
+    });
+    const check = await fetch(`${baseUrl}/check`, {
+      method: "POST",
+      headers: {
+        "authorization": `Bearer ${session.token}`,
+        "content-type": "application/yaml",
+      },
+      body: deckYaml,
+    });
+    assert.equal(check.status, 200);
+    assert.equal((await check.json()).validation.errors.length, 0);
+  }, {
+    authSigningSecret: secret,
+    bitAuthVerifier: async (username, password) => username === "u" && password === "right",
+  });
 });
 
 test("CLI check exits non-zero for invalid deck", async () => {

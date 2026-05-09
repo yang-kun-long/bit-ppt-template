@@ -6,6 +6,8 @@
 项目目标不是把幻灯片截图塞进 PPT，而是尽量生成原生 Office 对象：
 文本框、形状、表格、图表、图片和 Office Math 公式都应保持可编辑。
 
+代码使用 MIT License。北京理工大学名称、标识和视觉参考归其各自权利人所有。
+
 ## 特性
 
 - Node.js ESM CLI
@@ -17,26 +19,104 @@
 - 支持 `--json` 和 `--strict`，便于脚本、CI 和 AI agent 自动调用
 - 支持图片尺寸读取和 `imageText` 自动排版
 
-## 安装
+## 三种使用方式
+
+同一个 npm 包同时提供 Web UI、CLI 和 MCP 三个入口。普通用户优先使用 Web UI；
+脚本和 CI 使用 CLI；Codex、Claude Code 等本地 agent 使用 MCP。
+
+### 1. 普通用户：打开本地网页
+
+无需安装，直接启动：
+
+```powershell
+npx bit-ppt-generator
+```
+
+然后打开命令行输出的本地地址，默认是：
+
+```text
+http://127.0.0.1:3000/
+```
+
+本地网页默认不需要登录；只有部署者配置了鉴权环境变量时才会显示登录区。
+
+也可以全局安装后启动：
+
+```powershell
+npm install -g bit-ppt-generator
+bit-ppt-generator
+```
+
+### 2. 命令行用户：检查和生成 PPTX
+
+```powershell
+npm install -g bit-ppt-generator
+bit-ppt check content/example.yaml --json
+bit-ppt generate content/example.yaml output/example.pptx
+```
+
+常用 CLI：
+
+```text
+bit-ppt generate <input.yaml> <output.pptx> [--json] [--strict] [font options]
+bit-ppt check <input.yaml> [--json] [--strict]
+bit-ppt list-layouts [--json]
+bit-ppt guide [topic] [name] [--json]
+bit-ppt doctor [--json]
+```
+
+### 3. Agent 用户：配置 MCP
+
+全局安装后，MCP 客户端可以直接启动 npm 包提供的 `bit-ppt-mcp` 命令：
+
+```powershell
+npm install -g bit-ppt-generator
+bit-ppt-mcp --help
+```
+
+MCP 客户端配置示例：
+
+```json
+{
+  "mcpServers": {
+    "bit-ppt": {
+      "command": "bit-ppt-mcp",
+      "args": []
+    }
+  }
+}
+```
+
+如果 MCP 客户端不继承系统 PATH，改用 `npx` 启动：
+
+```json
+{
+  "mcpServers": {
+    "bit-ppt": {
+      "command": "npx",
+      "args": ["-y", "--package", "bit-ppt-generator", "bit-ppt-mcp"]
+    }
+  }
+}
+```
+
+不再需要写类似 `D:/atuodl/presentation-slide/bit-ppt-template/bin/bit-ppt-mcp.mjs`
+这样的本机源码路径。那种写法只适合仓库开发阶段；发布到 npm 后应使用包里的
+`bit-ppt-mcp` 命令。
+
+## 仓库开发
+
+克隆仓库后安装依赖：
 
 ```powershell
 npm install
 ```
 
-本地开发可以直接使用 Node 入口：
+启动本地网页：
 
 ```powershell
-node bin/bit-ppt.mjs --help
+npm run serve
 ```
-
-也可以链接为全局命令：
-
-```powershell
-npm link
-bit-ppt --help
-```
-
-## 快速开始
 
 生成示例 PPT：
 
@@ -46,49 +126,29 @@ npm run build:body-layouts
 npm run build:charts
 ```
 
-输出文件位于：
-
-```text
-output/example.pptx
-output/body-layout-test.pptx
-output/chart-flow-test.pptx
-```
-
-手动指定输入和输出：
+源码入口：
 
 ```powershell
-node bin/bit-ppt.mjs generate content/example.yaml output/example.pptx
+node bin/bit-ppt.mjs --help
+node bin/bit-ppt-http.mjs --help
+node bin/bit-ppt-mcp.mjs --help
 ```
 
-先检查再生成：
+本仓库采用单主干、多入口策略。Web UI、CLI、MCP 和 Node HTTP API 都复用同一套核心生成逻辑。
 
-```powershell
-node bin/bit-ppt.mjs check content/example.yaml --json
-node bin/bit-ppt.mjs generate content/example.yaml output/example.pptx --json
-```
+## npm 包入口
 
-严格模式会把 warning 也视为失败：
-
-```powershell
-node bin/bit-ppt.mjs check content/formula-test.yaml --json --strict
-node bin/bit-ppt.mjs generate content/example.yaml output/example.pptx --json --strict
-```
-
-## Release Targets
-
-本仓库采用单主干、多入口策略。CLI、MCP 和 Node HTTP 服务都复用同一套核心生成逻辑。
-
-当前状态：
-
+- Web UI：默认入口为 `bit-ppt-generator`，适合 npm 用户本地打开网页
 - CLI：已支持，入口为 `bit-ppt` 或 `node bin/bit-ppt.mjs`
 - MCP：已支持，入口为 `bit-ppt-mcp` 或 `node bin/bit-ppt-mcp.mjs`
 - Node HTTP API：已支持，入口为 `bit-ppt-http` 或 `node bin/bit-ppt-http.mjs`
 
-当前包仍设置为 `private: true`，`v0.2.0` 先作为本地和 Git tag 里程碑，不直接发布 npm。
+一个 npm release 同时包含 Web UI、CLI 和 MCP 三个入口，不拆成三个包。
 
 ## CLI 命令
 
 ```text
+bit-ppt-generator
 bit-ppt generate <input.yaml> <output.pptx> [--json] [--strict] [font options]
 bit-ppt check <input.yaml> [--json] [--strict]
 bit-ppt list-layouts [--json]
@@ -101,10 +161,10 @@ bit-ppt-http
 常用命令：
 
 ```powershell
-node bin/bit-ppt.mjs list-layouts
-node bin/bit-ppt.mjs list-layouts --json
-node bin/bit-ppt.mjs doctor
-node bin/bit-ppt.mjs doctor --json
+bit-ppt list-layouts
+bit-ppt list-layouts --json
+bit-ppt doctor
+bit-ppt doctor --json
 ```
 
 `doctor` 会检查 Node 版本、依赖、关键素材、示例 deck、输出目录可写性。
@@ -117,24 +177,23 @@ MCP 只是 adapter，仍复用 CLI 背后的同一套生成和校验函数。
 本地运行：
 
 ```powershell
-node bin/bit-ppt-mcp.mjs
-```
-
-全局链接后：
-
-```powershell
 bit-ppt-mcp
 ```
 
-MCP 客户端配置示例：
+从源码运行：
+
+```powershell
+node bin/bit-ppt-mcp.mjs
+```
+
+MCP 客户端配置示例，优先使用 npm 包命令：
 
 ```json
 {
   "mcpServers": {
     "bit-ppt": {
-      "command": "node",
-      "args": ["D:/atuodl/presentation-slide/bit-ppt-template/bin/bit-ppt-mcp.mjs"],
-      "cwd": "D:/atuodl/presentation-slide/bit-ppt-template"
+      "command": "bit-ppt-mcp",
+      "args": []
     }
   }
 }
@@ -164,7 +223,19 @@ MCP 客户端配置示例：
 
 项目提供一个轻量 Node HTTP 服务，用于上传 YAML 并下载生成的 PPTX。
 
-本地启动：
+普通本地用户启动网页：
+
+```powershell
+npx bit-ppt-generator
+```
+
+全局安装后：
+
+```powershell
+bit-ppt-generator
+```
+
+仓库开发启动：
 
 ```powershell
 npm run serve
@@ -176,16 +247,23 @@ npm run serve
 node bin/bit-ppt-http.mjs --host 127.0.0.1 --port 3000
 ```
 
-公网部署时建议配置 token 和生成并发上限：
+本地模式未设置鉴权环境变量时不需要登录，网页也不会显示登录框。公网部署时建议启用鉴权和生成并发上限：
 
 ```powershell
+$env:BIT_PPT_AUTH_SECRET="change-this-long-random-secret"
+$env:BIT_PPT_SESSION_TTL_SECONDS="604800"
 $env:BIT_PPT_TOKEN="change-this-token"
 $env:BIT_PPT_MAX_GENERATE_CONCURRENCY="1"
 npm run serve
 ```
 
-Linux systemd 可设置同名环境变量。设置 `BIT_PPT_TOKEN` 后，`/check`
-和 `/generate` 必须携带：
+Linux systemd 可设置同名环境变量。
+
+- 设置 `BIT_PPT_AUTH_SECRET` 后，网页会显示北理工登录，登录成功后使用签名 token。
+- 设置 `BIT_PPT_TOKEN` 后，HTTP API 也接受固定 Bearer token。
+- 两者都不设置时，适合本机使用，`/check` 和 `/generate` 不需要鉴权。
+
+固定 token 调用示例：
 
 ```http
 Authorization: Bearer change-this-token
@@ -193,7 +271,10 @@ Authorization: Bearer change-this-token
 
 端点：
 
+- `GET /`
 - `GET /health`
+- `POST /auth/bit-login`
+- `POST /auth/verify`
 - `POST /check`
 - `POST /generate`
 
@@ -538,11 +619,37 @@ npm run check:charts
 npm pack --dry-run
 ```
 
+## 发布
+
+npm 包名为 `bit-ppt-generator`。后续版本通过 GitHub Release 触发
+`.github/workflows/publish.yml`，并使用 npm Trusted Publisher 发布，不需要在
+GitHub Secrets 保存 npm token。
+
+Trusted Publisher 配置：
+
+```text
+Publisher: GitHub Actions
+Organization or user: yang-kun-long
+Repository: bit-ppt-template
+Workflow filename: publish.yml
+Environment name: 留空
+```
+
+发布新版本：
+
+```powershell
+npm version patch
+git push
+git push --tags
+```
+
+随后在 GitHub 创建并发布对应 tag 的 Release。
+
 ## 项目结构
 
 ```text
 bin/bit-ppt.mjs          CLI 入口
-bin/bit-ppt-http.mjs     Node HTTP 入口
+bin/bit-ppt-http.mjs     Web UI / Node HTTP 入口，也是 bit-ppt-generator 默认命令
 bin/bit-ppt-mcp.mjs      MCP 入口
 src/core/                纯校验和预检 core
 src/generate.mjs         核心生成器
