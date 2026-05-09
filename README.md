@@ -6,6 +6,11 @@
 项目目标不是把幻灯片截图塞进 PPT，而是尽量生成原生 Office 对象：
 文本框、形状、表格、图表、图片和 Office Math 公式都应保持可编辑。
 
+在线测试地址：[http://47.109.207.16:8080/](http://47.109.207.16:8080/)
+
+欢迎试用并在 [GitHub Issues](https://github.com/yang-kun-long/bit-ppt-template/issues)
+反馈问题、语法建议、版式需求或生成失败案例。
+
 ## 项目来源与相关路线
 
 本项目的视觉风格和最初需求来自 TeXPage 上的北京理工大学 LaTeX 幻灯片模板：
