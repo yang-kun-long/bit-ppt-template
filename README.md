@@ -6,6 +6,20 @@
 项目目标不是把幻灯片截图塞进 PPT，而是尽量生成原生 Office 对象：
 文本框、形状、表格、图表、图片和 Office Math 公式都应保持可编辑。
 
+## 项目来源与相关路线
+
+本项目的视觉风格和最初需求来自 TeXPage 上的北京理工大学 LaTeX 幻灯片模板：
+[BIThesis Beamer Slide Template](https://www.texpage.com/zh/template/18f4a5d2-2167-47b8-b193-85e2475e7a06)。
+原模板适合熟悉 LaTeX / Beamer 的用户，但 LaTeX 工具链较重，输出也通常是 PDF。
+PDF 用 WPS 播放比较方便；如果没有 WPS，常见的 PDF 转 PPT 流程又容易造成格式错乱。
+
+因此这里提供另一条路线：用 YAML 描述内容，直接生成可编辑 PPTX，尽量保留文本、
+表格、图表、形状和 Office Math 公式的可编辑性。
+
+如果你的需求是“已有 PDF 幻灯片，只想在线展示或播放”，可以使用另一个项目
+[pptView](https://github.com/yang-kun-long/pptView)。在线演示：
+[https://ppt.yangkunlong.top](https://ppt.yangkunlong.top)。
+
 代码使用 MIT License。北京理工大学名称、标识和视觉参考归其各自权利人所有。
 
 ## 特性
