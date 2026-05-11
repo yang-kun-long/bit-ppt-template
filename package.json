@@ -1,6 +1,6 @@
 {
   "name": "bit-ppt-generator",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "LaTeX-free Beijing Institute of Technology style PPTX generator with Web UI, CLI, and MCP entrypoints.",
   "license": "MIT",
   "type": "module",
