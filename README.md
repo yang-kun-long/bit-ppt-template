@@ -119,9 +119,6 @@ MCP 客户端配置示例：
 }
 ```
 
-不再需要写类似 `D:/atuodl/presentation-slide/bit-ppt-template/bin/bit-ppt-mcp.mjs`
-这样的本机源码路径。那种写法只适合仓库开发阶段；发布到 npm 后应使用包里的
-`bit-ppt-mcp` 命令。
 
 ## 仓库开发
 
