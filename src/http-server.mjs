@@ -40,11 +40,25 @@ const WEB_APP_HTML = String.raw`<!doctype html>
     button { border: 1px solid var(--red); background: var(--red); color: #fff; border-radius: 6px; padding: 9px 12px; font: inherit; cursor: pointer; }
     button.secondary { background: #fff; color: var(--red); }
     button:disabled { opacity: .55; cursor: not-allowed; }
+    a { color: var(--red); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .intro { margin: 0 0 14px; color: var(--muted); font-size: 13px; line-height: 1.6; }
+    .repo-link { display: inline-flex; align-items: center; gap: 6px; margin-bottom: 12px; font-size: 13px; font-weight: 650; }
+    .repo-icon { width: 16px; height: 16px; fill: currentColor; flex: 0 0 auto; }
+    .guide { display: grid; gap: 10px; margin: 10px 0 14px; }
+    .guide-step { border-left: 3px solid #d9b6b8; padding: 2px 0 2px 10px; }
+    .guide-step strong { display: block; margin-bottom: 4px; font-size: 13px; }
+    .guide-step p { margin: 0; color: var(--muted); font-size: 12px; line-height: 1.55; }
+    .yaml-section { min-width: 0; }
+    .yaml-workspace { display: grid; gap: 16px; grid-template-columns: minmax(0, 1fr) 290px; align-items: start; }
+    .yaml-workspace textarea { min-height: 640px; }
+    .side-guide { border-left: 1px solid var(--line); padding-left: 16px; }
     .status { min-height: 42px; white-space: pre-wrap; font-family: Consolas, "Cascadia Mono", monospace; font-size: 12px; color: var(--muted); }
     .ok { color: #137333; }
     .err { color: #b3261e; }
     .hidden { display: none; }
-    @media (max-width: 860px) { main { grid-template-columns: 1fr; padding: 14px; } textarea { min-height: 420px; } }
+    @media (max-width: 1060px) { .yaml-workspace { grid-template-columns: 1fr; } .side-guide { border-left: 0; border-top: 1px solid var(--line); padding: 14px 0 0; } }
+    @media (max-width: 860px) { main { grid-template-columns: 1fr; padding: 14px; } textarea, .yaml-workspace textarea { min-height: 420px; } }
   </style>
 </head>
 <body>
@@ -63,6 +77,13 @@ const WEB_APP_HTML = String.raw`<!doctype html>
         </div>
         <div id="authStatus" class="status"></div>
       </div>
+      <a class="repo-link" href="https://github.com/yang-kun-long/bit-ppt-template" target="_blank" rel="noreferrer">
+        <svg class="repo-icon" viewBox="0 0 16 16" aria-hidden="true">
+          <path d="M8 0C3.58 0 0 3.64 0 8.13c0 3.59 2.29 6.63 5.47 7.7.4.07.55-.18.55-.39 0-.19-.01-.83-.01-1.51-2.01.38-2.53-.5-2.69-.96-.09-.23-.48-.96-.82-1.15-.28-.15-.68-.52-.01-.53.63-.01 1.08.59 1.23.83.72 1.23 1.87.88 2.33.67.07-.53.28-.88.51-1.09-1.78-.2-3.64-.9-3.64-4.01 0-.89.31-1.61.82-2.18-.08-.2-.36-1.03.08-2.15 0 0 .67-.22 2.2.83A7.5 7.5 0 0 1 8 3.92c.68 0 1.36.09 2 .27 1.53-1.05 2.2-.83 2.2-.83.44 1.12.16 1.95.08 2.15.51.57.82 1.29.82 2.18 0 3.12-1.87 3.81-3.65 4.01.29.25.54.74.54 1.5 0 1.09-.01 1.97-.01 2.24 0 .21.15.46.55.39A8.03 8.03 0 0 0 16 8.13C16 3.64 12.42 0 8 0Z"/>
+        </svg>
+        GitHub 仓库
+      </a>
+      <p class="intro">这是一个把 YAML 生成可编辑 PPTX 的网页入口。推荐先让 AI 产出 YAML，再在这里检查和生成；报错时把检查结果交给 AI 修改。</p>
       <h2>输出</h2>
       <label for="outputName">文件名</label>
       <input id="outputName" value="bit-ppt" />
@@ -75,6 +96,8 @@ const WEB_APP_HTML = String.raw`<!doctype html>
       <div class="row">
         <button id="copyPromptBtn" class="secondary">复制提示词</button>
         <button id="copyRulesBtn" class="secondary">复制语法规则</button>
+        <button id="copyWorkflowBtn" class="secondary">复制使用教程</button>
+        <button id="copyErrorHelpBtn" class="secondary">复制报错求助</button>
         <button id="insertExampleBtn" class="secondary">插入最小示例</button>
         <button id="insertFullExampleBtn" class="secondary">插入完整示例</button>
       </div>
@@ -343,6 +366,42 @@ YAML 与公式注意事项：
 - 表格中有公式时，建议用单引号包住单元格。
 - 图片没有真实路径时使用 placeholder，不要写不存在的 assets 路径。
 - 每页文字保持短；如果 check 返回 warnings，按 repairPrompt 压缩或拆页。</textarea>
+      <textarea id="workflowGuide" hidden>请按这个流程和 AI 协作生成 PPT：
+
+1. 先发“提示词”
+- 告诉 AI：只输出 YAML，不要 Markdown 代码块，不要解释。
+- 补充你的任务：主题、页数、受众、用途、是否需要演讲稿。
+
+2. 再发“语法规则”
+- 让 AI 使用支持的 layout 和字段。
+- 告诉 AI：没有真实图片路径时必须用 image.mode: placeholder。
+- 告诉 AI：公式用 LaTeX，生成后要能通过 check。
+
+3. 最后发材料
+- 可以贴论文摘要、章节结构、实验结果、表格数据、图片说明、参考文献。
+- 要求 AI 生成完整 YAML。
+
+4. 在网页里检查
+- 把 YAML 粘到网页的 YAML 输入框，先点“检查”。
+- 没有 errors 再点“生成 PPTX”。
+
+5. 如果检查有问题
+- 把 check 返回的 errors、warnings、repairPrompt 和当前 YAML 一起发给 AI。
+- 要求 AI 只修改 YAML，不要解释，不要改变核心内容。</textarea>
+      <textarea id="errorHelpPrompt" hidden>下面是 BIT PPT Generator 的检查/生成报错。请你只输出修复后的完整 YAML，不要 Markdown 代码块，不要解释。
+
+修复要求：
+1. 保留原始内容意图和页面顺序。
+2. 修复未知 layout、字段结构错误、YAML 语法错误。
+3. 如果 warnings 说明文字过长，请压缩文字或拆成多页。
+4. 如果图片路径不存在，请改成 image.mode: placeholder，并补充具体 prompt。
+5. 如果公式导致 YAML 转义问题，请避免双引号，优先使用 plain scalar 或单引号。
+6. 输出必须能重新通过 check。
+
+网页报错 / check 结果：
+
+当前 YAML：
+</textarea>
       <textarea id="exampleYaml" hidden>meta:
   title: 北理工风格汇报
   author: BIT PPT Generator
@@ -617,8 +676,9 @@ slides:
       收尾时提示听众：生成结果是可编辑 PPTX。
       后续可以在 PowerPoint 或 WPS 中继续调整。</textarea>
     </section>
-    <section>
+    <section class="yaml-section">
       <h2>YAML</h2>
+      <div class="yaml-workspace">
       <textarea id="yaml" spellcheck="false">meta:
   title: 北理工风格 PPT
   author: BIT PPT Generator
@@ -633,6 +693,28 @@ slides:
       - 输出为可编辑 PPTX
       - 支持公式、图表和多种版式
 </textarea>
+      <aside class="side-guide">
+        <h3>使用教程</h3>
+        <div class="guide">
+          <div class="guide-step">
+            <strong>1. 先复制提示词</strong>
+            <p>发给 AI，说明它的角色、输出格式和页面限制。再补一句你的主题，例如“请做一份 10 页组会汇报”。</p>
+          </div>
+          <div class="guide-step">
+            <strong>2. 再复制语法规则</strong>
+            <p>继续发给 AI，让它按支持的 layout 和字段写 YAML。最后把论文摘要、实验结果、表格数据、图片说明等材料贴给 AI。</p>
+          </div>
+          <div class="guide-step">
+            <strong>3. 粘贴 YAML 后先检查</strong>
+            <p>把 AI 输出粘到左侧输入框，点“检查”。如果有 errors / warnings，把检查结果和当前 YAML 一起发回 AI，让它只修 YAML。</p>
+          </div>
+          <div class="guide-step">
+            <strong>4. 生成失败时这样沟通</strong>
+            <p>复制“报错求助”模板，把网页显示的错误、check 结果、当前 YAML 一起发给 AI；要求它保留内容意图，只修字段、长度、图片路径或公式写法。</p>
+          </div>
+        </div>
+      </aside>
+      </div>
     </section>
   </main>
   <script>
@@ -795,6 +877,8 @@ slides:
     $("generateBtn").addEventListener("click", generateDeck);
     $("copyPromptBtn").addEventListener("click", () => copyTextFrom("aiPrompt", "提示词"));
     $("copyRulesBtn").addEventListener("click", () => copyTextFrom("syntaxRules", "语法规则"));
+    $("copyWorkflowBtn").addEventListener("click", () => copyTextFrom("workflowGuide", "使用教程"));
+    $("copyErrorHelpBtn").addEventListener("click", () => copyTextFrom("errorHelpPrompt", "报错求助模板"));
     $("insertExampleBtn").addEventListener("click", insertExample);
     $("insertFullExampleBtn").addEventListener("click", insertFullExample);
     loadServerConfig();
