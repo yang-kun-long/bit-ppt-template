@@ -44,6 +44,15 @@ async function runCli(args, options = {}) {
   }
 }
 
+function stripNodeDeprecationWarnings(stderr) {
+  return stderr
+    .split(/\r?\n/)
+    .filter((line) => !/^\(node:\d+\) \[DEP\d+\] DeprecationWarning:/.test(line))
+    .filter((line) => !/^\(Use `node --trace-deprecation/.test(line))
+    .join("\n")
+    .trim();
+}
+
 function tempFile(name) {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), "bit-ppt-test-"));
   return {
@@ -623,7 +632,7 @@ test("CLI generate --json prints machine-readable result", async () => {
   const output = tempFile("example-json.pptx");
   const result = await runCli(["generate", "content/example.yaml", output.path, "--json"]);
   assert.equal(result.status, 0);
-  assert.equal(result.stderr, "");
+  assert.equal(stripNodeDeprecationWarnings(result.stderr), "");
   const payload = JSON.parse(result.stdout);
   assert.equal(payload.validation.errors.length, 0);
   assert.equal(payload.output, output.path);
