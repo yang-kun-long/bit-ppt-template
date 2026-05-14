@@ -13,6 +13,7 @@ import {
   getAllGuides,
   getGuideOverview,
   getGuideWorkflow,
+  getIconsGuide,
   getImagePlaceholderGuide,
   getLayoutExample,
   getLayoutGuide,
@@ -42,6 +43,7 @@ Progressive guide:
   bit-ppt guide example imageText
   bit-ppt guide speaker-notes
   bit-ppt guide image-placeholder
+  bit-ppt guide icons
   bit-ppt guide writing-rules
 
 Quality options:
@@ -163,6 +165,52 @@ ${JSON.stringify(guide.example, null, 2)}
 `);
 }
 
+function printIconsGuide(guide) {
+  const catalogLines = Object.entries(guide.catalog)
+    .sort(([a], [b]) => a.localeCompare(b))
+    .map(([category, names]) => `  ${category} (${names.length}): ${names.join(", ")}`)
+    .join("\n");
+  const sizeLines = Object.entries(guide.sizePresets)
+    .map(([key, inches]) => `  ${key}: ${inches}"`)
+    .join("\n");
+  const colorLines = Object.entries(guide.colorTokens)
+    .map(([key, hex]) => `  ${key} -> #${hex}`)
+    .join("\n");
+  console.log(`Icons (${guide.totalIcons} available)
+
+Purpose:
+  ${guide.purpose}
+
+Use when:
+  ${guide.whenToUse}
+
+Fields:
+${Object.entries(guide.fields).map(([name, spec]) => {
+    const required = spec.required ? "required" : "optional";
+    const value = spec.value ? ` = ${spec.value}` : "";
+    return `  ${name}: ${spec.type}${value} (${required})`;
+  }).join("\n")}
+
+Layouts:
+  ${guide.layouts.join(", ")}
+
+Size presets (inches):
+${sizeLines}
+
+Color tokens:
+${colorLines}
+
+Catalog by category:
+${catalogLines}
+
+Notes:
+${guide.notes.map((item) => `  - ${item}`).join("\n")}
+
+Example:
+${JSON.stringify(guide.example, null, 2)}
+`);
+}
+
 function printAvailableGuideLayouts() {
   console.log(listGuideLayouts().join("\n"));
 }
@@ -186,6 +234,7 @@ Usage:
   bit-ppt guide example <name> [--json]
   bit-ppt guide speaker-notes [--json]
   bit-ppt guide image-placeholder [--json]
+  bit-ppt guide icons [--json]
   bit-ppt guide writing-rules [--json]
 `);
 }
@@ -360,6 +409,13 @@ function printGuide(command, name, asJson) {
     const guide = getImagePlaceholderGuide();
     if (asJson) printJson(guide);
     else printImagePlaceholderGuide(guide);
+    return;
+  }
+
+  if (command === "icons") {
+    const guide = getIconsGuide();
+    if (asJson) printJson(guide);
+    else printIconsGuide(guide);
     return;
   }
 

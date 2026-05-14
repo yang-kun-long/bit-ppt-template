@@ -1,0 +1,4387 @@
+{
+  "version": 1,
+  "source": "北京理工大学学术答辩PPT模板正式版.pptx",
+  "license": "icons copyright remains with Beijing Institute of Technology; see README",
+  "icons": {
+    "code-brackets": {
+      "fragment": "fragments/F/code-brackets.xml",
+      "kind": "grpSp",
+      "source": {
+        "slide": 348,
+        "shape_index": 0,
+        "raw_id": "F-000"
+      },
+      "native_size_emu": [
+        529500,
+        421875
+      ],
+      "native_size_cm": [
+        1.471,
+        1.172
+      ],
+      "category": "tech",
+      "color_mode": "theme",
+      "byte_size": 11470
+    },
+    "theater-masks": {
+      "fragment": "fragments/F/theater-masks.xml",
+      "kind": "grpSp",
+      "source": {
+        "slide": 348,
+        "shape_index": 1,
+        "raw_id": "F-001"
+      },
+      "native_size_emu": [
+        535022,
+        436747
+      ],
+      "native_size_cm": [
+        1.486,
+        1.213
+      ],
+      "category": "creative",
+      "color_mode": "theme",
+      "byte_size": 13959
+    },
+    "stopwatch": {
+      "fragment": "fragments/F/stopwatch.xml",
+      "kind": "grpSp",
+      "source": {
+        "slide": 348,
+        "shape_index": 2,
+        "raw_id": "F-002"
+      },
+      "native_size_emu": [
+        523125,
+        523125
+      ],
+      "native_size_cm": [
+        1.453,
+        1.453
+      ],
+      "category": "misc",
+      "color_mode": "theme",
+      "byte_size": 11032
+    },
+    "drafting-compass": {
+      "fragment": "fragments/F/drafting-compass.xml",
+      "kind": "sp",
+      "source": {
+        "slide": 348,
+        "shape_index": 3,
+        "raw_id": "F-003"
+      },
+      "native_size_emu": [
+        421875,
+        523125
+      ],
+      "native_size_cm": [
+        1.172,
+        1.453
+      ],
+      "category": "academic",
+      "color_mode": "theme",
+      "byte_size": 13116
+    },
+    "desktop-computer": {
+      "fragment": "fragments/F/desktop-computer.xml",
+      "kind": "grpSp",
+      "source": {
+        "slide": 348,
+        "shape_index": 4,
+        "raw_id": "F-004"
+      },
+      "native_size_emu": [
+        525808,
+        289119
+      ],
+      "native_size_cm": [
+        1.461,
+        0.803
+      ],
+      "category": "tech",
+      "color_mode": "theme",
+      "byte_size": 14785
+    },
+    "american-football": {
+      "fragment": "fragments/F/american-football.xml",
+      "kind": "grpSp",
+      "source": {
+        "slide": 348,
+        "shape_index": 5,
+        "raw_id": "F-005"
+      },
+      "native_size_emu": [
+        405000,
+        525605
+      ],
+      "native_size_cm": [
+        1.125,
+        1.46
+      ],
+      "category": "sport",
+      "color_mode": "theme",
+      "byte_size": 17670
+    },
+    "hand-open": {
+      "fragment": "fragments/F/hand-open.xml",
+      "kind": "sp",
+      "source": {
+        "slide": 348,
+        "shape_index": 6,
+        "raw_id": "F-006"
+      },
+      "native_size_emu": [
+        523125,
+        472500
+      ],
+      "native_size_cm": [
+        1.453,
+        1.312
+      ],
+      "category": "people",
+      "color_mode": "theme",
+      "byte_size": 10071
+    },
+    "head-gear": {
+      "fragment": "fragments/F/head-gear.xml",
+      "kind": "grpSp",
+      "source": {
+        "slide": 348,
+        "shape_index": 7,
+        "raw_id": "F-007"
+      },
+      "native_size_emu": [
+        523125,
+        506250
+      ],
+      "native_size_cm": [
+        1.453,
+        1.406
+      ],
+      "category": "tech",
+      "color_mode": "theme",
+      "byte_size": 28570
+    },
+    "settings-gear": {
+      "fragment": "fragments/F/settings-gear.xml",
+      "kind": "sp",
+      "source": {
+        "slide": 348,
+        "shape_index": 8,
+        "raw_id": "F-008"
+      },
+      "native_size_emu": [
+        523125,
+        523125
+      ],
+      "native_size_cm": [
+        1.453,
+        1.453
+      ],
+      "category": "tech",
+      "color_mode": "theme",
+      "byte_size": 18124
+    },
+    "child-face": {
+      "fragment": "fragments/F/child-face.xml",
+      "kind": "grpSp",
+      "source": {
+        "slide": 348,
+        "shape_index": 9,
+        "raw_id": "F-009"
+      },
+      "native_size_emu": [
+        523125,
+        421875
+      ],
+      "native_size_cm": [
+        1.453,
+        1.172
+      ],
+      "category": "people",
+      "color_mode": "theme",
+      "byte_size": 13069
+    },
+    "marker-pen": {
+      "fragment": "fragments/F/marker-pen.xml",
+      "kind": "grpSp",
+      "source": {
+        "slide": 348,
+        "shape_index": 10,
+        "raw_id": "F-010"
+      },
+      "native_size_emu": [
+        519420,
+        499619
+      ],
+      "native_size_cm": [
+        1.443,
+        1.388
+      ],
+      "category": "creative",
+      "color_mode": "theme",
+      "byte_size": 13560
+    },
+    "pencils-crossed": {
+      "fragment": "fragments/F/pencils-crossed.xml",
+      "kind": "sp",
+      "source": {
+        "slide": 348,
+        "shape_index": 11,
+        "raw_id": "F-011"
+      },
+      "native_size_emu": [
+        523125,
+        523125
+      ],
+      "native_size_cm": [
+        1.453,
+        1.453
+      ],
+      "category": "creative",
+      "color_mode": "theme",
+      "byte_size": 28458
+    },
+    "math-board": {
+      "fragment": "fragments/F/math-board.xml",
+      "kind": "grpSp",
+      "source": {
+        "slide": 348,
+        "shape_index": 12,
+        "raw_id": "F-012"
+      },
+      "native_size_emu": [
+        525285,
+        520374
+      ],
+      "native_size_cm": [
+        1.459,
+        1.445
+      ],
+      "category": "academic",
+      "color_mode": "theme",
+      "byte_size": 35821
+    },
+    "award-medal": {
+      "fragment": "fragments/F/award-medal.xml",
+      "kind": "grpSp",
+      "source": {
+        "slide": 348,
+        "shape_index": 13,
+        "raw_id": "F-013"
+      },
+      "native_size_emu": [
+        404490,
+        524199
+      ],
+      "native_size_cm": [
+        1.124,
+        1.456
+      ],
+      "category": "people",
+      "color_mode": "theme",
+      "byte_size": 19611
+    },
+    "microscope": {
+      "fragment": "fragments/F/microscope.xml",
+      "kind": "grpSp",
+      "source": {
+        "slide": 348,
+        "shape_index": 14,
+        "raw_id": "F-014"
+      },
+      "native_size_emu": [
+        472500,
+        536482
+      ],
+      "native_size_cm": [
+        1.312,
+        1.49
+      ],
+      "category": "academic",
+      "color_mode": "theme",
+      "byte_size": 16650
+    },
+    "usb-drive": {
+      "fragment": "fragments/F/usb-drive.xml",
+      "kind": "grpSp",
+      "source": {
+        "slide": 348,
+        "shape_index": 15,
+        "raw_id": "F-015"
+      },
+      "native_size_emu": [
+        534465,
+        500838
+      ],
+      "native_size_cm": [
+        1.485,
+        1.391
+      ],
+      "category": "tech",
+      "color_mode": "theme",
+      "byte_size": 9380
+    },
+    "puzzle-piece": {
+      "fragment": "fragments/F/puzzle-piece.xml",
+      "kind": "sp",
+      "source": {
+        "slide": 348,
+        "shape_index": 16,
+        "raw_id": "F-016"
+      },
+      "native_size_emu": [
+        523125,
+        472500
+      ],
+      "native_size_cm": [
+        1.453,
+        1.312
+      ],
+      "category": "thinking",
+      "color_mode": "theme",
+      "byte_size": 17075
+    },
+    "team-podium": {
+      "fragment": "fragments/F/team-podium.xml",
+      "kind": "grpSp",
+      "source": {
+        "slide": 348,
+        "shape_index": 17,
+        "raw_id": "F-017"
+      },
+      "native_size_emu": [
+        523125,
+        530263
+      ],
+      "native_size_cm": [
+        1.453,
+        1.473
+      ],
+      "category": "people",
+      "color_mode": "theme",
+      "byte_size": 18582
+    },
+    "camera": {
+      "fragment": "fragments/F/camera.xml",
+      "kind": "grpSp",
+      "source": {
+        "slide": 348,
+        "shape_index": 18,
+        "raw_id": "F-018"
+      },
+      "native_size_emu": [
+        523125,
+        438750
+      ],
+      "native_size_cm": [
+        1.453,
+        1.219
+      ],
+      "category": "creative",
+      "color_mode": "theme",
+      "byte_size": 10027
+    },
+    "blackboard-formula": {
+      "fragment": "fragments/F/blackboard-formula.xml",
+      "kind": "grpSp",
+      "source": {
+        "slide": 348,
+        "shape_index": 19,
+        "raw_id": "F-019"
+      },
+      "native_size_emu": [
+        523125,
+        455625
+      ],
+      "native_size_cm": [
+        1.453,
+        1.266
+      ],
+      "category": "academic",
+      "color_mode": "theme",
+      "byte_size": 28942
+    },
+    "magnifier": {
+      "fragment": "fragments/F/magnifier.xml",
+      "kind": "grpSp",
+      "source": {
+        "slide": 348,
+        "shape_index": 20,
+        "raw_id": "F-020"
+      },
+      "native_size_emu": [
+        540000,
+        540000
+      ],
+      "native_size_cm": [
+        1.5,
+        1.5
+      ],
+      "category": "thinking",
+      "color_mode": "theme",
+      "byte_size": 13979
+    },
+    "protractor": {
+      "fragment": "fragments/F/protractor.xml",
+      "kind": "grpSp",
+      "source": {
+        "slide": 348,
+        "shape_index": 21,
+        "raw_id": "F-021"
+      },
+      "native_size_emu": [
+        523125,
+        337500
+      ],
+      "native_size_cm": [
+        1.453,
+        0.938
+      ],
+      "category": "academic",
+      "color_mode": "theme",
+      "byte_size": 29236
+    },
+    "paper-plane": {
+      "fragment": "fragments/F/paper-plane.xml",
+      "kind": "grpSp",
+      "source": {
+        "slide": 348,
+        "shape_index": 22,
+        "raw_id": "F-022"
+      },
+      "native_size_emu": [
+        523125,
+        491937
+      ],
+      "native_size_cm": [
+        1.453,
+        1.366
+      ],
+      "category": "misc",
+      "color_mode": "theme",
+      "byte_size": 7348
+    },
+    "briefcase": {
+      "fragment": "fragments/F/briefcase.xml",
+      "kind": "grpSp",
+      "source": {
+        "slide": 348,
+        "shape_index": 23,
+        "raw_id": "F-023"
+      },
+      "native_size_emu": [
+        421875,
+        533082
+      ],
+      "native_size_cm": [
+        1.172,
+        1.481
+      ],
+      "category": "office",
+      "color_mode": "theme",
+      "byte_size": 17171
+    },
+    "soccer-ball": {
+      "fragment": "fragments/F/soccer-ball.xml",
+      "kind": "sp",
+      "source": {
+        "slide": 348,
+        "shape_index": 24,
+        "raw_id": "F-024"
+      },
+      "native_size_emu": [
+        523125,
+        523125
+      ],
+      "native_size_cm": [
+        1.453,
+        1.453
+      ],
+      "category": "sport",
+      "color_mode": "theme",
+      "byte_size": 12498
+    },
+    "target-arrow": {
+      "fragment": "fragments/F/target-arrow.xml",
+      "kind": "grpSp",
+      "source": {
+        "slide": 348,
+        "shape_index": 25,
+        "raw_id": "F-025"
+      },
+      "native_size_emu": [
+        523125,
+        523125
+      ],
+      "native_size_cm": [
+        1.453,
+        1.453
+      ],
+      "category": "sport",
+      "color_mode": "theme",
+      "byte_size": 10030
+    },
+    "skull": {
+      "fragment": "fragments/F/skull.xml",
+      "kind": "sp",
+      "source": {
+        "slide": 348,
+        "shape_index": 26,
+        "raw_id": "F-026"
+      },
+      "native_size_emu": [
+        506250,
+        523125
+      ],
+      "native_size_cm": [
+        1.406,
+        1.453
+      ],
+      "category": "misc",
+      "color_mode": "theme",
+      "byte_size": 10684
+    },
+    "diploma-scroll": {
+      "fragment": "fragments/F/diploma-scroll.xml",
+      "kind": "grpSp",
+      "source": {
+        "slide": 348,
+        "shape_index": 27,
+        "raw_id": "F-027"
+      },
+      "native_size_emu": [
+        520509,
+        517527
+      ],
+      "native_size_cm": [
+        1.446,
+        1.438
+      ],
+      "category": "academic",
+      "color_mode": "theme",
+      "byte_size": 17071
+    },
+    "dna-helix": {
+      "fragment": "fragments/F/dna-helix.xml",
+      "kind": "sp",
+      "source": {
+        "slide": 348,
+        "shape_index": 28,
+        "raw_id": "F-028"
+      },
+      "native_size_emu": [
+        523125,
+        523125
+      ],
+      "native_size_cm": [
+        1.453,
+        1.453
+      ],
+      "category": "academic",
+      "color_mode": "theme",
+      "byte_size": 15939
+    },
+    "document": {
+      "fragment": "fragments/F/document.xml",
+      "kind": "grpSp",
+      "source": {
+        "slide": 348,
+        "shape_index": 29,
+        "raw_id": "F-029"
+      },
+      "native_size_emu": [
+        456638,
+        523007
+      ],
+      "native_size_cm": [
+        1.268,
+        1.453
+      ],
+      "category": "academic",
+      "color_mode": "theme",
+      "byte_size": 21192
+    },
+    "thumbs-up": {
+      "fragment": "fragments/F/thumbs-up.xml",
+      "kind": "sp",
+      "source": {
+        "slide": 348,
+        "shape_index": 30,
+        "raw_id": "F-030"
+      },
+      "native_size_emu": [
+        523125,
+        489375
+      ],
+      "native_size_cm": [
+        1.453,
+        1.359
+      ],
+      "category": "office",
+      "color_mode": "theme",
+      "byte_size": 17310
+    },
+    "checkmark": {
+      "fragment": "fragments/F/checkmark.xml",
+      "kind": "sp",
+      "source": {
+        "slide": 348,
+        "shape_index": 31,
+        "raw_id": "F-031"
+      },
+      "native_size_emu": [
+        523125,
+        438750
+      ],
+      "native_size_cm": [
+        1.453,
+        1.219
+      ],
+      "category": "office",
+      "color_mode": "theme",
+      "byte_size": 4846
+    },
+    "graduation-cap": {
+      "fragment": "fragments/F/graduation-cap.xml",
+      "kind": "grpSp",
+      "source": {
+        "slide": 348,
+        "shape_index": 32,
+        "raw_id": "F-032"
+      },
+      "native_size_emu": [
+        523125,
+        455625
+      ],
+      "native_size_cm": [
+        1.453,
+        1.266
+      ],
+      "category": "academic",
+      "color_mode": "theme",
+      "byte_size": 12966
+    },
+    "lightbulb": {
+      "fragment": "fragments/F/lightbulb.xml",
+      "kind": "grpSp",
+      "source": {
+        "slide": 348,
+        "shape_index": 33,
+        "raw_id": "F-033"
+      },
+      "native_size_emu": [
+        473036,
+        525437
+      ],
+      "native_size_cm": [
+        1.314,
+        1.46
+      ],
+      "category": "thinking",
+      "color_mode": "theme",
+      "byte_size": 30286
+    },
+    "infinity": {
+      "fragment": "fragments/F/infinity.xml",
+      "kind": "sp",
+      "source": {
+        "slide": 348,
+        "shape_index": 34,
+        "raw_id": "F-034"
+      },
+      "native_size_emu": [
+        506250,
+        320625
+      ],
+      "native_size_cm": [
+        1.406,
+        0.891
+      ],
+      "category": "thinking",
+      "color_mode": "theme",
+      "byte_size": 10862
+    },
+    "head-blocked": {
+      "fragment": "fragments/F/head-blocked.xml",
+      "kind": "sp",
+      "source": {
+        "slide": 348,
+        "shape_index": 35,
+        "raw_id": "F-035"
+      },
+      "native_size_emu": [
+        523125,
+        506250
+      ],
+      "native_size_cm": [
+        1.453,
+        1.406
+      ],
+      "category": "thinking",
+      "color_mode": "theme",
+      "byte_size": 12081
+    },
+    "computer-mouse": {
+      "fragment": "fragments/F/computer-mouse.xml",
+      "kind": "grpSp",
+      "source": {
+        "slide": 348,
+        "shape_index": 36,
+        "raw_id": "F-036"
+      },
+      "native_size_emu": [
+        270000,
+        537009
+      ],
+      "native_size_cm": [
+        0.75,
+        1.492
+      ],
+      "category": "tech",
+      "color_mode": "theme",
+      "byte_size": 10898
+    },
+    "music-note": {
+      "fragment": "fragments/F/music-note.xml",
+      "kind": "sp",
+      "source": {
+        "slide": 348,
+        "shape_index": 37,
+        "raw_id": "F-037"
+      },
+      "native_size_emu": [
+        472500,
+        523125
+      ],
+      "native_size_cm": [
+        1.312,
+        1.453
+      ],
+      "category": "creative",
+      "color_mode": "theme",
+      "byte_size": 9207
+    },
+    "treble-clef": {
+      "fragment": "fragments/F/treble-clef.xml",
+      "kind": "sp",
+      "source": {
+        "slide": 348,
+        "shape_index": 38,
+        "raw_id": "F-038"
+      },
+      "native_size_emu": [
+        270000,
+        523125
+      ],
+      "native_size_cm": [
+        0.75,
+        1.453
+      ],
+      "category": "creative",
+      "color_mode": "theme",
+      "byte_size": 30372
+    },
+    "envelope": {
+      "fragment": "fragments/F/envelope.xml",
+      "kind": "grpSp",
+      "source": {
+        "slide": 348,
+        "shape_index": 39,
+        "raw_id": "F-039"
+      },
+      "native_size_emu": [
+        526686,
+        360454
+      ],
+      "native_size_cm": [
+        1.463,
+        1.001
+      ],
+      "category": "office",
+      "color_mode": "theme",
+      "byte_size": 13747
+    },
+    "piano-keys": {
+      "fragment": "fragments/F/piano-keys.xml",
+      "kind": "sp",
+      "source": {
+        "slide": 348,
+        "shape_index": 40,
+        "raw_id": "F-040"
+      },
+      "native_size_emu": [
+        523125,
+        371250
+      ],
+      "native_size_cm": [
+        1.453,
+        1.031
+      ],
+      "category": "creative",
+      "color_mode": "theme",
+      "byte_size": 17304
+    },
+    "push-pin": {
+      "fragment": "fragments/F/push-pin.xml",
+      "kind": "sp",
+      "source": {
+        "slide": 348,
+        "shape_index": 41,
+        "raw_id": "F-041"
+      },
+      "native_size_emu": [
+        286875,
+        523125
+      ],
+      "native_size_cm": [
+        0.797,
+        1.453
+      ],
+      "category": "office",
+      "color_mode": "theme",
+      "byte_size": 11512
+    },
+    "quill-pen": {
+      "fragment": "fragments/F/quill-pen.xml",
+      "kind": "sp",
+      "source": {
+        "slide": 348,
+        "shape_index": 42,
+        "raw_id": "F-042"
+      },
+      "native_size_emu": [
+        303750,
+        523125
+      ],
+      "native_size_cm": [
+        0.844,
+        1.453
+      ],
+      "category": "creative",
+      "color_mode": "theme",
+      "byte_size": 13497
+    },
+    "puzzle-piece-alt": {
+      "fragment": "fragments/F/puzzle-piece-alt.xml",
+      "kind": "sp",
+      "source": {
+        "slide": 348,
+        "shape_index": 43,
+        "raw_id": "F-043"
+      },
+      "native_size_emu": [
+        523125,
+        421875
+      ],
+      "native_size_cm": [
+        1.453,
+        1.172
+      ],
+      "category": "thinking",
+      "color_mode": "theme",
+      "byte_size": 9308
+    },
+    "question-shield": {
+      "fragment": "fragments/F/question-shield.xml",
+      "kind": "sp",
+      "source": {
+        "slide": 348,
+        "shape_index": 44,
+        "raw_id": "F-044"
+      },
+      "native_size_emu": [
+        523125,
+        438750
+      ],
+      "native_size_cm": [
+        1.453,
+        1.219
+      ],
+      "category": "thinking",
+      "color_mode": "theme",
+      "byte_size": 9156
+    },
+    "bar-chart": {
+      "fragment": "fragments/F/bar-chart.xml",
+      "kind": "grpSp",
+      "source": {
+        "slide": 348,
+        "shape_index": 45,
+        "raw_id": "F-045"
+      },
+      "native_size_emu": [
+        521893,
+        527023
+      ],
+      "native_size_cm": [
+        1.45,
+        1.464
+      ],
+      "category": "office",
+      "color_mode": "theme",
+      "byte_size": 8552
+    },
+    "envelope-line": {
+      "fragment": "fragments/A/envelope-line.xml",
+      "kind": "grpSp",
+      "source": {
+        "slide": 334,
+        "shape_index": 0,
+        "raw_id": "A-000"
+      },
+      "native_size_emu": [
+        481013,
+        323851
+      ],
+      "native_size_cm": [
+        1.336,
+        0.9
+      ],
+      "category": "communication",
+      "color_mode": "theme",
+      "byte_size": 11482
+    },
+    "envelope-open": {
+      "fragment": "fragments/A/envelope-open.xml",
+      "kind": "grpSp",
+      "source": {
+        "slide": 334,
+        "shape_index": 1,
+        "raw_id": "A-001"
+      },
+      "native_size_emu": [
+        481013,
+        323851
+      ],
+      "native_size_cm": [
+        1.336,
+        0.9
+      ],
+      "category": "communication",
+      "color_mode": "theme",
+      "byte_size": 9125
+    },
+    "envelope-back": {
+      "fragment": "fragments/A/envelope-back.xml",
+      "kind": "sp",
+      "source": {
+        "slide": 334,
+        "shape_index": 2,
+        "raw_id": "A-002"
+      },
+      "native_size_emu": [
+        481013,
+        323851
+      ],
+      "native_size_cm": [
+        1.336,
+        0.9
+      ],
+      "category": "communication",
+      "color_mode": "theme",
+      "byte_size": 7116
+    },
+    "envelope-letter": {
+      "fragment": "fragments/A/envelope-letter.xml",
+      "kind": "sp",
+      "source": {
+        "slide": 334,
+        "shape_index": 3,
+        "raw_id": "A-003"
+      },
+      "native_size_emu": [
+        481013,
+        323851
+      ],
+      "native_size_cm": [
+        1.336,
+        0.9
+      ],
+      "category": "communication",
+      "color_mode": "theme",
+      "byte_size": 5822
+    },
+    "paperclip": {
+      "fragment": "fragments/A/paperclip.xml",
+      "kind": "sp",
+      "source": {
+        "slide": 334,
+        "shape_index": 4,
+        "raw_id": "A-004"
+      },
+      "native_size_emu": [
+        454025,
+        481013
+      ],
+      "native_size_cm": [
+        1.261,
+        1.336
+      ],
+      "category": "attachment",
+      "color_mode": "theme",
+      "byte_size": 8060
+    },
+    "magnifier-line": {
+      "fragment": "fragments/A/magnifier-line.xml",
+      "kind": "grpSp",
+      "source": {
+        "slide": 334,
+        "shape_index": 5,
+        "raw_id": "A-005"
+      },
+      "native_size_emu": [
+        490538,
+        469901
+      ],
+      "native_size_cm": [
+        1.363,
+        1.305
+      ],
+      "category": "communication",
+      "color_mode": "theme",
+      "byte_size": 10357
+    },
+    "pushpin": {
+      "fragment": "fragments/A/pushpin.xml",
+      "kind": "sp",
+      "source": {
+        "slide": 334,
+        "shape_index": 6,
+        "raw_id": "A-006"
+      },
+      "native_size_emu": [
+        484188,
+        474663
+      ],
+      "native_size_cm": [
+        1.345,
+        1.319
+      ],
+      "category": "attachment",
+      "color_mode": "theme",
+      "byte_size": 11039
+    },
+    "paperclip-curl": {
+      "fragment": "fragments/A/paperclip-curl.xml",
+      "kind": "sp",
+      "source": {
+        "slide": 334,
+        "shape_index": 7,
+        "raw_id": "A-007"
+      },
+      "native_size_emu": [
+        311150,
+        307976
+      ],
+      "native_size_cm": [
+        0.864,
+        0.855
+      ],
+      "category": "attachment",
+      "color_mode": "theme",
+      "byte_size": 6879
+    },
+    "paperclip-hook": {
+      "fragment": "fragments/A/paperclip-hook.xml",
+      "kind": "sp",
+      "source": {
+        "slide": 334,
+        "shape_index": 8,
+        "raw_id": "A-008"
+      },
+      "native_size_emu": [
+        311150,
+        307976
+      ],
+      "native_size_cm": [
+        0.864,
+        0.855
+      ],
+      "category": "attachment",
+      "color_mode": "theme",
+      "byte_size": 6638
+    },
+    "link-chain": {
+      "fragment": "fragments/A/link-chain.xml",
+      "kind": "sp",
+      "source": {
+        "slide": 334,
+        "shape_index": 9,
+        "raw_id": "A-009"
+      },
+      "native_size_emu": [
+        495300,
+        481013
+      ],
+      "native_size_cm": [
+        1.376,
+        1.336
+      ],
+      "category": "attachment",
+      "color_mode": "theme",
+      "byte_size": 13774
+    },
+    "link-rings": {
+      "fragment": "fragments/A/link-rings.xml",
+      "kind": "sp",
+      "source": {
+        "slide": 334,
+        "shape_index": 10,
+        "raw_id": "A-010"
+      },
+      "native_size_emu": [
+        382588,
+        481013
+      ],
+      "native_size_cm": [
+        1.063,
+        1.336
+      ],
+      "category": "attachment",
+      "color_mode": "theme",
+      "byte_size": 12558
+    },
+    "share-network": {
+      "fragment": "fragments/A/share-network.xml",
+      "kind": "sp",
+      "source": {
+        "slide": 334,
+        "shape_index": 11,
+        "raw_id": "A-011"
+      },
+      "native_size_emu": [
+        481013,
+        481013
+      ],
+      "native_size_cm": [
+        1.336,
+        1.336
+      ],
+      "category": "ui",
+      "color_mode": "theme",
+      "byte_size": 11756
+    },
+    "trash-can": {
+      "fragment": "fragments/A/trash-can.xml",
+      "kind": "sp",
+      "source": {
+        "slide": 334,
+        "shape_index": 12,
+        "raw_id": "A-012"
+      },
+      "native_size_emu": [
+        479425,
+        481013
+      ],
+      "native_size_cm": [
+        1.332,
+        1.336
+      ],
+      "category": "ui",
+      "color_mode": "theme",
+      "byte_size": 12042
+    },
+    "trash-can-bin": {
+      "fragment": "fragments/A/trash-can-bin.xml",
+      "kind": "grpSp",
+      "source": {
+        "slide": 334,
+        "shape_index": 13,
+        "raw_id": "A-013"
+      },
+      "native_size_emu": [
+        427038,
+        479426
+      ],
+      "native_size_cm": [
+        1.186,
+        1.332
+      ],
+      "category": "ui",
+      "color_mode": "theme",
+      "byte_size": 18038
+    },
+    "trash-can-lid": {
+      "fragment": "fragments/A/trash-can-lid.xml",
+      "kind": "grpSp",
+      "source": {
+        "slide": 334,
+        "shape_index": 14,
+        "raw_id": "A-014"
+      },
+      "native_size_emu": [
+        481013,
+        479426
+      ],
+      "native_size_cm": [
+        1.336,
+        1.332
+      ],
+      "category": "ui",
+      "color_mode": "theme",
+      "byte_size": 17624
+    },
+    "pie-half": {
+      "fragment": "fragments/A/pie-half.xml",
+      "kind": "sp",
+      "source": {
+        "slide": 334,
+        "shape_index": 15,
+        "raw_id": "A-015"
+      },
+      "native_size_emu": [
+        481013,
+        479426
+      ],
+      "native_size_cm": [
+        1.336,
+        1.332
+      ],
+      "category": "shape",
+      "color_mode": "theme",
+      "byte_size": 11736
+    },
+    "circle-line": {
+      "fragment": "fragments/A/circle-line.xml",
+      "kind": "sp",
+      "source": {
+        "slide": 334,
+        "shape_index": 16,
+        "raw_id": "A-016"
+      },
+      "native_size_emu": [
+        338138,
+        479426
+      ],
+      "native_size_cm": [
+        0.939,
+        1.332
+      ],
+      "category": "shape",
+      "color_mode": "theme",
+      "byte_size": 10054
+    },
+    "flag-line": {
+      "fragment": "fragments/A/flag-line.xml",
+      "kind": "sp",
+      "source": {
+        "slide": 334,
+        "shape_index": 17,
+        "raw_id": "A-017"
+      },
+      "native_size_emu": [
+        295275,
+        479426
+      ],
+      "native_size_cm": [
+        0.82,
+        1.332
+      ],
+      "category": "symbol",
+      "color_mode": "theme",
+      "byte_size": 8652
+    },
+    "layers": {
+      "fragment": "fragments/A/layers.xml",
+      "kind": "sp",
+      "source": {
+        "slide": 334,
+        "shape_index": 18,
+        "raw_id": "A-018"
+      },
+      "native_size_emu": [
+        481013,
+        461963
+      ],
+      "native_size_cm": [
+        1.336,
+        1.283
+      ],
+      "category": "ui",
+      "color_mode": "theme",
+      "byte_size": 9774
+    },
+    "copy": {
+      "fragment": "fragments/A/copy.xml",
+      "kind": "sp",
+      "source": {
+        "slide": 334,
+        "shape_index": 19,
+        "raw_id": "A-019"
+      },
+      "native_size_emu": [
+        479425,
+        479426
+      ],
+      "native_size_cm": [
+        1.332,
+        1.332
+      ],
+      "category": "ui",
+      "color_mode": "theme",
+      "byte_size": 7421
+    },
+    "droplet": {
+      "fragment": "fragments/A/droplet.xml",
+      "kind": "sp",
+      "source": {
+        "slide": 334,
+        "shape_index": 20,
+        "raw_id": "A-020"
+      },
+      "native_size_emu": [
+        322263,
+        479426
+      ],
+      "native_size_cm": [
+        0.895,
+        1.332
+      ],
+      "category": "shape",
+      "color_mode": "theme",
+      "byte_size": 6268
+    },
+    "phone-handset": {
+      "fragment": "fragments/A/phone-handset.xml",
+      "kind": "sp",
+      "source": {
+        "slide": 334,
+        "shape_index": 21,
+        "raw_id": "A-021"
+      },
+      "native_size_emu": [
+        112713,
+        115888
+      ],
+      "native_size_cm": [
+        0.313,
+        0.322
+      ],
+      "category": "communication",
+      "color_mode": "theme",
+      "byte_size": 3712
+    },
+    "eye": {
+      "fragment": "fragments/A/eye.xml",
+      "kind": "sp",
+      "source": {
+        "slide": 334,
+        "shape_index": 22,
+        "raw_id": "A-022"
+      },
+      "native_size_emu": [
+        481013,
+        288926
+      ],
+      "native_size_cm": [
+        1.336,
+        0.803
+      ],
+      "category": "symbol",
+      "color_mode": "theme",
+      "byte_size": 6904
+    },
+    "ring": {
+      "fragment": "fragments/A/ring.xml",
+      "kind": "sp",
+      "source": {
+        "slide": 334,
+        "shape_index": 23,
+        "raw_id": "A-023"
+      },
+      "native_size_emu": [
+        157163,
+        153988
+      ],
+      "native_size_cm": [
+        0.437,
+        0.428
+      ],
+      "category": "shape",
+      "color_mode": "theme",
+      "byte_size": 3691
+    },
+    "sliders-horizontal": {
+      "fragment": "fragments/A/sliders-horizontal.xml",
+      "kind": "grpSp",
+      "source": {
+        "slide": 334,
+        "shape_index": 24,
+        "raw_id": "A-024"
+      },
+      "native_size_emu": [
+        481013,
+        479426
+      ],
+      "native_size_cm": [
+        1.336,
+        1.332
+      ],
+      "category": "ui",
+      "color_mode": "theme",
+      "byte_size": 23969
+    },
+    "sliders-vertical": {
+      "fragment": "fragments/A/sliders-vertical.xml",
+      "kind": "grpSp",
+      "source": {
+        "slide": 334,
+        "shape_index": 25,
+        "raw_id": "A-025"
+      },
+      "native_size_emu": [
+        404812,
+        479426
+      ],
+      "native_size_cm": [
+        1.124,
+        1.332
+      ],
+      "category": "ui",
+      "color_mode": "theme",
+      "byte_size": 26723
+    },
+    "gear-line": {
+      "fragment": "fragments/A/gear-line.xml",
+      "kind": "grpSp",
+      "source": {
+        "slide": 334,
+        "shape_index": 26,
+        "raw_id": "A-026"
+      },
+      "native_size_emu": [
+        479425,
+        479426
+      ],
+      "native_size_cm": [
+        1.332,
+        1.332
+      ],
+      "category": "ui",
+      "color_mode": "theme",
+      "byte_size": 21950
+    },
+    "skip-end": {
+      "fragment": "fragments/A/skip-end.xml",
+      "kind": "grpSp",
+      "source": {
+        "slide": 334,
+        "shape_index": 27,
+        "raw_id": "A-027"
+      },
+      "native_size_emu": [
+        481013,
+        239713
+      ],
+      "native_size_cm": [
+        1.336,
+        0.666
+      ],
+      "category": "playback",
+      "color_mode": "theme",
+      "byte_size": 12239
+    },
+    "skip-start": {
+      "fragment": "fragments/A/skip-start.xml",
+      "kind": "grpSp",
+      "source": {
+        "slide": 334,
+        "shape_index": 28,
+        "raw_id": "A-028"
+      },
+      "native_size_emu": [
+        481014,
+        239713
+      ],
+      "native_size_cm": [
+        1.336,
+        0.666
+      ],
+      "category": "playback",
+      "color_mode": "theme",
+      "byte_size": 12367
+    },
+    "fast-forward": {
+      "fragment": "fragments/A/fast-forward.xml",
+      "kind": "grpSp",
+      "source": {
+        "slide": 334,
+        "shape_index": 29,
+        "raw_id": "A-029"
+      },
+      "native_size_emu": [
+        481013,
+        273051
+      ],
+      "native_size_cm": [
+        1.336,
+        0.758
+      ],
+      "category": "playback",
+      "color_mode": "theme",
+      "byte_size": 9224
+    },
+    "rewind": {
+      "fragment": "fragments/A/rewind.xml",
+      "kind": "grpSp",
+      "source": {
+        "slide": 334,
+        "shape_index": 30,
+        "raw_id": "A-030"
+      },
+      "native_size_emu": [
+        481013,
+        273051
+      ],
+      "native_size_cm": [
+        1.336,
+        0.758
+      ],
+      "category": "playback",
+      "color_mode": "theme",
+      "byte_size": 9298
+    },
+    "skip-to-end": {
+      "fragment": "fragments/A/skip-to-end.xml",
+      "kind": "grpSp",
+      "source": {
+        "slide": 334,
+        "shape_index": 31,
+        "raw_id": "A-031"
+      },
+      "native_size_emu": [
+        428626,
+        481013
+      ],
+      "native_size_cm": [
+        1.191,
+        1.336
+      ],
+      "category": "playback",
+      "color_mode": "theme",
+      "byte_size": 8076
+    },
+    "skip-to-start": {
+      "fragment": "fragments/A/skip-to-start.xml",
+      "kind": "grpSp",
+      "source": {
+        "slide": 334,
+        "shape_index": 32,
+        "raw_id": "A-032"
+      },
+      "native_size_emu": [
+        427037,
+        485776
+      ],
+      "native_size_cm": [
+        1.186,
+        1.349
+      ],
+      "category": "playback",
+      "color_mode": "theme",
+      "byte_size": 8140
+    },
+    "triangle-up": {
+      "fragment": "fragments/A/triangle-up.xml",
+      "kind": "grpSp",
+      "source": {
+        "slide": 334,
+        "shape_index": 33,
+        "raw_id": "A-033"
+      },
+      "native_size_emu": [
+        479425,
+        425451
+      ],
+      "native_size_cm": [
+        1.332,
+        1.182
+      ],
+      "category": "shape",
+      "color_mode": "theme",
+      "byte_size": 8360
+    },
+    "circle-shape": {
+      "fragment": "fragments/A/circle-shape.xml",
+      "kind": "sp",
+      "source": {
+        "slide": 334,
+        "shape_index": 34,
+        "raw_id": "A-034"
+      },
+      "native_size_emu": [
+        481013,
+        481013
+      ],
+      "native_size_cm": [
+        1.336,
+        1.336
+      ],
+      "category": "shape",
+      "color_mode": "theme",
+      "byte_size": 6110
+    },
+    "rectangle-vertical": {
+      "fragment": "fragments/A/rectangle-vertical.xml",
+      "kind": "sp",
+      "source": {
+        "slide": 334,
+        "shape_index": 35,
+        "raw_id": "A-035"
+      },
+      "native_size_emu": [
+        184150,
+        481013
+      ],
+      "native_size_cm": [
+        0.512,
+        1.336
+      ],
+      "category": "shape",
+      "color_mode": "theme",
+      "byte_size": 4492
+    },
+    "rectangle-tall": {
+      "fragment": "fragments/A/rectangle-tall.xml",
+      "kind": "sp",
+      "source": {
+        "slide": 334,
+        "shape_index": 36,
+        "raw_id": "A-036"
+      },
+      "native_size_emu": [
+        184150,
+        481013
+      ],
+      "native_size_cm": [
+        0.512,
+        1.336
+      ],
+      "category": "shape",
+      "color_mode": "theme",
+      "byte_size": 4492
+    },
+    "square-line": {
+      "fragment": "fragments/A/square-line.xml",
+      "kind": "sp",
+      "source": {
+        "slide": 334,
+        "shape_index": 37,
+        "raw_id": "A-037"
+      },
+      "native_size_emu": [
+        481013,
+        481013
+      ],
+      "native_size_cm": [
+        1.336,
+        1.336
+      ],
+      "category": "shape",
+      "color_mode": "theme",
+      "byte_size": 4479
+    },
+    "line-vertical": {
+      "fragment": "fragments/A/line-vertical.xml",
+      "kind": "sp",
+      "source": {
+        "slide": 334,
+        "shape_index": 38,
+        "raw_id": "A-038"
+      },
+      "native_size_emu": [
+        14288,
+        158750
+      ],
+      "native_size_cm": [
+        0.04,
+        0.441
+      ],
+      "category": "shape",
+      "color_mode": "theme",
+      "byte_size": 3056
+    },
+    "power-button": {
+      "fragment": "fragments/A/power-button.xml",
+      "kind": "sp",
+      "source": {
+        "slide": 334,
+        "shape_index": 39,
+        "raw_id": "A-039"
+      },
+      "native_size_emu": [
+        412750,
+        401638
+      ],
+      "native_size_cm": [
+        1.147,
+        1.116
+      ],
+      "category": "ui",
+      "color_mode": "theme",
+      "byte_size": 7757
+    },
+    "play-button": {
+      "fragment": "fragments/A/play-button.xml",
+      "kind": "sp",
+      "source": {
+        "slide": 334,
+        "shape_index": 40,
+        "raw_id": "A-040"
+      },
+      "native_size_emu": [
+        368300,
+        485776
+      ],
+      "native_size_cm": [
+        1.023,
+        1.349
+      ],
+      "category": "playback",
+      "color_mode": "theme",
+      "byte_size": 4273
+    },
+    "cube": {
+      "fragment": "fragments/A/cube.xml",
+      "kind": "sp",
+      "source": {
+        "slide": 334,
+        "shape_index": 41,
+        "raw_id": "A-041"
+      },
+      "native_size_emu": [
+        427038,
+        481013
+      ],
+      "native_size_cm": [
+        1.186,
+        1.336
+      ],
+      "category": "shape",
+      "color_mode": "theme",
+      "byte_size": 7752
+    },
+    "grid-3x3": {
+      "fragment": "fragments/A/grid-3x3.xml",
+      "kind": "grpSp",
+      "source": {
+        "slide": 334,
+        "shape_index": 42,
+        "raw_id": "A-042"
+      },
+      "native_size_emu": [
+        481014,
+        481013
+      ],
+      "native_size_cm": [
+        1.336,
+        1.336
+      ],
+      "category": "ui",
+      "color_mode": "theme",
+      "byte_size": 40940
+    },
+    "grid-2x2": {
+      "fragment": "fragments/A/grid-2x2.xml",
+      "kind": "grpSp",
+      "source": {
+        "slide": 334,
+        "shape_index": 43,
+        "raw_id": "A-043"
+      },
+      "native_size_emu": [
+        481013,
+        481013
+      ],
+      "native_size_cm": [
+        1.336,
+        1.336
+      ],
+      "category": "ui",
+      "color_mode": "theme",
+      "byte_size": 18614
+    },
+    "list-bars": {
+      "fragment": "fragments/A/list-bars.xml",
+      "kind": "grpSp",
+      "source": {
+        "slide": 334,
+        "shape_index": 44,
+        "raw_id": "A-044"
+      },
+      "native_size_emu": [
+        481013,
+        481013
+      ],
+      "native_size_cm": [
+        1.336,
+        1.336
+      ],
+      "category": "ui",
+      "color_mode": "theme",
+      "byte_size": 14274
+    },
+    "menu-lines": {
+      "fragment": "fragments/A/menu-lines.xml",
+      "kind": "grpSp",
+      "source": {
+        "slide": 334,
+        "shape_index": 45,
+        "raw_id": "A-045"
+      },
+      "native_size_emu": [
+        479425,
+        296863
+      ],
+      "native_size_cm": [
+        1.332,
+        0.825
+      ],
+      "category": "ui",
+      "color_mode": "theme",
+      "byte_size": 10022
+    },
+    "arrow-merge": {
+      "fragment": "fragments/A/arrow-merge.xml",
+      "kind": "sp",
+      "source": {
+        "slide": 334,
+        "shape_index": 46,
+        "raw_id": "A-046"
+      },
+      "native_size_emu": [
+        481013,
+        203200
+      ],
+      "native_size_cm": [
+        1.336,
+        0.564
+      ],
+      "category": "arrow",
+      "color_mode": "theme",
+      "byte_size": 7077
+    },
+    "arrow-split": {
+      "fragment": "fragments/A/arrow-split.xml",
+      "kind": "sp",
+      "source": {
+        "slide": 334,
+        "shape_index": 47,
+        "raw_id": "A-047"
+      },
+      "native_size_emu": [
+        479425,
+        417513
+      ],
+      "native_size_cm": [
+        1.332,
+        1.16
+      ],
+      "category": "arrow",
+      "color_mode": "theme",
+      "byte_size": 8952
+    },
+    "arrows-swap": {
+      "fragment": "fragments/A/arrows-swap.xml",
+      "kind": "grpSp",
+      "source": {
+        "slide": 334,
+        "shape_index": 48,
+        "raw_id": "A-048"
+      },
+      "native_size_emu": [
+        481013,
+        420688
+      ],
+      "native_size_cm": [
+        1.336,
+        1.169
+      ],
+      "category": "arrow",
+      "color_mode": "theme",
+      "byte_size": 14655
+    },
+    "arrow-curve-cw": {
+      "fragment": "fragments/A/arrow-curve-cw.xml",
+      "kind": "grpSp",
+      "source": {
+        "slide": 334,
+        "shape_index": 49,
+        "raw_id": "A-049"
+      },
+      "native_size_emu": [
+        481013,
+        484188
+      ],
+      "native_size_cm": [
+        1.336,
+        1.345
+      ],
+      "category": "arrow",
+      "color_mode": "theme",
+      "byte_size": 11666
+    },
+    "arrow-curve-ccw": {
+      "fragment": "fragments/A/arrow-curve-ccw.xml",
+      "kind": "sp",
+      "source": {
+        "slide": 334,
+        "shape_index": 50,
+        "raw_id": "A-050"
+      },
+      "native_size_emu": [
+        481013,
+        401638
+      ],
+      "native_size_cm": [
+        1.336,
+        1.116
+      ],
+      "category": "arrow",
+      "color_mode": "theme",
+      "byte_size": 6957
+    },
+    "undo-curve": {
+      "fragment": "fragments/A/undo-curve.xml",
+      "kind": "sp",
+      "source": {
+        "slide": 334,
+        "shape_index": 51,
+        "raw_id": "A-051"
+      },
+      "native_size_emu": [
+        454025,
+        250825
+      ],
+      "native_size_cm": [
+        1.261,
+        0.697
+      ],
+      "category": "arrow",
+      "color_mode": "theme",
+      "byte_size": 6299
+    },
+    "redo-curve": {
+      "fragment": "fragments/A/redo-curve.xml",
+      "kind": "sp",
+      "source": {
+        "slide": 334,
+        "shape_index": 52,
+        "raw_id": "A-052"
+      },
+      "native_size_emu": [
+        454025,
+        249238
+      ],
+      "native_size_cm": [
+        1.261,
+        0.692
+      ],
+      "category": "arrow",
+      "color_mode": "theme",
+      "byte_size": 6268
+    },
+    "refresh": {
+      "fragment": "fragments/A/refresh.xml",
+      "kind": "sp",
+      "source": {
+        "slide": 334,
+        "shape_index": 53,
+        "raw_id": "A-053"
+      },
+      "native_size_emu": [
+        479425,
+        481013
+      ],
+      "native_size_cm": [
+        1.332,
+        1.336
+      ],
+      "category": "ui",
+      "color_mode": "theme",
+      "byte_size": 8283
+    },
+    "login": {
+      "fragment": "fragments/A/login.xml",
+      "kind": "grpSp",
+      "source": {
+        "slide": 334,
+        "shape_index": 54,
+        "raw_id": "A-054"
+      },
+      "native_size_emu": [
+        481013,
+        481013
+      ],
+      "native_size_cm": [
+        1.336,
+        1.336
+      ],
+      "category": "ui",
+      "color_mode": "theme",
+      "byte_size": 11314
+    },
+    "arrows-expand-all": {
+      "fragment": "fragments/A/arrows-expand-all.xml",
+      "kind": "sp",
+      "source": {
+        "slide": 334,
+        "shape_index": 55,
+        "raw_id": "A-055"
+      },
+      "native_size_emu": [
+        481013,
+        481013
+      ],
+      "native_size_cm": [
+        1.336,
+        1.336
+      ],
+      "category": "arrow",
+      "color_mode": "theme",
+      "byte_size": 11913
+    },
+    "arrow-up-down": {
+      "fragment": "fragments/A/arrow-up-down.xml",
+      "kind": "sp",
+      "source": {
+        "slide": 334,
+        "shape_index": 56,
+        "raw_id": "A-056"
+      },
+      "native_size_emu": [
+        173038,
+        481013
+      ],
+      "native_size_cm": [
+        0.481,
+        1.336
+      ],
+      "category": "arrow",
+      "color_mode": "theme",
+      "byte_size": 6715
+    },
+    "arrow-left-right": {
+      "fragment": "fragments/A/arrow-left-right.xml",
+      "kind": "sp",
+      "source": {
+        "slide": 334,
+        "shape_index": 57,
+        "raw_id": "A-057"
+      },
+      "native_size_emu": [
+        481013,
+        176213
+      ],
+      "native_size_cm": [
+        1.336,
+        0.489
+      ],
+      "category": "arrow",
+      "color_mode": "theme",
+      "byte_size": 6027
+    },
+    "arrows-collapse": {
+      "fragment": "fragments/A/arrows-collapse.xml",
+      "kind": "grpSp",
+      "source": {
+        "slide": 334,
+        "shape_index": 58,
+        "raw_id": "A-058"
+      },
+      "native_size_emu": [
+        479426,
+        481013
+      ],
+      "native_size_cm": [
+        1.332,
+        1.336
+      ],
+      "category": "arrow",
+      "color_mode": "theme",
+      "byte_size": 19740
+    },
+    "arrows-expand": {
+      "fragment": "fragments/A/arrows-expand.xml",
+      "kind": "grpSp",
+      "source": {
+        "slide": 334,
+        "shape_index": 59,
+        "raw_id": "A-059"
+      },
+      "native_size_emu": [
+        481013,
+        481013
+      ],
+      "native_size_cm": [
+        1.336,
+        1.336
+      ],
+      "category": "arrow",
+      "color_mode": "theme",
+      "byte_size": 19736
+    },
+    "arrow-corner-up-right": {
+      "fragment": "fragments/A/arrow-corner-up-right.xml",
+      "kind": "grpSp",
+      "source": {
+        "slide": 334,
+        "shape_index": 60,
+        "raw_id": "A-060"
+      },
+      "native_size_emu": [
+        479425,
+        481013
+      ],
+      "native_size_cm": [
+        1.332,
+        1.336
+      ],
+      "category": "arrow",
+      "color_mode": "theme",
+      "byte_size": 10069
+    },
+    "arrow-up": {
+      "fragment": "fragments/A/arrow-up.xml",
+      "kind": "grpSp",
+      "source": {
+        "slide": 334,
+        "shape_index": 61,
+        "raw_id": "A-061"
+      },
+      "native_size_emu": [
+        481013,
+        481013
+      ],
+      "native_size_cm": [
+        1.336,
+        1.336
+      ],
+      "category": "arrow",
+      "color_mode": "theme",
+      "byte_size": 9862
+    },
+    "arrow-up-right": {
+      "fragment": "fragments/A/arrow-up-right.xml",
+      "kind": "sp",
+      "source": {
+        "slide": 334,
+        "shape_index": 62,
+        "raw_id": "A-062"
+      },
+      "native_size_emu": [
+        330200,
+        481013
+      ],
+      "native_size_cm": [
+        0.917,
+        1.336
+      ],
+      "category": "arrow",
+      "color_mode": "theme",
+      "byte_size": 4793
+    },
+    "badge-wave": {
+      "fragment": "fragments/A/badge-wave.xml",
+      "kind": "sp",
+      "source": {
+        "slide": 334,
+        "shape_index": 63,
+        "raw_id": "A-063"
+      },
+      "native_size_emu": [
+        330200,
+        481013
+      ],
+      "native_size_cm": [
+        0.917,
+        1.336
+      ],
+      "category": "symbol",
+      "color_mode": "theme",
+      "byte_size": 5229
+    },
+    "arrow-right": {
+      "fragment": "fragments/A/arrow-right.xml",
+      "kind": "sp",
+      "source": {
+        "slide": 334,
+        "shape_index": 64,
+        "raw_id": "A-064"
+      },
+      "native_size_emu": [
+        481013,
+        334963
+      ],
+      "native_size_cm": [
+        1.336,
+        0.93
+      ],
+      "category": "arrow",
+      "color_mode": "theme",
+      "byte_size": 4805
+    },
+    "arrow-left": {
+      "fragment": "fragments/A/arrow-left.xml",
+      "kind": "sp",
+      "source": {
+        "slide": 334,
+        "shape_index": 65,
+        "raw_id": "A-065"
+      },
+      "native_size_emu": [
+        479425,
+        334963
+      ],
+      "native_size_cm": [
+        1.332,
+        0.93
+      ],
+      "category": "arrow",
+      "color_mode": "theme",
+      "byte_size": 4790
+    },
+    "chevron-up": {
+      "fragment": "fragments/A/chevron-up.xml",
+      "kind": "sp",
+      "source": {
+        "slide": 334,
+        "shape_index": 66,
+        "raw_id": "A-066"
+      },
+      "native_size_emu": [
+        481013,
+        249238
+      ],
+      "native_size_cm": [
+        1.336,
+        0.692
+      ],
+      "category": "arrow",
+      "color_mode": "theme",
+      "byte_size": 4108
+    },
+    "chevron-down": {
+      "fragment": "fragments/A/chevron-down.xml",
+      "kind": "sp",
+      "source": {
+        "slide": 334,
+        "shape_index": 67,
+        "raw_id": "A-067"
+      },
+      "native_size_emu": [
+        481013,
+        249238
+      ],
+      "native_size_cm": [
+        1.336,
+        0.692
+      ],
+      "category": "arrow",
+      "color_mode": "theme",
+      "byte_size": 3930
+    },
+    "chevron-right": {
+      "fragment": "fragments/A/chevron-right.xml",
+      "kind": "sp",
+      "source": {
+        "slide": 334,
+        "shape_index": 68,
+        "raw_id": "A-068"
+      },
+      "native_size_emu": [
+        247650,
+        481013
+      ],
+      "native_size_cm": [
+        0.688,
+        1.336
+      ],
+      "category": "arrow",
+      "color_mode": "theme",
+      "byte_size": 4141
+    },
+    "chevron-left": {
+      "fragment": "fragments/A/chevron-left.xml",
+      "kind": "sp",
+      "source": {
+        "slide": 334,
+        "shape_index": 69,
+        "raw_id": "A-069"
+      },
+      "native_size_emu": [
+        247650,
+        481013
+      ],
+      "native_size_cm": [
+        0.688,
+        1.336
+      ],
+      "category": "arrow",
+      "color_mode": "theme",
+      "byte_size": 4099
+    },
+    "badge-wave-large": {
+      "fragment": "fragments/A/badge-wave-large.xml",
+      "kind": "sp",
+      "source": {
+        "slide": 334,
+        "shape_index": 70,
+        "raw_id": "A-070"
+      },
+      "native_size_emu": [
+        466725,
+        481013
+      ],
+      "native_size_cm": [
+        1.296,
+        1.336
+      ],
+      "category": "symbol",
+      "color_mode": "theme",
+      "byte_size": 17113
+    },
+    "badge-flower": {
+      "fragment": "fragments/A/badge-flower.xml",
+      "kind": "sp",
+      "source": {
+        "slide": 334,
+        "shape_index": 71,
+        "raw_id": "A-071"
+      },
+      "native_size_emu": [
+        481013,
+        487363
+      ],
+      "native_size_cm": [
+        1.336,
+        1.354
+      ],
+      "category": "symbol",
+      "color_mode": "theme",
+      "byte_size": 20424
+    },
+    "badge-bumpy": {
+      "fragment": "fragments/A/badge-bumpy.xml",
+      "kind": "sp",
+      "source": {
+        "slide": 334,
+        "shape_index": 72,
+        "raw_id": "A-072"
+      },
+      "native_size_emu": [
+        479425,
+        484188
+      ],
+      "native_size_cm": [
+        1.332,
+        1.345
+      ],
+      "category": "symbol",
+      "color_mode": "theme",
+      "byte_size": 18846
+    },
+    "star-line": {
+      "fragment": "fragments/A/star-line.xml",
+      "kind": "sp",
+      "source": {
+        "slide": 334,
+        "shape_index": 73,
+        "raw_id": "A-073"
+      },
+      "native_size_emu": [
+        481013,
+        481013
+      ],
+      "native_size_cm": [
+        1.336,
+        1.336
+      ],
+      "category": "symbol",
+      "color_mode": "theme",
+      "byte_size": 15715
+    },
+    "dots-ring": {
+      "fragment": "fragments/A/dots-ring.xml",
+      "kind": "sp",
+      "source": {
+        "slide": 334,
+        "shape_index": 74,
+        "raw_id": "A-074"
+      },
+      "native_size_emu": [
+        481013,
+        461963
+      ],
+      "native_size_cm": [
+        1.336,
+        1.283
+      ],
+      "category": "symbol",
+      "color_mode": "theme",
+      "byte_size": 8194
+    },
+    "burst": {
+      "fragment": "fragments/A/burst.xml",
+      "kind": "grpSp",
+      "source": {
+        "slide": 334,
+        "shape_index": 75,
+        "raw_id": "A-075"
+      },
+      "native_size_emu": [
+        481012,
+        481014
+      ],
+      "native_size_cm": [
+        1.336,
+        1.336
+      ],
+      "category": "symbol",
+      "color_mode": "theme",
+      "byte_size": 34398
+    },
+    "info-circle": {
+      "fragment": "fragments/A/info-circle.xml",
+      "kind": "grpSp",
+      "source": {
+        "slide": 334,
+        "shape_index": 76,
+        "raw_id": "A-076"
+      },
+      "native_size_emu": [
+        481013,
+        481013
+      ],
+      "native_size_cm": [
+        1.336,
+        1.336
+      ],
+      "category": "symbol",
+      "color_mode": "theme",
+      "byte_size": 40926
+    },
+    "question-mark": {
+      "fragment": "fragments/A/question-mark.xml",
+      "kind": "grpSp",
+      "source": {
+        "slide": 334,
+        "shape_index": 77,
+        "raw_id": "A-077"
+      },
+      "native_size_emu": [
+        479425,
+        481013
+      ],
+      "native_size_cm": [
+        1.332,
+        1.336
+      ],
+      "category": "symbol",
+      "color_mode": "theme",
+      "byte_size": 10431
+    },
+    "question-curve": {
+      "fragment": "fragments/A/question-curve.xml",
+      "kind": "grpSp",
+      "source": {
+        "slide": 334,
+        "shape_index": 78,
+        "raw_id": "A-078"
+      },
+      "native_size_emu": [
+        293688,
+        481013
+      ],
+      "native_size_cm": [
+        0.816,
+        1.336
+      ],
+      "category": "symbol",
+      "color_mode": "theme",
+      "byte_size": 9685
+    },
+    "exclamation-mark": {
+      "fragment": "fragments/A/exclamation-mark.xml",
+      "kind": "grpSp",
+      "source": {
+        "slide": 334,
+        "shape_index": 79,
+        "raw_id": "A-079"
+      },
+      "native_size_emu": [
+        25400,
+        481013
+      ],
+      "native_size_cm": [
+        0.071,
+        1.336
+      ],
+      "category": "symbol",
+      "color_mode": "theme",
+      "byte_size": 5443
+    },
+    "code-tag": {
+      "fragment": "fragments/A/code-tag.xml",
+      "kind": "grpSp",
+      "source": {
+        "slide": 334,
+        "shape_index": 80,
+        "raw_id": "A-080"
+      },
+      "native_size_emu": [
+        481013,
+        233363
+      ],
+      "native_size_cm": [
+        1.336,
+        0.648
+      ],
+      "category": "ui",
+      "color_mode": "theme",
+      "byte_size": 13978
+    },
+    "checkbox-checked": {
+      "fragment": "fragments/A/checkbox-checked.xml",
+      "kind": "grpSp",
+      "source": {
+        "slide": 334,
+        "shape_index": 81,
+        "raw_id": "A-081"
+      },
+      "native_size_emu": [
+        481013,
+        454025
+      ],
+      "native_size_cm": [
+        1.336,
+        1.261
+      ],
+      "category": "symbol",
+      "color_mode": "theme",
+      "byte_size": 9891
+    },
+    "checkmark-line": {
+      "fragment": "fragments/A/checkmark-line.xml",
+      "kind": "sp",
+      "source": {
+        "slide": 334,
+        "shape_index": 82,
+        "raw_id": "A-082"
+      },
+      "native_size_emu": [
+        479425,
+        330201
+      ],
+      "native_size_cm": [
+        1.332,
+        0.917
+      ],
+      "category": "symbol",
+      "color_mode": "theme",
+      "byte_size": 4152
+    },
+    "cross-x": {
+      "fragment": "fragments/A/cross-x.xml",
+      "kind": "sp",
+      "source": {
+        "slide": 334,
+        "shape_index": 83,
+        "raw_id": "A-083"
+      },
+      "native_size_emu": [
+        481013,
+        481013
+      ],
+      "native_size_cm": [
+        1.336,
+        1.336
+      ],
+      "category": "symbol",
+      "color_mode": "theme",
+      "byte_size": 6102
+    },
+    "percent": {
+      "fragment": "fragments/A/percent.xml",
+      "kind": "grpSp",
+      "source": {
+        "slide": 334,
+        "shape_index": 84,
+        "raw_id": "A-084"
+      },
+      "native_size_emu": [
+        479426,
+        485776
+      ],
+      "native_size_cm": [
+        1.332,
+        1.349
+      ],
+      "category": "math",
+      "color_mode": "theme",
+      "byte_size": 16306
+    },
+    "minus": {
+      "fragment": "fragments/A/minus.xml",
+      "kind": "grpSp",
+      "source": {
+        "slide": 334,
+        "shape_index": 85,
+        "raw_id": "A-085"
+      },
+      "native_size_emu": [
+        481013,
+        211138
+      ],
+      "native_size_cm": [
+        1.336,
+        0.586
+      ],
+      "category": "math",
+      "color_mode": "theme",
+      "byte_size": 6934
+    },
+    "divide": {
+      "fragment": "fragments/A/divide.xml",
+      "kind": "grpSp",
+      "source": {
+        "slide": 334,
+        "shape_index": 86,
+        "raw_id": "A-086"
+      },
+      "native_size_emu": [
+        481013,
+        428626
+      ],
+      "native_size_cm": [
+        1.336,
+        1.191
+      ],
+      "category": "math",
+      "color_mode": "theme",
+      "byte_size": 7033
+    },
+    "asterisk": {
+      "fragment": "fragments/A/asterisk.xml",
+      "kind": "sp",
+      "source": {
+        "slide": 334,
+        "shape_index": 87,
+        "raw_id": "A-087"
+      },
+      "native_size_emu": [
+        420688,
+        481013
+      ],
+      "native_size_cm": [
+        1.169,
+        1.336
+      ],
+      "category": "math",
+      "color_mode": "theme",
+      "byte_size": 7382
+    },
+    "dash": {
+      "fragment": "fragments/A/dash.xml",
+      "kind": "sp",
+      "source": {
+        "slide": 334,
+        "shape_index": 88,
+        "raw_id": "A-088"
+      },
+      "native_size_emu": [
+        481013,
+        14288
+      ],
+      "native_size_cm": [
+        1.336,
+        0.04
+      ],
+      "category": "math",
+      "color_mode": "theme",
+      "byte_size": 3079
+    },
+    "plus": {
+      "fragment": "fragments/A/plus.xml",
+      "kind": "sp",
+      "source": {
+        "slide": 334,
+        "shape_index": 89,
+        "raw_id": "A-089"
+      },
+      "native_size_emu": [
+        479425,
+        481013
+      ],
+      "native_size_cm": [
+        1.332,
+        1.336
+      ],
+      "category": "math",
+      "color_mode": "theme",
+      "byte_size": 5251
+    },
+    "inbox-empty": {
+      "fragment": "fragments/C/inbox-empty.xml",
+      "kind": "sp",
+      "source": {
+        "slide": 339,
+        "shape_index": 0,
+        "raw_id": "C-000"
+      },
+      "native_size_emu": [
+        481013,
+        368300
+      ],
+      "native_size_cm": [
+        1.336,
+        1.023
+      ],
+      "category": "storage",
+      "color_mode": "theme",
+      "byte_size": 9238
+    },
+    "inbox-tray": {
+      "fragment": "fragments/C/inbox-tray.xml",
+      "kind": "grpSp",
+      "source": {
+        "slide": 339,
+        "shape_index": 1,
+        "raw_id": "C-001"
+      },
+      "native_size_emu": [
+        481013,
+        368300
+      ],
+      "native_size_cm": [
+        1.336,
+        1.023
+      ],
+      "category": "storage",
+      "color_mode": "theme",
+      "byte_size": 16198
+    },
+    "inbox-stack": {
+      "fragment": "fragments/C/inbox-stack.xml",
+      "kind": "grpSp",
+      "source": {
+        "slide": 339,
+        "shape_index": 2,
+        "raw_id": "C-002"
+      },
+      "native_size_emu": [
+        481013,
+        420688
+      ],
+      "native_size_cm": [
+        1.336,
+        1.169
+      ],
+      "category": "storage",
+      "color_mode": "theme",
+      "byte_size": 12099
+    },
+    "inbox-document": {
+      "fragment": "fragments/C/inbox-document.xml",
+      "kind": "grpSp",
+      "source": {
+        "slide": 339,
+        "shape_index": 3,
+        "raw_id": "C-003"
+      },
+      "native_size_emu": [
+        481013,
+        420688
+      ],
+      "native_size_cm": [
+        1.336,
+        1.169
+      ],
+      "category": "storage",
+      "color_mode": "theme",
+      "byte_size": 17804
+    },
+    "wifi-signal": {
+      "fragment": "fragments/C/wifi-signal.xml",
+      "kind": "grpSp",
+      "source": {
+        "slide": 339,
+        "shape_index": 4,
+        "raw_id": "C-004"
+      },
+      "native_size_emu": [
+        479425,
+        354012
+      ],
+      "native_size_cm": [
+        1.332,
+        0.983
+      ],
+      "category": "ui",
+      "color_mode": "theme",
+      "byte_size": 27480
+    },
+    "cpu-chip": {
+      "fragment": "fragments/C/cpu-chip.xml",
+      "kind": "grpSp",
+      "source": {
+        "slide": 339,
+        "shape_index": 5,
+        "raw_id": "C-005"
+      },
+      "native_size_emu": [
+        481013,
+        481013
+      ],
+      "native_size_cm": [
+        1.336,
+        1.336
+      ],
+      "category": "ui",
+      "color_mode": "theme",
+      "byte_size": 20054
+    },
+    "server-rack": {
+      "fragment": "fragments/C/server-rack.xml",
+      "kind": "grpSp",
+      "source": {
+        "slide": 339,
+        "shape_index": 6,
+        "raw_id": "C-006"
+      },
+      "native_size_emu": [
+        479425,
+        404813
+      ],
+      "native_size_cm": [
+        1.332,
+        1.124
+      ],
+      "category": "storage",
+      "color_mode": "theme",
+      "byte_size": 34966
+    },
+    "database-cylinder": {
+      "fragment": "fragments/C/database-cylinder.xml",
+      "kind": "grpSp",
+      "source": {
+        "slide": 339,
+        "shape_index": 7,
+        "raw_id": "C-007"
+      },
+      "native_size_emu": [
+        481013,
+        450850
+      ],
+      "native_size_cm": [
+        1.336,
+        1.252
+      ],
+      "category": "storage",
+      "color_mode": "theme",
+      "byte_size": 16361
+    },
+    "database-x": {
+      "fragment": "fragments/C/database-x.xml",
+      "kind": "grpSp",
+      "source": {
+        "slide": 339,
+        "shape_index": 8,
+        "raw_id": "C-008"
+      },
+      "native_size_emu": [
+        481013,
+        450850
+      ],
+      "native_size_cm": [
+        1.336,
+        1.252
+      ],
+      "category": "storage",
+      "color_mode": "theme",
+      "byte_size": 18235
+    },
+    "database-arrow": {
+      "fragment": "fragments/C/database-arrow.xml",
+      "kind": "grpSp",
+      "source": {
+        "slide": 339,
+        "shape_index": 9,
+        "raw_id": "C-009"
+      },
+      "native_size_emu": [
+        481013,
+        450850
+      ],
+      "native_size_cm": [
+        1.336,
+        1.252
+      ],
+      "category": "storage",
+      "color_mode": "theme",
+      "byte_size": 15310
+    },
+    "database-add": {
+      "fragment": "fragments/C/database-add.xml",
+      "kind": "grpSp",
+      "source": {
+        "slide": 339,
+        "shape_index": 10,
+        "raw_id": "C-010"
+      },
+      "native_size_emu": [
+        481013,
+        450850
+      ],
+      "native_size_cm": [
+        1.336,
+        1.252
+      ],
+      "category": "storage",
+      "color_mode": "theme",
+      "byte_size": 17443
+    },
+    "database-folder": {
+      "fragment": "fragments/C/database-folder.xml",
+      "kind": "sp",
+      "source": {
+        "slide": 339,
+        "shape_index": 11,
+        "raw_id": "C-011"
+      },
+      "native_size_emu": [
+        479425,
+        450850
+      ],
+      "native_size_cm": [
+        1.332,
+        1.252
+      ],
+      "category": "storage",
+      "color_mode": "theme",
+      "byte_size": 12887
+    },
+    "window-tabs": {
+      "fragment": "fragments/C/window-tabs.xml",
+      "kind": "grpSp",
+      "source": {
+        "slide": 339,
+        "shape_index": 12,
+        "raw_id": "C-012"
+      },
+      "native_size_emu": [
+        481013,
+        428625
+      ],
+      "native_size_cm": [
+        1.336,
+        1.191
+      ],
+      "category": "ui",
+      "color_mode": "theme",
+      "byte_size": 13013
+    },
+    "window-empty": {
+      "fragment": "fragments/C/window-empty.xml",
+      "kind": "grpSp",
+      "source": {
+        "slide": 339,
+        "shape_index": 13,
+        "raw_id": "C-013"
+      },
+      "native_size_emu": [
+        481013,
+        428625
+      ],
+      "native_size_cm": [
+        1.336,
+        1.191
+      ],
+      "category": "ui",
+      "color_mode": "theme",
+      "byte_size": 13013
+    },
+    "window-split": {
+      "fragment": "fragments/C/window-split.xml",
+      "kind": "grpSp",
+      "source": {
+        "slide": 339,
+        "shape_index": 14,
+        "raw_id": "C-014"
+      },
+      "native_size_emu": [
+        481013,
+        428625
+      ],
+      "native_size_cm": [
+        1.336,
+        1.191
+      ],
+      "category": "ui",
+      "color_mode": "theme",
+      "byte_size": 12028
+    },
+    "window-three-panel": {
+      "fragment": "fragments/C/window-three-panel.xml",
+      "kind": "grpSp",
+      "source": {
+        "slide": 339,
+        "shape_index": 15,
+        "raw_id": "C-015"
+      },
+      "native_size_emu": [
+        481013,
+        428625
+      ],
+      "native_size_cm": [
+        1.336,
+        1.191
+      ],
+      "category": "ui",
+      "color_mode": "theme",
+      "byte_size": 12028
+    },
+    "window-divider": {
+      "fragment": "fragments/C/window-divider.xml",
+      "kind": "grpSp",
+      "source": {
+        "slide": 339,
+        "shape_index": 16,
+        "raw_id": "C-016"
+      },
+      "native_size_emu": [
+        479425,
+        428625
+      ],
+      "native_size_cm": [
+        1.332,
+        1.191
+      ],
+      "category": "ui",
+      "color_mode": "theme",
+      "byte_size": 12028
+    },
+    "terminal-prompt": {
+      "fragment": "fragments/C/terminal-prompt.xml",
+      "kind": "grpSp",
+      "source": {
+        "slide": 339,
+        "shape_index": 17,
+        "raw_id": "C-017"
+      },
+      "native_size_emu": [
+        481013,
+        428625
+      ],
+      "native_size_cm": [
+        1.336,
+        1.191
+      ],
+      "category": "ui",
+      "color_mode": "theme",
+      "byte_size": 18025
+    },
+    "terminal-check": {
+      "fragment": "fragments/C/terminal-check.xml",
+      "kind": "grpSp",
+      "source": {
+        "slide": 339,
+        "shape_index": 18,
+        "raw_id": "C-018"
+      },
+      "native_size_emu": [
+        479425,
+        428625
+      ],
+      "native_size_cm": [
+        1.332,
+        1.191
+      ],
+      "category": "ui",
+      "color_mode": "theme",
+      "byte_size": 14929
+    },
+    "window-x": {
+      "fragment": "fragments/C/window-x.xml",
+      "kind": "grpSp",
+      "source": {
+        "slide": 339,
+        "shape_index": 19,
+        "raw_id": "C-019"
+      },
+      "native_size_emu": [
+        481013,
+        428625
+      ],
+      "native_size_cm": [
+        1.336,
+        1.191
+      ],
+      "category": "ui",
+      "color_mode": "theme",
+      "byte_size": 17055
+    },
+    "window-add": {
+      "fragment": "fragments/C/window-add.xml",
+      "kind": "grpSp",
+      "source": {
+        "slide": 339,
+        "shape_index": 20,
+        "raw_id": "C-020"
+      },
+      "native_size_emu": [
+        481013,
+        428625
+      ],
+      "native_size_cm": [
+        1.336,
+        1.191
+      ],
+      "category": "ui",
+      "color_mode": "theme",
+      "byte_size": 14118
+    },
+    "window-back-forward": {
+      "fragment": "fragments/C/window-back-forward.xml",
+      "kind": "grpSp",
+      "source": {
+        "slide": 339,
+        "shape_index": 21,
+        "raw_id": "C-021"
+      },
+      "native_size_emu": [
+        481013,
+        428625
+      ],
+      "native_size_cm": [
+        1.336,
+        1.191
+      ],
+      "category": "ui",
+      "color_mode": "theme",
+      "byte_size": 16251
+    },
+    "window-bookmark": {
+      "fragment": "fragments/C/window-bookmark.xml",
+      "kind": "grpSp",
+      "source": {
+        "slide": 339,
+        "shape_index": 22,
+        "raw_id": "C-022"
+      },
+      "native_size_emu": [
+        481013,
+        481013
+      ],
+      "native_size_cm": [
+        1.336,
+        1.336
+      ],
+      "category": "ui",
+      "color_mode": "theme",
+      "byte_size": 19091
+    },
+    "window-search": {
+      "fragment": "fragments/C/window-search.xml",
+      "kind": "grpSp",
+      "source": {
+        "slide": 339,
+        "shape_index": 23,
+        "raw_id": "C-023"
+      },
+      "native_size_emu": [
+        479425,
+        428625
+      ],
+      "native_size_cm": [
+        1.332,
+        1.191
+      ],
+      "category": "ui",
+      "color_mode": "theme",
+      "byte_size": 11047
+    },
+    "ruler-pencil-cross": {
+      "fragment": "fragments/C/ruler-pencil-cross.xml",
+      "kind": "sp",
+      "source": {
+        "slide": 339,
+        "shape_index": 24,
+        "raw_id": "C-024"
+      },
+      "native_size_emu": [
+        487363,
+        488950
+      ],
+      "native_size_cm": [
+        1.354,
+        1.358
+      ],
+      "category": "tool",
+      "color_mode": "theme",
+      "byte_size": 12949
+    },
+    "brush-pencil-cross": {
+      "fragment": "fragments/C/brush-pencil-cross.xml",
+      "kind": "sp",
+      "source": {
+        "slide": 339,
+        "shape_index": 25,
+        "raw_id": "C-025"
+      },
+      "native_size_emu": [
+        481013,
+        479425
+      ],
+      "native_size_cm": [
+        1.336,
+        1.332
+      ],
+      "category": "tool",
+      "color_mode": "theme",
+      "byte_size": 15881
+    },
+    "ruler-tilted": {
+      "fragment": "fragments/C/ruler-tilted.xml",
+      "kind": "sp",
+      "source": {
+        "slide": 339,
+        "shape_index": 26,
+        "raw_id": "C-026"
+      },
+      "native_size_emu": [
+        487363,
+        479425
+      ],
+      "native_size_cm": [
+        1.354,
+        1.332
+      ],
+      "category": "tool",
+      "color_mode": "theme",
+      "byte_size": 14391
+    },
+    "ruler": {
+      "fragment": "fragments/C/ruler.xml",
+      "kind": "sp",
+      "source": {
+        "slide": 339,
+        "shape_index": 27,
+        "raw_id": "C-027"
+      },
+      "native_size_emu": [
+        484188,
+        484188
+      ],
+      "native_size_cm": [
+        1.345,
+        1.345
+      ],
+      "category": "tool",
+      "color_mode": "theme",
+      "byte_size": 12049
+    },
+    "paintbrush-tilted": {
+      "fragment": "fragments/C/paintbrush-tilted.xml",
+      "kind": "sp",
+      "source": {
+        "slide": 339,
+        "shape_index": 28,
+        "raw_id": "C-028"
+      },
+      "native_size_emu": [
+        479425,
+        461963
+      ],
+      "native_size_cm": [
+        1.332,
+        1.283
+      ],
+      "category": "tool",
+      "color_mode": "theme",
+      "byte_size": 12664
+    },
+    "fountain-pen": {
+      "fragment": "fragments/C/fountain-pen.xml",
+      "kind": "sp",
+      "source": {
+        "slide": 339,
+        "shape_index": 29,
+        "raw_id": "C-029"
+      },
+      "native_size_emu": [
+        481013,
+        479425
+      ],
+      "native_size_cm": [
+        1.336,
+        1.332
+      ],
+      "category": "tool",
+      "color_mode": "theme",
+      "byte_size": 10933
+    },
+    "marker-tilted": {
+      "fragment": "fragments/C/marker-tilted.xml",
+      "kind": "sp",
+      "source": {
+        "slide": 339,
+        "shape_index": 30,
+        "raw_id": "C-030"
+      },
+      "native_size_emu": [
+        479425,
+        479425
+      ],
+      "native_size_cm": [
+        1.332,
+        1.332
+      ],
+      "category": "tool",
+      "color_mode": "theme",
+      "byte_size": 9736
+    },
+    "pencil": {
+      "fragment": "fragments/C/pencil.xml",
+      "kind": "sp",
+      "source": {
+        "slide": 339,
+        "shape_index": 31,
+        "raw_id": "C-031"
+      },
+      "native_size_emu": [
+        481013,
+        479425
+      ],
+      "native_size_cm": [
+        1.336,
+        1.332
+      ],
+      "category": "tool",
+      "color_mode": "theme",
+      "byte_size": 9026
+    },
+    "notepad-pen": {
+      "fragment": "fragments/C/notepad-pen.xml",
+      "kind": "sp",
+      "source": {
+        "slide": 339,
+        "shape_index": 32,
+        "raw_id": "C-032"
+      },
+      "native_size_emu": [
+        385763,
+        484188
+      ],
+      "native_size_cm": [
+        1.072,
+        1.345
+      ],
+      "category": "tool",
+      "color_mode": "theme",
+      "byte_size": 10730
+    },
+    "notepad-blank": {
+      "fragment": "fragments/C/notepad-blank.xml",
+      "kind": "sp",
+      "source": {
+        "slide": 339,
+        "shape_index": 33,
+        "raw_id": "C-033"
+      },
+      "native_size_emu": [
+        481013,
+        428625
+      ],
+      "native_size_cm": [
+        1.336,
+        1.191
+      ],
+      "category": "tool",
+      "color_mode": "theme",
+      "byte_size": 8878
+    },
+    "presentation-board": {
+      "fragment": "fragments/C/presentation-board.xml",
+      "kind": "grpSp",
+      "source": {
+        "slide": 339,
+        "shape_index": 34,
+        "raw_id": "C-034"
+      },
+      "native_size_emu": [
+        427038,
+        479425
+      ],
+      "native_size_cm": [
+        1.186,
+        1.332
+      ],
+      "category": "award",
+      "color_mode": "theme",
+      "byte_size": 16717
+    },
+    "presentation-graph": {
+      "fragment": "fragments/C/presentation-graph.xml",
+      "kind": "sp",
+      "source": {
+        "slide": 339,
+        "shape_index": 35,
+        "raw_id": "C-035"
+      },
+      "native_size_emu": [
+        428625,
+        479425
+      ],
+      "native_size_cm": [
+        1.191,
+        1.332
+      ],
+      "category": "award",
+      "color_mode": "theme",
+      "byte_size": 11105
+    },
+    "graduation-cap-line": {
+      "fragment": "fragments/C/graduation-cap-line.xml",
+      "kind": "sp",
+      "source": {
+        "slide": 339,
+        "shape_index": 36,
+        "raw_id": "C-036"
+      },
+      "native_size_emu": [
+        481013,
+        300038
+      ],
+      "native_size_cm": [
+        1.336,
+        0.833
+      ],
+      "category": "award",
+      "color_mode": "theme",
+      "byte_size": 8663
+    },
+    "ribbon-award": {
+      "fragment": "fragments/C/ribbon-award.xml",
+      "kind": "sp",
+      "source": {
+        "slide": 339,
+        "shape_index": 37,
+        "raw_id": "C-037"
+      },
+      "native_size_emu": [
+        487363,
+        481013
+      ],
+      "native_size_cm": [
+        1.354,
+        1.336
+      ],
+      "category": "award",
+      "color_mode": "theme",
+      "byte_size": 12289
+    },
+    "award-medal-line": {
+      "fragment": "fragments/C/award-medal-line.xml",
+      "kind": "grpSp",
+      "source": {
+        "slide": 339,
+        "shape_index": 38,
+        "raw_id": "C-038"
+      },
+      "native_size_emu": [
+        368300,
+        481013
+      ],
+      "native_size_cm": [
+        1.023,
+        1.336
+      ],
+      "category": "award",
+      "color_mode": "theme",
+      "byte_size": 19269
+    },
+    "bookmark-x": {
+      "fragment": "fragments/C/bookmark-x.xml",
+      "kind": "grpSp",
+      "source": {
+        "slide": 339,
+        "shape_index": 39,
+        "raw_id": "C-039"
+      },
+      "native_size_emu": [
+        280988,
+        481013
+      ],
+      "native_size_cm": [
+        0.781,
+        1.336
+      ],
+      "category": "award",
+      "color_mode": "theme",
+      "byte_size": 12339
+    },
+    "bookmark-minus": {
+      "fragment": "fragments/C/bookmark-minus.xml",
+      "kind": "grpSp",
+      "source": {
+        "slide": 339,
+        "shape_index": 40,
+        "raw_id": "C-040"
+      },
+      "native_size_emu": [
+        285750,
+        481013
+      ],
+      "native_size_cm": [
+        0.794,
+        1.336
+      ],
+      "category": "award",
+      "color_mode": "theme",
+      "byte_size": 9408
+    },
+    "bookmark-plus": {
+      "fragment": "fragments/C/bookmark-plus.xml",
+      "kind": "grpSp",
+      "source": {
+        "slide": 339,
+        "shape_index": 41,
+        "raw_id": "C-041"
+      },
+      "native_size_emu": [
+        284163,
+        481013
+      ],
+      "native_size_cm": [
+        0.789,
+        1.336
+      ],
+      "category": "award",
+      "color_mode": "theme",
+      "byte_size": 13025
+    },
+    "bookmark": {
+      "fragment": "fragments/C/bookmark.xml",
+      "kind": "sp",
+      "source": {
+        "slide": 339,
+        "shape_index": 42,
+        "raw_id": "C-042"
+      },
+      "native_size_emu": [
+        285750,
+        481013
+      ],
+      "native_size_cm": [
+        0.794,
+        1.336
+      ],
+      "category": "award",
+      "color_mode": "theme",
+      "byte_size": 5518
+    },
+    "books-shelf": {
+      "fragment": "fragments/C/books-shelf.xml",
+      "kind": "grpSp",
+      "source": {
+        "slide": 339,
+        "shape_index": 43,
+        "raw_id": "C-043"
+      },
+      "native_size_emu": [
+        431800,
+        481013
+      ],
+      "native_size_cm": [
+        1.199,
+        1.336
+      ],
+      "category": "book",
+      "color_mode": "theme",
+      "byte_size": 20122
+    },
+    "book-cover-tall": {
+      "fragment": "fragments/C/book-cover-tall.xml",
+      "kind": "sp",
+      "source": {
+        "slide": 339,
+        "shape_index": 44,
+        "raw_id": "C-044"
+      },
+      "native_size_emu": [
+        404813,
+        481013
+      ],
+      "native_size_cm": [
+        1.124,
+        1.336
+      ],
+      "category": "book",
+      "color_mode": "theme",
+      "byte_size": 9354
+    },
+    "book-tablet": {
+      "fragment": "fragments/C/book-tablet.xml",
+      "kind": "sp",
+      "source": {
+        "slide": 339,
+        "shape_index": 45,
+        "raw_id": "C-045"
+      },
+      "native_size_emu": [
+        406400,
+        481013
+      ],
+      "native_size_cm": [
+        1.129,
+        1.336
+      ],
+      "category": "book",
+      "color_mode": "theme",
+      "byte_size": 7445
+    },
+    "book-cover": {
+      "fragment": "fragments/C/book-cover.xml",
+      "kind": "sp",
+      "source": {
+        "slide": 339,
+        "shape_index": 46,
+        "raw_id": "C-046"
+      },
+      "native_size_emu": [
+        404813,
+        481013
+      ],
+      "native_size_cm": [
+        1.124,
+        1.336
+      ],
+      "category": "book",
+      "color_mode": "theme",
+      "byte_size": 6466
+    },
+    "newspaper": {
+      "fragment": "fragments/C/newspaper.xml",
+      "kind": "grpSp",
+      "source": {
+        "slide": 339,
+        "shape_index": 47,
+        "raw_id": "C-047"
+      },
+      "native_size_emu": [
+        479425,
+        352425
+      ],
+      "native_size_cm": [
+        1.332,
+        0.979
+      ],
+      "category": "book",
+      "color_mode": "theme",
+      "byte_size": 23909
+    },
+    "battery-empty": {
+      "fragment": "fragments/C/battery-empty.xml",
+      "kind": "grpSp",
+      "source": {
+        "slide": 339,
+        "shape_index": 48,
+        "raw_id": "C-048"
+      },
+      "native_size_emu": [
+        481013,
+        239713
+      ],
+      "native_size_cm": [
+        1.336,
+        0.666
+      ],
+      "category": "device",
+      "color_mode": "theme",
+      "byte_size": 12665
+    },
+    "battery-low": {
+      "fragment": "fragments/C/battery-low.xml",
+      "kind": "sp",
+      "source": {
+        "slide": 339,
+        "shape_index": 49,
+        "raw_id": "C-049"
+      },
+      "native_size_emu": [
+        481013,
+        239713
+      ],
+      "native_size_cm": [
+        1.336,
+        0.666
+      ],
+      "category": "device",
+      "color_mode": "theme",
+      "byte_size": 7679
+    },
+    "battery-full": {
+      "fragment": "fragments/C/battery-full.xml",
+      "kind": "sp",
+      "source": {
+        "slide": 339,
+        "shape_index": 50,
+        "raw_id": "C-050"
+      },
+      "native_size_emu": [
+        481013,
+        239713
+      ],
+      "native_size_cm": [
+        1.336,
+        0.666
+      ],
+      "category": "device",
+      "color_mode": "theme",
+      "byte_size": 6720
+    },
+    "joystick": {
+      "fragment": "fragments/C/joystick.xml",
+      "kind": "sp",
+      "source": {
+        "slide": 339,
+        "shape_index": 51,
+        "raw_id": "C-051"
+      },
+      "native_size_emu": [
+        261938,
+        481013
+      ],
+      "native_size_cm": [
+        0.728,
+        1.336
+      ],
+      "category": "device",
+      "color_mode": "theme",
+      "byte_size": 10230
+    },
+    "gamepad": {
+      "fragment": "fragments/C/gamepad.xml",
+      "kind": "grpSp",
+      "source": {
+        "slide": 339,
+        "shape_index": 52,
+        "raw_id": "C-052"
+      },
+      "native_size_emu": [
+        479425,
+        346075
+      ],
+      "native_size_cm": [
+        1.332,
+        0.961
+      ],
+      "category": "device",
+      "color_mode": "theme",
+      "byte_size": 20312
+    },
+    "keyboard": {
+      "fragment": "fragments/C/keyboard.xml",
+      "kind": "grpSp",
+      "source": {
+        "slide": 339,
+        "shape_index": 53,
+        "raw_id": "C-053"
+      },
+      "native_size_emu": [
+        481013,
+        293688
+      ],
+      "native_size_cm": [
+        1.336,
+        0.816
+      ],
+      "category": "device",
+      "color_mode": "theme",
+      "byte_size": 44973
+    },
+    "computer-mouse-line": {
+      "fragment": "fragments/C/computer-mouse-line.xml",
+      "kind": "grpSp",
+      "source": {
+        "slide": 339,
+        "shape_index": 54,
+        "raw_id": "C-054"
+      },
+      "native_size_emu": [
+        292100,
+        481013
+      ],
+      "native_size_cm": [
+        0.811,
+        1.336
+      ],
+      "category": "device",
+      "color_mode": "theme",
+      "byte_size": 10044
+    },
+    "monitor": {
+      "fragment": "fragments/C/monitor.xml",
+      "kind": "grpSp",
+      "source": {
+        "slide": 339,
+        "shape_index": 55,
+        "raw_id": "C-055"
+      },
+      "native_size_emu": [
+        481013,
+        465138
+      ],
+      "native_size_cm": [
+        1.336,
+        1.292
+      ],
+      "category": "device",
+      "color_mode": "theme",
+      "byte_size": 11012
+    },
+    "laptop": {
+      "fragment": "fragments/C/laptop.xml",
+      "kind": "grpSp",
+      "source": {
+        "slide": 339,
+        "shape_index": 56,
+        "raw_id": "C-056"
+      },
+      "native_size_emu": [
+        481013,
+        322263
+      ],
+      "native_size_cm": [
+        1.336,
+        0.895
+      ],
+      "category": "device",
+      "color_mode": "theme",
+      "byte_size": 7880
+    },
+    "tablet": {
+      "fragment": "fragments/C/tablet.xml",
+      "kind": "grpSp",
+      "source": {
+        "slide": 339,
+        "shape_index": 57,
+        "raw_id": "C-057"
+      },
+      "native_size_emu": [
+        352425,
+        481013
+      ],
+      "native_size_cm": [
+        0.979,
+        1.336
+      ],
+      "category": "device",
+      "color_mode": "theme",
+      "byte_size": 8791
+    },
+    "phone": {
+      "fragment": "fragments/C/phone.xml",
+      "kind": "grpSp",
+      "source": {
+        "slide": 339,
+        "shape_index": 58,
+        "raw_id": "C-058"
+      },
+      "native_size_emu": [
+        293688,
+        481013
+      ],
+      "native_size_cm": [
+        0.816,
+        1.336
+      ],
+      "category": "device",
+      "color_mode": "theme",
+      "byte_size": 8775
+    },
+    "phone-call": {
+      "fragment": "fragments/C/phone-call.xml",
+      "kind": "grpSp",
+      "source": {
+        "slide": 339,
+        "shape_index": 59,
+        "raw_id": "C-059"
+      },
+      "native_size_emu": [
+        269875,
+        481013
+      ],
+      "native_size_cm": [
+        0.75,
+        1.336
+      ],
+      "category": "device",
+      "color_mode": "theme",
+      "byte_size": 9925
+    },
+    "shopping-cart": {
+      "fragment": "fragments/C/shopping-cart.xml",
+      "kind": "grpSp",
+      "source": {
+        "slide": 339,
+        "shape_index": 60,
+        "raw_id": "C-060"
+      },
+      "native_size_emu": [
+        481012,
+        366713
+      ],
+      "native_size_cm": [
+        1.336,
+        1.019
+      ],
+      "category": "commerce",
+      "color_mode": "theme",
+      "byte_size": 17421
+    },
+    "shopping-basket": {
+      "fragment": "fragments/C/shopping-basket.xml",
+      "kind": "grpSp",
+      "source": {
+        "slide": 339,
+        "shape_index": 61,
+        "raw_id": "C-061"
+      },
+      "native_size_emu": [
+        481013,
+        382588
+      ],
+      "native_size_cm": [
+        1.336,
+        1.063
+      ],
+      "category": "commerce",
+      "color_mode": "theme",
+      "byte_size": 17919
+    },
+    "shopping-bag": {
+      "fragment": "fragments/C/shopping-bag.xml",
+      "kind": "sp",
+      "source": {
+        "slide": 339,
+        "shape_index": 62,
+        "raw_id": "C-062"
+      },
+      "native_size_emu": [
+        349250,
+        481013
+      ],
+      "native_size_cm": [
+        0.97,
+        1.336
+      ],
+      "category": "commerce",
+      "color_mode": "theme",
+      "byte_size": 9303
+    },
+    "tag": {
+      "fragment": "fragments/C/tag.xml",
+      "kind": "grpSp",
+      "source": {
+        "slide": 339,
+        "shape_index": 63,
+        "raw_id": "C-063"
+      },
+      "native_size_emu": [
+        481013,
+        484188
+      ],
+      "native_size_cm": [
+        1.336,
+        1.345
+      ],
+      "category": "commerce",
+      "color_mode": "theme",
+      "byte_size": 20949
+    },
+    "tag-cut": {
+      "fragment": "fragments/C/tag-cut.xml",
+      "kind": "grpSp",
+      "source": {
+        "slide": 339,
+        "shape_index": 64,
+        "raw_id": "C-064"
+      },
+      "native_size_emu": [
+        484188,
+        484188
+      ],
+      "native_size_cm": [
+        1.345,
+        1.345
+      ],
+      "category": "commerce",
+      "color_mode": "theme",
+      "byte_size": 10852
+    },
+    "wallet": {
+      "fragment": "fragments/C/wallet.xml",
+      "kind": "grpSp",
+      "source": {
+        "slide": 339,
+        "shape_index": 65,
+        "raw_id": "C-065"
+      },
+      "native_size_emu": [
+        481013,
+        436563
+      ],
+      "native_size_cm": [
+        1.336,
+        1.213
+      ],
+      "category": "commerce",
+      "color_mode": "theme",
+      "byte_size": 11303
+    },
+    "coin": {
+      "fragment": "fragments/C/coin.xml",
+      "kind": "grpSp",
+      "source": {
+        "slide": 339,
+        "shape_index": 66,
+        "raw_id": "C-066"
+      },
+      "native_size_emu": [
+        479425,
+        322263
+      ],
+      "native_size_cm": [
+        1.332,
+        0.895
+      ],
+      "category": "commerce",
+      "color_mode": "theme",
+      "byte_size": 13331
+    },
+    "currency-dollar": {
+      "fragment": "fragments/C/currency-dollar.xml",
+      "kind": "grpSp",
+      "source": {
+        "slide": 339,
+        "shape_index": 67,
+        "raw_id": "C-067"
+      },
+      "native_size_emu": [
+        481013,
+        239713
+      ],
+      "native_size_cm": [
+        1.336,
+        0.666
+      ],
+      "category": "commerce",
+      "color_mode": "theme",
+      "byte_size": 8971
+    },
+    "currency-euro": {
+      "fragment": "fragments/C/currency-euro.xml",
+      "kind": "sp",
+      "source": {
+        "slide": 339,
+        "shape_index": 68,
+        "raw_id": "C-068"
+      },
+      "native_size_emu": [
+        157163,
+        481013
+      ],
+      "native_size_cm": [
+        0.437,
+        1.336
+      ],
+      "category": "commerce",
+      "color_mode": "theme",
+      "byte_size": 7774
+    },
+    "currency-yuan": {
+      "fragment": "fragments/C/currency-yuan.xml",
+      "kind": "sp",
+      "source": {
+        "slide": 339,
+        "shape_index": 69,
+        "raw_id": "C-069"
+      },
+      "native_size_emu": [
+        450850,
+        481013
+      ],
+      "native_size_cm": [
+        1.252,
+        1.336
+      ],
+      "category": "commerce",
+      "color_mode": "theme",
+      "byte_size": 12766
+    },
+    "currency-yen": {
+      "fragment": "fragments/C/currency-yen.xml",
+      "kind": "sp",
+      "source": {
+        "slide": 339,
+        "shape_index": 70,
+        "raw_id": "C-070"
+      },
+      "native_size_emu": [
+        360363,
+        481013
+      ],
+      "native_size_cm": [
+        1.001,
+        1.336
+      ],
+      "category": "commerce",
+      "color_mode": "theme",
+      "byte_size": 8629
+    },
+    "currency-ruble": {
+      "fragment": "fragments/C/currency-ruble.xml",
+      "kind": "sp",
+      "source": {
+        "slide": 339,
+        "shape_index": 71,
+        "raw_id": "C-071"
+      },
+      "native_size_emu": [
+        352425,
+        481013
+      ],
+      "native_size_cm": [
+        0.979,
+        1.336
+      ],
+      "category": "commerce",
+      "color_mode": "theme",
+      "byte_size": 8604
+    },
+    "calendar-line": {
+      "fragment": "fragments/C/calendar-line.xml",
+      "kind": "grpSp",
+      "source": {
+        "slide": 339,
+        "shape_index": 72,
+        "raw_id": "C-072"
+      },
+      "native_size_emu": [
+        481013,
+        481013
+      ],
+      "native_size_cm": [
+        1.336,
+        1.336
+      ],
+      "category": "time",
+      "color_mode": "theme",
+      "byte_size": 39451
+    },
+    "calendar-date": {
+      "fragment": "fragments/C/calendar-date.xml",
+      "kind": "grpSp",
+      "source": {
+        "slide": 339,
+        "shape_index": 73,
+        "raw_id": "C-073"
+      },
+      "native_size_emu": [
+        481013,
+        481013
+      ],
+      "native_size_cm": [
+        1.336,
+        1.336
+      ],
+      "category": "time",
+      "color_mode": "theme",
+      "byte_size": 22571
+    },
+    "calendar-blank": {
+      "fragment": "fragments/C/calendar-blank.xml",
+      "kind": "sp",
+      "source": {
+        "slide": 339,
+        "shape_index": 74,
+        "raw_id": "C-074"
+      },
+      "native_size_emu": [
+        481013,
+        481013
+      ],
+      "native_size_cm": [
+        1.336,
+        1.336
+      ],
+      "category": "time",
+      "color_mode": "theme",
+      "byte_size": 11850
+    },
+    "alarm-clock": {
+      "fragment": "fragments/C/alarm-clock.xml",
+      "kind": "grpSp",
+      "source": {
+        "slide": 339,
+        "shape_index": 75,
+        "raw_id": "C-075"
+      },
+      "native_size_emu": [
+        481013,
+        442913
+      ],
+      "native_size_cm": [
+        1.336,
+        1.23
+      ],
+      "category": "time",
+      "color_mode": "theme",
+      "byte_size": 16668
+    },
+    "watch": {
+      "fragment": "fragments/C/watch.xml",
+      "kind": "grpSp",
+      "source": {
+        "slide": 339,
+        "shape_index": 76,
+        "raw_id": "C-076"
+      },
+      "native_size_emu": [
+        374650,
+        481013
+      ],
+      "native_size_cm": [
+        1.041,
+        1.336
+      ],
+      "category": "time",
+      "color_mode": "theme",
+      "byte_size": 16577
+    },
+    "clock": {
+      "fragment": "fragments/C/clock.xml",
+      "kind": "grpSp",
+      "source": {
+        "slide": 339,
+        "shape_index": 77,
+        "raw_id": "C-077"
+      },
+      "native_size_emu": [
+        522288,
+        481013
+      ],
+      "native_size_cm": [
+        1.451,
+        1.336
+      ],
+      "category": "time",
+      "color_mode": "theme",
+      "byte_size": 11894
+    },
+    "signpost": {
+      "fragment": "fragments/C/signpost.xml",
+      "kind": "sp",
+      "source": {
+        "slide": 339,
+        "shape_index": 78,
+        "raw_id": "C-078"
+      },
+      "native_size_emu": [
+        396875,
+        481013
+      ],
+      "native_size_cm": [
+        1.102,
+        1.336
+      ],
+      "category": "location",
+      "color_mode": "theme",
+      "byte_size": 11181
+    },
+    "compass": {
+      "fragment": "fragments/C/compass.xml",
+      "kind": "grpSp",
+      "source": {
+        "slide": 339,
+        "shape_index": 79,
+        "raw_id": "C-079"
+      },
+      "native_size_emu": [
+        481013,
+        481013
+      ],
+      "native_size_cm": [
+        1.336,
+        1.336
+      ],
+      "category": "location",
+      "color_mode": "theme",
+      "byte_size": 14208
+    },
+    "map-folded": {
+      "fragment": "fragments/C/map-folded.xml",
+      "kind": "grpSp",
+      "source": {
+        "slide": 339,
+        "shape_index": 80,
+        "raw_id": "C-080"
+      },
+      "native_size_emu": [
+        481013,
+        379413
+      ],
+      "native_size_cm": [
+        1.336,
+        1.054
+      ],
+      "category": "location",
+      "color_mode": "theme",
+      "byte_size": 24225
+    },
+    "location-pin-alt": {
+      "fragment": "fragments/C/location-pin-alt.xml",
+      "kind": "sp",
+      "source": {
+        "slide": 339,
+        "shape_index": 81,
+        "raw_id": "C-081"
+      },
+      "native_size_emu": [
+        481013,
+        379413
+      ],
+      "native_size_cm": [
+        1.336,
+        1.054
+      ],
+      "category": "location",
+      "color_mode": "theme",
+      "byte_size": 10177
+    },
+    "location-pin": {
+      "fragment": "fragments/C/location-pin.xml",
+      "kind": "grpSp",
+      "source": {
+        "slide": 339,
+        "shape_index": 82,
+        "raw_id": "C-082"
+      },
+      "native_size_emu": [
+        368300,
+        481013
+      ],
+      "native_size_cm": [
+        1.023,
+        1.336
+      ],
+      "category": "location",
+      "color_mode": "theme",
+      "byte_size": 13105
+    }
+  }
+}

@@ -1,5 +1,6 @@
 import { CHART_TYPES, SUPPORTED_LAYOUTS } from "./layouts.mjs";
 import {
+  bulletText,
   expandSlidesWithReport,
   getSpeakerNotesValue,
   hasKnownPlaceholderRatio,
@@ -89,7 +90,7 @@ function validateDeck(deck, options = {}) {
   const checkBullets = (slideIndex, pathName, value, max = 5, textMax = 34) => {
     requireArray(slideIndex, pathName, value);
     maxItems(slideIndex, pathName, value, max);
-    if (Array.isArray(value)) value.forEach((item, idx) => maxText(slideIndex, `${pathName}[${idx}]`, item, textMax, "bullet"));
+    if (Array.isArray(value)) value.forEach((item, idx) => maxText(slideIndex, `${pathName}[${idx}]`, bulletText(item), textMax, "bullet"));
   };
   const checkImage = (slideIndex, pathName, value, imageOptions = {}) => {
     if (value === undefined || value === null || value === "") return;

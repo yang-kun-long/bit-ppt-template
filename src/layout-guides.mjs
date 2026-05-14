@@ -1,4 +1,5 @@
 import { listLayouts as listSupportedLayouts } from "./core/layouts.mjs";
+import { ICON_COLOR_TOKENS, ICON_SIZE_PRESETS, listIconsByCategory } from "./icons.mjs";
 
 const writingRules = [
   "Keep slide text short and concrete; use validation warnings as rewrite hints.",
@@ -286,12 +287,16 @@ const additionalLayoutGuides = {
       layout: { type: "literal", required: true, value: "bullets" },
       title: { type: "string", required: true },
       lead: { type: "string", required: false },
-      bullets: { type: "string[]", required: true },
+      bullets: { type: "(string | { icon, iconColor?, text })[]", required: true },
       fontSize: { type: "number", required: false },
     },
     limits: { lead: { recommendedChars: 58 }, bullets: { maxItems: 8, recommendedChars: 38 } },
-    notes: ["Inline `$...$` and `\\(...\\)` formulas are supported.", "Long bullet lists may be split during preflight."],
-    example: { layout: "bullets", title: "核心发现", lead: "结构化输入能降低排版漂移。", bullets: ["模型只填写短字段。", "模板负责视觉规范。", "预检负责溢出修复。"] },
+    notes: [
+      "Inline `$...$` and `\\(...\\)` formulas are supported.",
+      "Long bullet lists may be split during preflight.",
+      "A bullet item can be a string, or `{ icon, iconColor?, text }` to replace the dot with an icon (see `bit-ppt guide icons`).",
+    ],
+    example: { layout: "bullets", title: "核心发现", lead: "结构化输入能降低排版漂移。", bullets: [{ icon: "checkmark", text: "模型只填写短字段。" }, { icon: "settings-gear", text: "模板负责视觉规范。" }, { icon: "magnifier", text: "预检负责溢出修复。" }] },
   },
   claim: {
     layout: "claim",
@@ -677,6 +682,7 @@ function getGuideOverview() {
       "bit-ppt guide example <name>",
       "bit-ppt guide speaker-notes",
       "bit-ppt guide image-placeholder",
+      "bit-ppt guide icons",
       "bit-ppt guide writing-rules",
     ],
     guidedLayouts: listGuideLayouts(),
@@ -699,11 +705,47 @@ function getGuideWorkflow() {
   return getGuideOverview().workflow;
 }
 
+function getIconsGuide() {
+  const byCategory = listIconsByCategory();
+  const totalIcons = Object.values(byCategory).reduce((sum, list) => sum + list.length, 0);
+  return {
+    topic: "icons",
+    purpose: "Decorate cards (and future layouts) with editable BIT-styled vector icons.",
+    whenToUse: "Use when a card title benefits from a quick visual cue. Keep one icon per card.",
+    fields: {
+      icon: { type: "string", required: false, value: "icon name from the catalog below" },
+      iconColor: { type: "string", required: false, value: "color token (accent1, primary, green, red, ...) or 6-digit hex; defaults to BIT green" },
+    },
+    layouts: ["cards", "bullets", "comparison"],
+    sizePresets: { ...ICON_SIZE_PRESETS },
+    colorTokens: { ...ICON_COLOR_TOKENS },
+    totalIcons,
+    catalog: byCategory,
+    notes: [
+      "Icons are injected as native PowerPoint vector shapes — editable after generation.",
+      "Default color resolves to BIT green; pass `iconColor: red` for emphasis or any 6-digit hex for custom colors.",
+      "Card icon size is fixed by the layout (0.62 inch for single row, 0.46 inch for multi-row); custom sizing is not needed in YAML.",
+      "Inside `bullets` (and `comparison` columns), pass `{ icon, iconColor?, text }` to replace the bullet dot with an icon. Plain strings still work.",
+      "Icon names are stable; treat them as identifiers, not display labels.",
+    ],
+    example: {
+      layout: "cards",
+      title: "三大能力",
+      cards: [
+        { icon: "magnifier", title: "文献调研", text: "自动搜集、分类、摘要论文。" },
+        { icon: "microscope", title: "实验跟踪", text: "记录每次实验的配置、参数与结果。" },
+        { icon: "settings-gear", title: "算力调度", text: "通过 AutoDL API 管理 GPU 资源。" },
+      ],
+    },
+  };
+}
+
 function getAllGuides() {
   return {
     overview: getGuideOverview(),
     speakerNotes: getSpeakerNotesGuide(),
     imagePlaceholder: getImagePlaceholderGuide(),
+    icons: getIconsGuide(),
     writingRules: getWritingRules(),
     layouts: Object.fromEntries(listGuideLayouts().map((layout) => [layout, getLayoutGuide(layout)])),
   };
@@ -713,6 +755,7 @@ export {
   getAllGuides,
   getGuideOverview,
   getGuideWorkflow,
+  getIconsGuide,
   getImagePlaceholderGuide,
   getLayoutExample,
   getLayoutGuide,

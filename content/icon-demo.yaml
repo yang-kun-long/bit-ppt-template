@@ -1,0 +1,105 @@
+meta:
+  title: 图标素材端到端 Demo
+  subtitle: BIT Icon Library POC
+  author: BIT PPT Generator
+  date: 2026
+
+slides:
+  - layout: title
+
+  - layout: cards
+    title: 三大能力（不带图标，作对照）
+    cards:
+      - title: 文献调研
+        text: 自动搜集、分类、摘要论文。
+      - title: 实验跟踪
+        text: 记录每次实验配置、参数、结果与失败原因。
+      - title: 算力调度
+        text: 通过 AutoDL API 管理 GPU 资源。
+
+  - layout: cards
+    title: 三大能力（带图标）
+    cards:
+      - icon: magnifier
+        title: 文献调研
+        text: 自动搜集、分类、摘要论文。
+      - icon: microscope
+        title: 实验跟踪
+        text: 记录每次实验配置、参数、结果与失败原因。
+      - icon: settings-gear
+        title: 算力调度
+        text: 通过 AutoDL API 管理 GPU 资源。
+
+  - layout: cards
+    title: 自定义图标颜色
+    cards:
+      - icon: lightbulb
+        iconColor: accent1
+        title: 灵感
+        text: 默认主题色 accent1(BIT 主绿)。
+      - icon: dna-helix
+        iconColor: "006C39"
+        title: 创新
+        text: 显式 RGB 主绿。
+      - icon: target-arrow
+        iconColor: "A13F3D"
+        title: 突破
+        text: 强调红用于关键页。
+
+  - layout: cards
+    title: 学术研究图标速览
+    cards:
+      - icon: graduation-cap
+        title: 学位
+        text: 培养方向与毕业要求。
+      - icon: dna-helix
+        title: 学科
+        text: 跨学科融合。
+      - icon: blackboard-formula
+        title: 理论
+        text: 数学建模与推导。
+      - icon: drafting-compass
+        title: 设计
+        text: 系统设计与原型。
+      - icon: thumbs-up
+        title: 评审
+        text: 同行评议与展示。
+      - icon: diploma-scroll
+        title: 成果
+        text: 学位论文与答辩。
+
+  - layout: bullets
+    title: bullets 列表也能挂图标
+    lead: 每个 bullet 既可以是字符串,也可以是 { icon, iconColor?, text } 对象。
+    bullets:
+      - icon: checkmark
+        text: 模型只填写短字段。
+      - icon: settings-gear
+        text: 模板负责视觉规范。
+      - icon: magnifier
+        text: 预检负责溢出修复。
+      - 字符串形式仍保持绿色圆点。
+
+  - layout: comparison
+    title: comparison 也支持图标
+    left:
+      label: 不优先
+      title: 端到端 Agent
+      bullets:
+        - icon: skull
+          iconColor: red
+          text: 流程封闭
+        - icon: head-blocked
+          iconColor: red
+          text: 复核成本高
+    right:
+      label: 优先
+      title: MCP 工具链
+      bullets:
+        - icon: checkmark
+          text: 跨客户端
+        - icon: hand-open
+          text: 人类可介入
+
+  - layout: closing
+    title: 谢谢

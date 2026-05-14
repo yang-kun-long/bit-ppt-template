@@ -16,6 +16,7 @@ import {
   getAllGuides,
   getGuideOverview,
   getGuideWorkflow,
+  getIconsGuide,
   getImagePlaceholderGuide,
   getLayoutExample,
   getLayoutGuide,
@@ -84,6 +85,8 @@ function guideResult(topic = "overview", name) {
       return getSpeakerNotesGuide();
     case "image-placeholder":
       return getImagePlaceholderGuide();
+    case "icons":
+      return getIconsGuide();
     case "writing-rules":
       return getWritingRules();
     default:
@@ -120,7 +123,7 @@ export function createBitPptMcpServer() {
     title: "Get Progressive Guide",
     description: "Return focused guide content for layouts, schemas, examples, speaker notes, image placeholders, or writing rules.",
     inputSchema: {
-      topic: z.enum(["overview", "all", "workflow", "layouts", "layout", "schema", "example", "speaker-notes", "image-placeholder", "writing-rules"]).optional().default("overview"),
+      topic: z.enum(["overview", "all", "workflow", "layouts", "layout", "schema", "example", "speaker-notes", "image-placeholder", "icons", "writing-rules"]).optional().default("overview"),
       name: z.string().optional().describe("Layout name for topic layout, schema, or example."),
     },
   }, async ({ topic, name }) => textResult(guideResult(topic, name)));

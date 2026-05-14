@@ -4,8 +4,11 @@ import { createRequire } from "node:module";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import JSZip from "jszip";
 import pptxgen from "pptxgenjs";
+import { createIconCollector, addIcon, postprocessIcons } from "./icons.mjs";
 import { listLayouts as coreListLayouts } from "./core/layouts.mjs";
 import {
+  bulletIcon,
+  bulletText,
   expandSlidesWithReport,
   getSpeakerNotesValue,
   hasKnownPlaceholderRatio,
@@ -326,7 +329,7 @@ function estimateText(text, boxW, fontSize, opts = {}) {
 }
 
 function estimateBulletHeight(text, boxW, fontSize) {
-  return estimateText(text, Math.max(0.5, boxW - 0.34), fontSize, { lineHeight: 1.22 }).height + 0.14;
+  return estimateText(bulletText(text), Math.max(0.5, boxW - 0.34), fontSize, { lineHeight: 1.22 }).height + 0.14;
 }
 
 function addText(slide, text, x, y, w, h, opts = {}) {
@@ -549,22 +552,33 @@ function addBulletList(slide, bullets, x, y, w, gap = 0.58, options = {}, ctx = 
   const size = options.fontSize || 16;
   bullets.forEach((item, idx) => {
     const top = y + idx * gap;
-    slide.addShape("ellipse", {
-      x,
-      y: top + 0.12,
-      w: 0.12,
-      h: 0.12,
-      fill: { color: options.color || theme.green },
-      line: { transparency: 100 },
-    });
+    const iconRef = ctx && bulletIcon(item);
+    if (iconRef) {
+      addIcon(slide, ctx.icons, iconRef.icon, {
+        x: x - 0.04,
+        y: top + 0.02,
+        size: 0.22,
+        color: iconRef.color || options.color || theme.green,
+      });
+    } else {
+      slide.addShape("ellipse", {
+        x,
+        y: top + 0.12,
+        w: 0.12,
+        h: 0.12,
+        fill: { color: options.color || theme.green },
+        line: { transparency: 100 },
+      });
+    }
     const textOptions = {
       fontSize: size,
       color: options.textColor || theme.ink,
       valign: "top",
       fit: "shrink",
     };
-    if (ctx) addInlineMathText(slide, item, x + 0.28, top, w - 0.28, gap - 0.03, textOptions, ctx);
-    else addText(slide, item, x + 0.28, top, w - 0.28, gap - 0.03, textOptions);
+    const text = bulletText(item);
+    if (ctx) addInlineMathText(slide, text, x + 0.28, top, w - 0.28, gap - 0.03, textOptions, ctx);
+    else addText(slide, text, x + 0.28, top, w - 0.28, gap - 0.03, textOptions);
   });
 }
 
@@ -574,22 +588,33 @@ function addFlowBulletList(slide, bullets, x, y, w, maxH, options = {}, ctx = nu
   bullets.forEach((item) => {
     const itemH = Math.min(maxH - (top - y), estimateBulletHeight(item, w, size));
     if (itemH <= 0.12) return;
-    slide.addShape("ellipse", {
-      x,
-      y: top + 0.13,
-      w: 0.12,
-      h: 0.12,
-      fill: { color: options.color || theme.green },
-      line: { transparency: 100 },
-    });
+    const iconRef = ctx && bulletIcon(item);
+    if (iconRef) {
+      addIcon(slide, ctx.icons, iconRef.icon, {
+        x: x - 0.04,
+        y: top + 0.03,
+        size: 0.24,
+        color: iconRef.color || options.color || theme.green,
+      });
+    } else {
+      slide.addShape("ellipse", {
+        x,
+        y: top + 0.13,
+        w: 0.12,
+        h: 0.12,
+        fill: { color: options.color || theme.green },
+        line: { transparency: 100 },
+      });
+    }
     const textOptions = {
       fontSize: size,
       color: options.textColor || theme.ink,
       valign: "top",
       fit: "shrink",
     };
-    if (ctx) addInlineMathText(slide, item, x + 0.28, top, w - 0.28, itemH, textOptions, ctx);
-    else addText(slide, item, x + 0.28, top, w - 0.28, itemH, textOptions);
+    const text = bulletText(item);
+    if (ctx) addInlineMathText(slide, text, x + 0.28, top, w - 0.28, itemH, textOptions, ctx);
+    else addText(slide, text, x + 0.28, top, w - 0.28, itemH, textOptions);
     top += itemH;
   });
 }
@@ -600,22 +625,33 @@ function addCompactBulletList(slide, bullets, x, y, w, options = {}, ctx = null)
   const dot = options.dotSize || 0.09;
   bullets.forEach((item, idx) => {
     const top = y + idx * gap;
-    slide.addShape("ellipse", {
-      x,
-      y: top + 0.1,
-      w: dot,
-      h: dot,
-      fill: { color: options.color || theme.green },
-      line: { transparency: 100 },
-    });
+    const iconRef = ctx && bulletIcon(item);
+    if (iconRef) {
+      addIcon(slide, ctx.icons, iconRef.icon, {
+        x: x - 0.03,
+        y: top + 0.02,
+        size: 0.18,
+        color: iconRef.color || options.color || theme.green,
+      });
+    } else {
+      slide.addShape("ellipse", {
+        x,
+        y: top + 0.1,
+        w: dot,
+        h: dot,
+        fill: { color: options.color || theme.green },
+        line: { transparency: 100 },
+      });
+    }
     const textOptions = {
       fontSize: size,
       color: options.textColor || theme.ink,
       valign: "mid",
       fit: "shrink",
     };
-    if (ctx) addInlineMathText(slide, item, x + 0.26, top, w - 0.26, 0.22, textOptions, ctx);
-    else addText(slide, item, x + 0.26, top, w - 0.26, 0.22, textOptions);
+    const text = bulletText(item);
+    if (ctx) addInlineMathText(slide, text, x + 0.26, top, w - 0.26, 0.22, textOptions, ctx);
+    else addText(slide, text, x + 0.26, top, w - 0.26, 0.22, textOptions);
   });
 }
 
@@ -789,8 +825,26 @@ function layoutCards(pptx, slideData, pageNo, ctx) {
     const x = 0.82 + col * (cardW + gap);
     const y = 1.78 + row * (cardH + 0.32);
     slide.addShape("rect", { x, y, w: cardW, h: cardH, fill: { color: idx % 2 ? "F9FBFA" : "FFFFFF" }, line: { color: theme.line, width: 0.8 } });
-    addText(slide, card.title || `观点 ${idx + 1}`, x + 0.22, y + 0.2, cardW - 0.44, 0.36, { fontSize: 15, bold: true, color: theme.green });
-    addInlineMathText(slide, card.text || "", x + 0.22, y + 0.76, cardW - 0.44, cardH - 0.98, { fontSize: rows === 1 ? 12.5 : 10.8, color: theme.ink, valign: "top" }, ctx);
+
+    const hasIcon = Boolean(card.icon);
+    const iconSize = rows === 1 ? 0.62 : 0.46;
+    const iconGap = 0.14;
+    const titleX = hasIcon ? x + 0.22 + iconSize + iconGap : x + 0.22;
+    const titleW = cardW - 0.44 - (hasIcon ? iconSize + iconGap : 0);
+
+    if (hasIcon) {
+      addIcon(slide, ctx.icons, card.icon, {
+        x: x + 0.22,
+        y: y + 0.2,
+        size: iconSize,
+        color: card.iconColor || theme.green,
+      });
+    }
+
+    addText(slide, card.title || `观点 ${idx + 1}`, titleX, y + 0.22, titleW, 0.36, { fontSize: 15, bold: true, color: theme.green, valign: "mid" });
+    const bodyY = y + (hasIcon ? Math.max(iconSize, 0.46) + 0.28 : 0.76);
+    const bodyH = cardH - (bodyY - y) - 0.22;
+    addInlineMathText(slide, card.text || "", x + 0.22, bodyY, cardW - 0.44, bodyH, { fontSize: rows === 1 ? 12.5 : 10.8, color: theme.ink, valign: "top" }, ctx);
   });
 }
 
@@ -1475,7 +1529,7 @@ function layoutClosing(pptx, slideData) {
 function createDeck(deck, options = {}) {
   const resolvedFonts = configureFonts(deck, options);
   const pptx = new pptxgen();
-  const ctx = { equations: [] };
+  const ctx = { equations: [], icons: createIconCollector() };
   pptx.layout = "LAYOUT_WIDE";
   pptx.author = deck.meta?.author || "BIT";
   pptx.company = "Beijing Institute of Technology";
@@ -1598,7 +1652,7 @@ function createDeck(deck, options = {}) {
     }
     addSpeakerNotes(pptx, slide);
   }
-  return { pptx, preflight: preflight.report, equations: ctx.equations, fonts: resolvedFonts };
+  return { pptx, preflight: preflight.report, equations: ctx.equations, icons: ctx.icons.list(), fonts: resolvedFonts };
 }
 
 function listLayouts() {
@@ -1628,11 +1682,12 @@ async function generateDeckFile(input, output, options = {}) {
     throw error;
   }
   fs.mkdirSync(path.dirname(output), { recursive: true });
-  const { pptx, preflight, equations, fonts: resolvedFonts } = createDeck(deck, options);
+  const { pptx, preflight, equations, icons, fonts: resolvedFonts } = createDeck(deck, options);
   let fileName = output;
   try {
     await pptx.writeFile({ fileName });
     await postprocessOmml(fileName, equations);
+    await postprocessIcons(fileName, icons);
   } catch (error) {
     if (error?.code !== "EBUSY") throw error;
     const parsed = path.parse(output);
@@ -1640,6 +1695,7 @@ async function generateDeckFile(input, output, options = {}) {
     fileName = path.join(parsed.dir, `${parsed.name}-${stamp}${parsed.ext}`);
     await pptx.writeFile({ fileName });
     await postprocessOmml(fileName, equations);
+    await postprocessIcons(fileName, icons);
   }
   return { output: fileName, preflight, validation: check.validation, repairPrompt: check.repairPrompt, fonts: resolvedFonts };
 }

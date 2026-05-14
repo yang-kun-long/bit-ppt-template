@@ -130,7 +130,19 @@ function estimateText(text, boxW, fontSize, opts = {}) {
 }
 
 function estimateBulletHeight(text, boxW, fontSize) {
-  return estimateText(text, Math.max(0.5, boxW - 0.34), fontSize, { lineHeight: 1.22 }).height + 0.14;
+  return estimateText(bulletText(text), Math.max(0.5, boxW - 0.34), fontSize, { lineHeight: 1.22 }).height + 0.14;
+}
+
+function bulletText(item) {
+  if (item && typeof item === "object" && !Array.isArray(item)) return item.text || "";
+  return item;
+}
+
+function bulletIcon(item) {
+  if (item && typeof item === "object" && !Array.isArray(item) && item.icon) {
+    return { icon: String(item.icon), color: item.iconColor || null };
+  }
+  return null;
 }
 
 function splitBulletsSlide(slide) {
@@ -250,6 +262,8 @@ function expandSlides(slides = []) {
 }
 
 export {
+  bulletIcon,
+  bulletText,
   clone,
   expandSlides,
   expandSlidesWithReport,

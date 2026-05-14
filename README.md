@@ -37,6 +37,7 @@ PDF 用 WPS 播放比较方便；如果没有 WPS，常见的 PDF 转 PPT 流程
 - 支持渐进式 guide，方便 Codex / Claude Code 等本地 agent 查询能力
 - 支持 `--json` 和 `--strict`，便于脚本、CI 和 AI agent 自动调用
 - 支持图片尺寸读取和 `imageText` 自动排版
+- 内置 219 个北理工矢量图标,可在 `cards` / `bullets` / `comparison` 里直接用
 
 ## 三种使用方式
 
@@ -580,6 +581,64 @@ node bin/bit-ppt.mjs check content/placeholder-image-demo.yaml --json
 node bin/bit-ppt.mjs generate content/placeholder-image-demo.yaml output/placeholder-image-demo.pptx
 ```
 
+## 图标
+
+模板内置 219 个北理工矢量图标，从官方答辩 PPT 模板抽取，覆盖学术、商务、UI、
+箭头、货币、时间、地点等场景。生成后是 PowerPoint 可编辑的原生形状，不是位图。
+
+目前支持的布局：`cards` / `bullets` / `comparison`。
+
+在 `cards` 里给每张卡片加一个图标：
+
+```yaml
+- layout: cards
+  title: 三大能力
+  cards:
+    - icon: magnifier
+      title: 文献调研
+      text: 自动搜集、分类、摘要论文。
+    - icon: microscope
+      iconColor: red          # 可选，默认 BIT 主绿
+      title: 实验跟踪
+      text: 记录每次实验配置与结果。
+    - icon: settings-gear
+      title: 算力调度
+      text: 通过 AutoDL API 管理 GPU。
+```
+
+在 `bullets` / `comparison` 里，把字符串换成对象就能用图标替换默认的绿色圆点；
+字符串和对象可以混用：
+
+```yaml
+- layout: bullets
+  title: 核心发现
+  bullets:
+    - icon: checkmark
+      text: 模型只填写短字段。
+    - icon: skull
+      iconColor: red
+      text: 端到端流程风险高。
+    - 字符串形式继续显示绿色圆点。
+```
+
+颜色 token：`accent1` / `primary` / `green` → BIT 主绿；`red` → BIT 强调红；
+也可以直接传 6 位十六进制（如 `006C39`）。
+
+列出全部图标 / 分类 / 颜色 token / 尺寸预设：
+
+```powershell
+node bin/bit-ppt.mjs guide icons          # 文本格式
+node bin/bit-ppt.mjs guide icons --json   # JSON，适合 AI agent 检索
+```
+
+完整示例参见 `content/icon-demo.yaml`，可直接生成查看效果：
+
+```powershell
+node bin/bit-ppt.mjs generate content/icon-demo.yaml output/icon-demo.pptx
+```
+
+图标版权归北京理工大学，源自其官方学术答辩 PPT 模板。
+
 ## 公式
 
 `formula` 布局会将 LaTeX 风格公式转换为原生 Office Math / OMML：
@@ -670,9 +729,11 @@ bin/bit-ppt-mcp.mjs      MCP 入口
 src/core/                纯校验和预检 core
 src/generate.mjs         核心生成器
 src/http-server.mjs      Node HTTP 服务
+src/icons.mjs            BIT 矢量图标注入与色彩 / 尺寸预设
 src/layout-guides.mjs    面向 AI 的结构化 guide
 content/                 示例 YAML 和测试 fixture
 assets/                  BIT 风格素材
+assets/icons/            矢量图标 manifest 与 fragment
 output/                  本地生成结果，默认不提交
 test/                    node:test 测试
 AI_CONTENT_GUIDE.md      完整内容写作指南

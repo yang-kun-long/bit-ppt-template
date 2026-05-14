@@ -27,9 +27,12 @@ slides:
     lead: 调研发现，现有 AI 科研助手在自动化程度和人类控制权之间存在明显取舍。
     fontSize: 15
     bullets:
-      - 端到端 Agent 流程固定，适合演示，但学术伦理和可控性风险高。
+      - icon: skull
+        iconColor: red
+        text: 端到端 Agent 流程固定，适合演示，但学术伦理和可控性风险高。
       - TUI / Web 工作台更符合人类引导理念，但需要用户切换到独立应用。
-      - 独立 MCP Server 具备跨客户端通用性，是值得优先投入的产品形态。
+      - icon: checkmark
+        text: 独立 MCP Server 具备跨客户端通用性，是值得优先投入的产品形态。
       - 高校图书馆 session 复用可以绕开爬虫式全文获取的法律和体验问题。
       - GPU 执行环境是面向机器学习复现实验的关键差异化能力。
       - AI 生成 PPT 不应该直接生成代码，而应该生成稳定的结构化内容。
@@ -62,13 +65,17 @@ slides:
   - layout: cards
     title: 多观点卡片
     cards:
-      - title: 内容结构
+      - icon: code-brackets
+        title: 内容结构
         text: 用 YAML 限定字段，减少模型自由发挥导致的异常结构。
-      - title: 视觉规范
+      - icon: ruler-pencil-cross
+        title: 视觉规范
         text: 北理工颜色、校徽、页眉和字号规则由模板统一控制。
-      - title: 可编辑输出
+      - icon: quill-pen
+        title: 可编辑输出
         text: 文本框、表格和形状都是 PowerPoint 原生元素。
-      - title: 自动修复
+      - icon: settings-gear
+        title: 自动修复
         text: 对长列表、宽表格和参考文献执行 preflight 检测。
 
   - layout: table
@@ -86,15 +93,21 @@ slides:
       label: 不优先做
       title: 端到端 Agent
       bullets:
-        - 流程封闭，用户难以介入
-        - 复现过程不可控
+        - icon: skull
+          iconColor: red
+          text: 流程封闭，用户难以介入
+        - icon: head-blocked
+          iconColor: red
+          text: 复现过程不可控
         - 学术伦理风险更高
     right:
       label: 优先做
       title: 独立 MCP Server
       bullets:
-        - 跨 Claude、Cursor、Windsurf 等客户端
-        - 模型驱动，人类随时打断
+        - icon: checkmark
+          text: 跨 Claude、Cursor、Windsurf 等客户端
+        - icon: hand-open
+          text: 模型驱动，人类随时打断
         - 更适合工具链和算力资源集成
 
   - layout: timeline
