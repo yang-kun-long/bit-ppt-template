@@ -38,6 +38,7 @@ PDF 用 WPS 播放比较方便；如果没有 WPS，常见的 PDF 转 PPT 流程
 - 支持 `--json` 和 `--strict`，便于脚本、CI 和 AI agent 自动调用
 - 支持图片尺寸读取和 `imageText` 自动排版
 - 内置 219 个北理工矢量图标,可在 `cards` / `bullets` / `comparison` 里直接用
+- 支持真正的 PowerPoint Connector（连接线），可自动跟随形状移动
 
 ## 三种使用方式
 
@@ -638,6 +639,57 @@ node bin/bit-ppt.mjs generate content/icon-demo.yaml output/icon-demo.pptx
 ```
 
 图标版权归北京理工大学，源自其官方学术答辩 PPT 模板。
+
+## 连接线（Connector）
+
+模板支持真正的 PowerPoint Connector，可以自动跟随形状移动。这对流程图、架构图等场景非常有用。
+
+在 `flowchart` 布局中使用 `connectors` 字段定义连接线：
+
+```yaml
+- layout: flowchart
+  title: "数据处理流程"
+  nodes:
+    - id: input
+      label: "数据输入"
+      x: 1.5
+      y: 2.5
+      color: "006C39"
+    - id: process
+      label: "数据处理"
+      x: 5.5
+      y: 2.5
+      color: "0066CC"
+    - id: output
+      label: "结果输出"
+      x: 9.5
+      y: 2.5
+      color: "A13F3D"
+  connectors:
+    - from: { node: input, site: 1 }    # 从 input 的右侧
+      to: { node: process, site: 3 }    # 到 process 的左侧
+      type: elbow                        # 折线类型
+      label: "传输"
+    - from: { node: process, site: 1 }
+      to: { node: output, site: 3 }
+      type: elbow
+      label: "导出"
+```
+
+**连接点索引**（site）：
+- `0` = 上 (top)
+- `1` = 右 (right)
+- `2` = 下 (bottom)
+- `3` = 左 (left)
+
+**连接线类型**（type）：
+- `straight` - 直线
+- `elbow` - 折线（默认）
+- `curved` - 曲线
+
+完整示例参见 `content/connector-demo.yaml`，详细文档见 `docs/CONNECTOR.md`。
+
+**优势**：移动形状时，连接线会自动调整路径，无需手动重新对齐。
 
 ## 公式
 

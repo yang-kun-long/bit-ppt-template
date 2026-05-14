@@ -1,0 +1,86 @@
+meta:
+  title: "Connector 功能演示"
+  author: "BIT PPT Template"
+
+slides:
+  - layout: title
+    title: "PowerPoint Connector 演示"
+    subtitle: "自动跟随的连接线"
+
+  - layout: flowchart
+    title: "数据处理流程"
+    nodes:
+      - id: input
+        label: "数据输入"
+        x: 1.5
+        y: 2.5
+        color: "006C39"
+
+      - id: process
+        label: "数据处理"
+        x: 5.5
+        y: 2.5
+        color: "0066CC"
+
+      - id: output
+        label: "结果输出"
+        x: 9.5
+        y: 2.5
+        color: "A13F3D"
+
+    connectors:
+      - from: { node: input, site: 1 }
+        to: { node: process, site: 3 }
+        type: elbow
+        label: "传输"
+
+      - from: { node: process, site: 1 }
+        to: { node: output, site: 3 }
+        type: elbow
+        label: "导出"
+
+  - layout: flowchart
+    title: "分支流程"
+    nodes:
+      - id: start
+        label: "开始"
+        x: 6
+        y: 1.5
+        color: "006C39"
+
+      - id: decision
+        label: "判断条件"
+        x: 6
+        y: 3.5
+        color: "0066CC"
+        shape: diamond
+
+      - id: yes
+        label: "是"
+        x: 3
+        y: 5.5
+        color: "006C39"
+
+      - id: no
+        label: "否"
+        x: 9
+        y: 5.5
+        color: "A13F3D"
+
+    connectors:
+      - from: { node: start, site: 2 }
+        to: { node: decision, site: 0 }
+        type: straight
+
+      - from: { node: decision, site: 3 }
+        to: { node: yes, site: 0 }
+        type: elbow
+        label: "Y"
+
+      - from: { node: decision, site: 1 }
+        to: { node: no, site: 0 }
+        type: elbow
+        label: "N"
+
+  - layout: closing
+    title: "谢谢"

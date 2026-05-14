@@ -5,6 +5,7 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 import JSZip from "jszip";
 import pptxgen from "pptxgenjs";
 import { createIconCollector, addIcon, postprocessIcons } from "./icons.mjs";
+import { injectConnectors } from "./connectors.mjs";
 import { listLayouts as coreListLayouts } from "./core/layouts.mjs";
 import {
   bulletIcon,
@@ -1277,14 +1278,26 @@ function layoutFlowchart(pptx, slideData, pageNo, ctx) {
   addTitle(slide, slideData.title || "流程图", "FLOWCHART");
   const nodes = resolveFlowNodePositions((slideData.nodes || []).slice(0, 10), { x: 0.98, y: 1.7, w: 11.35, h: 4.48 });
   const byId = new Map(nodes.map((node, idx) => [node.id || String(idx + 1), node]));
-  const edges = slideData.edges?.length
-    ? slideData.edges
-    : nodes.slice(0, -1).map((node, idx) => ({ from: node.id || String(idx + 1), to: nodes[idx + 1].id || String(idx + 2) }));
-  edges.forEach((edge) => {
-    const from = byId.get(edge.from);
-    const to = byId.get(edge.to);
-    if (from && to) drawFlowEdge(slide, from, to, edge);
-  });
+
+  // 如果定义了 connectors，使用真正的 Connector；否则使用传统的 edges
+  const useConnectors = slideData.connectors && slideData.connectors.length > 0;
+
+  if (!useConnectors) {
+    // 传统模式：使用 line 形状
+    const edges = slideData.edges?.length
+      ? slideData.edges
+      : nodes.slice(0, -1).map((node, idx) => ({ from: node.id || String(idx + 1), to: nodes[idx + 1].id || String(idx + 2) }));
+    edges.forEach((edge) => {
+      const from = byId.get(edge.from);
+      const to = byId.get(edge.to);
+      if (from && to) drawFlowEdge(slide, from, to, edge);
+    });
+  }
+
+  // 绘制节点并记录形状 ID
+  const shapeIdMap = new Map();
+  let currentShapeId = 2; // pptxgenjs 从 2 开始分配 ID
+
   nodes.forEach((node, idx) => {
     const accent = node.color || (idx % 2 === 0 ? theme.green : theme.darkGreen);
     const fill = node.fill || (node.emphasis ? "F1F8F4" : "FFFFFF");
@@ -1297,22 +1310,72 @@ function layoutFlowchart(pptx, slideData, pageNo, ctx) {
       fill: { color: fill },
       line: { color: accent, width: node.emphasis ? 1.35 : 0.95 },
     });
+
+    // 记录形状 ID（假设每个节点占用 1 个形状 ID）
+    shapeIdMap.set(node.id || String(idx + 1), currentShapeId);
+    currentShapeId += 1;
+
     addInlineMathText(slide, node.text || node.label || node.id || "", node.x + 0.16, node.y + 0.15, node.w - 0.32, 0.28, {
       fontSize: node.fontSize || 11.2,
       color: accent,
       bold: true,
       align: "center",
     }, ctx);
+
+    // 文本也会占用形状 ID
+    currentShapeId += 1;
+
     if (node.note) {
       addInlineMathText(slide, node.note, node.x + 0.18, node.y + 0.46, node.w - 0.36, 0.18, {
         fontSize: 7.5,
         color: theme.muted,
         align: "center",
       }, ctx);
+      currentShapeId += 1;
     }
   });
+
   if (slideData.note) {
     addInlineMathText(slide, slideData.note, 1.02, 6.02, 10.9, 0.28, { fontSize: 10, color: theme.muted, align: "center" }, ctx);
+  }
+
+  // 如果使用 connectors，收集配置信息
+  if (useConnectors) {
+    const connectors = slideData.connectors.map(conn => {
+      const fromNodeId = conn.from.node;
+      const toNodeId = conn.to.node;
+      const fromShapeId = shapeIdMap.get(fromNodeId);
+      const toShapeId = shapeIdMap.get(toNodeId);
+
+      if (!fromShapeId || !toShapeId) {
+        console.warn(`警告: 无法找到节点 ${fromNodeId} 或 ${toNodeId} 的形状 ID`);
+        return null;
+      }
+
+      return {
+        from: {
+          shapeId: fromShapeId,
+          site: conn.from.site !== undefined ? conn.from.site : 1, // 默认右侧
+        },
+        to: {
+          shapeId: toShapeId,
+          site: conn.to.site !== undefined ? conn.to.site : 3, // 默认左侧
+        },
+        type: conn.type || 'elbow',
+        color: conn.color || '000000',
+        width: conn.width || 19050,
+        arrowType: conn.arrowType || 'triangle',
+        name: conn.label || conn.name,
+      };
+    }).filter(c => c !== null);
+
+    // 将 connector 配置添加到上下文中
+    // slideIndex 需要根据当前幻灯片数量计算
+    const slideIndex = pptx.slides.length;
+    ctx.connectors.push({
+      slideIndex,
+      connectors,
+    });
   }
 }
 
@@ -1427,6 +1490,13 @@ async function postprocessOmml(fileName, equations) {
   fs.writeFileSync(fileName, out);
 }
 
+async function postprocessConnectors(fileName, connectors) {
+  if (!connectors.length) return;
+  for (const connectorGroup of connectors) {
+    await injectConnectors(fileName, fileName, connectorGroup.connectors, connectorGroup.slideIndex);
+  }
+}
+
 function layoutComparison(pptx, slideData, pageNo, ctx) {
   const slide = pptx.addSlide();
   addPageBrand(slide, pageNo);
@@ -1529,7 +1599,7 @@ function layoutClosing(pptx, slideData) {
 function createDeck(deck, options = {}) {
   const resolvedFonts = configureFonts(deck, options);
   const pptx = new pptxgen();
-  const ctx = { equations: [], icons: createIconCollector() };
+  const ctx = { equations: [], icons: createIconCollector(), connectors: [] };
   pptx.layout = "LAYOUT_WIDE";
   pptx.author = deck.meta?.author || "BIT";
   pptx.company = "Beijing Institute of Technology";
@@ -1652,7 +1722,7 @@ function createDeck(deck, options = {}) {
     }
     addSpeakerNotes(pptx, slide);
   }
-  return { pptx, preflight: preflight.report, equations: ctx.equations, icons: ctx.icons.list(), fonts: resolvedFonts };
+  return { pptx, preflight: preflight.report, equations: ctx.equations, icons: ctx.icons.list(), connectors: ctx.connectors, fonts: resolvedFonts };
 }
 
 function listLayouts() {
@@ -1682,12 +1752,13 @@ async function generateDeckFile(input, output, options = {}) {
     throw error;
   }
   fs.mkdirSync(path.dirname(output), { recursive: true });
-  const { pptx, preflight, equations, icons, fonts: resolvedFonts } = createDeck(deck, options);
+  const { pptx, preflight, equations, icons, connectors, fonts: resolvedFonts } = createDeck(deck, options);
   let fileName = output;
   try {
     await pptx.writeFile({ fileName });
     await postprocessOmml(fileName, equations);
     await postprocessIcons(fileName, icons);
+    await postprocessConnectors(fileName, connectors);
   } catch (error) {
     if (error?.code !== "EBUSY") throw error;
     const parsed = path.parse(output);
@@ -1696,6 +1767,7 @@ async function generateDeckFile(input, output, options = {}) {
     await pptx.writeFile({ fileName });
     await postprocessOmml(fileName, equations);
     await postprocessIcons(fileName, icons);
+    await postprocessConnectors(fileName, connectors);
   }
   return { output: fileName, preflight, validation: check.validation, repairPrompt: check.repairPrompt, fonts: resolvedFonts };
 }
