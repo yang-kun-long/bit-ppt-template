@@ -29,8 +29,31 @@ export async function injectConnectors(inputPath, outputPath, connectors, slideI
     if (id > maxId) maxId = id
   })
 
+  // 如果 connector 包含位置信息而不是 shapeId，需要查找对应的形状
+  const resolvedConnectors = connectors.map(conn => {
+    if (conn.from.shapeId && conn.to.shapeId) {
+      // 已经有 shapeId，直接使用
+      return conn
+    }
+
+    // 根据位置查找形状 ID
+    const fromShapeId = findShapeIdByPosition(slideXML, conn.from.x, conn.from.y)
+    const toShapeId = findShapeIdByPosition(slideXML, conn.to.x, conn.to.y)
+
+    if (!fromShapeId || !toShapeId) {
+      console.warn(`警告: 无法找到位置 (${conn.from.x}, ${conn.from.y}) 或 (${conn.to.x}, ${conn.to.y}) 的形状`)
+      return null
+    }
+
+    return {
+      ...conn,
+      from: { ...conn.from, shapeId: fromShapeId },
+      to: { ...conn.to, shapeId: toShapeId },
+    }
+  }).filter(c => c !== null)
+
   // 生成 connector XML 片段
-  const connectorFragments = connectors.map((conn, index) => {
+  const connectorFragments = resolvedConnectors.map((conn, index) => {
     return generateConnectorXML({
       id: maxId + index + 1,
       name: conn.name || `Connector ${index + 1}`,
@@ -62,6 +85,46 @@ export async function injectConnectors(inputPath, outputPath, connectors, slideI
   // 写入新文件
   const output = await zip.generateAsync({ type: 'nodebuffer' })
   await writeFile(outputPath, output)
+}
+
+/**
+ * 根据位置查找形状 ID
+ * @param {string} xml - 幻灯片 XML
+ * @param {number} x - X 坐标（英寸）
+ * @param {number} y - Y 坐标（英寸）
+ * @returns {number|null} 形状 ID
+ */
+function findShapeIdByPosition(xml, x, y) {
+  // 将英寸转换为 EMU (1 inch = 914400 EMU)
+  const targetX = Math.round(x * 914400)
+  const targetY = Math.round(y * 914400)
+  const tolerance = 10000 // 允许 10000 EMU 的误差
+
+  // 查找所有形状
+  const shapePattern = /<p:sp>[\s\S]*?<\/p:sp>/g
+  const shapes = xml.match(shapePattern) || []
+
+  for (const shape of shapes) {
+    // 提取形状 ID
+    const idMatch = shape.match(/<p:cNvPr id="(\d+)"/)
+    if (!idMatch) continue
+    const shapeId = parseInt(idMatch[1])
+
+    // 提取位置
+    const xMatch = shape.match(/<a:off x="(\d+)"/)
+    const yMatch = shape.match(/y="(\d+)"/)
+    if (!xMatch || !yMatch) continue
+
+    const shapeX = parseInt(xMatch[1])
+    const shapeY = parseInt(yMatch[1])
+
+    // 检查位置是否匹配
+    if (Math.abs(shapeX - targetX) < tolerance && Math.abs(shapeY - targetY) < tolerance) {
+      return shapeId
+    }
+  }
+
+  return null
 }
 
 /**

@@ -33,11 +33,15 @@ slides:
         to: { node: process, site: 3 }
         type: elbow
         label: "传输"
+        color: "FF0000"
+        width: 38100
 
       - from: { node: process, site: 1 }
         to: { node: output, site: 3 }
         type: elbow
         label: "导出"
+        color: "0000FF"
+        width: 38100
 
   - layout: flowchart
     title: "分支流程"

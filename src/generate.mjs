@@ -1272,6 +1272,138 @@ function drawFlowEdge(slide, from, to, options = {}) {
   });
 }
 
+function drawSmartConnector(slide, fromNode, toNode, options = {}) {
+  // 根据连接点索引计算起点和终点
+  const fromSite = options.from?.site !== undefined ? options.from.site : 1; // 默认右侧
+  const toSite = options.to?.site !== undefined ? options.to.site : 3; // 默认左侧
+
+  // 计算连接点坐标
+  // site: 0=上, 1=右, 2=下, 3=左
+  const getConnectionPoint = (node, site) => {
+    const cx = node.x + node.w / 2;
+    const cy = node.y + node.h / 2;
+    switch (site) {
+      case 0: return { x: cx, y: node.y }; // 上
+      case 1: return { x: node.x + node.w, y: cy }; // 右
+      case 2: return { x: cx, y: node.y + node.h }; // 下
+      case 3: return { x: node.x, y: cy }; // 左
+      default: return { x: cx, y: cy };
+    }
+  };
+
+  const start = getConnectionPoint(fromNode, fromSite);
+  const end = getConnectionPoint(toNode, toSite);
+
+  const connType = options.type || 'elbow';
+  const color = options.color || '000000';
+  const width = (options.width || 19050) / 12700; // 转换 EMU 到 pt
+
+  if (connType === 'straight') {
+    // 直线连接
+    slide.addShape('line', {
+      x: start.x,
+      y: start.y,
+      w: end.x - start.x,
+      h: end.y - start.y,
+      line: {
+        color: color,
+        width: width,
+        endArrowType: options.arrowType || 'triangle',
+      },
+    });
+  } else if (connType === 'elbow') {
+    // 折线连接（L形）
+    // 根据连接点方向决定折线路径
+    const isHorizontalFirst = (fromSite === 1 || fromSite === 3); // 右或左
+
+    if (isHorizontalFirst) {
+      // 先水平再垂直
+      const midX = (start.x + end.x) / 2;
+
+      // 第一段：水平线
+      slide.addShape('line', {
+        x: start.x,
+        y: start.y,
+        w: midX - start.x,
+        h: 0,
+        line: {
+          color: color,
+          width: width,
+          endArrowType: 'none',
+        },
+      });
+
+      // 第二段：垂直线带箭头
+      slide.addShape('line', {
+        x: midX,
+        y: start.y,
+        w: 0,
+        h: end.y - start.y,
+        line: {
+          color: color,
+          width: width,
+          endArrowType: 'none',
+        },
+      });
+
+      // 第三段：水平线到终点
+      slide.addShape('line', {
+        x: midX,
+        y: end.y,
+        w: end.x - midX,
+        h: 0,
+        line: {
+          color: color,
+          width: width,
+          endArrowType: options.arrowType || 'triangle',
+        },
+      });
+    } else {
+      // 先垂直再水平
+      const midY = (start.y + end.y) / 2;
+
+      // 第一段：垂直线
+      slide.addShape('line', {
+        x: start.x,
+        y: start.y,
+        w: 0,
+        h: midY - start.y,
+        line: {
+          color: color,
+          width: width,
+          endArrowType: 'none',
+        },
+      });
+
+      // 第二段：水平线
+      slide.addShape('line', {
+        x: start.x,
+        y: midY,
+        w: end.x - start.x,
+        h: 0,
+        line: {
+          color: color,
+          width: width,
+          endArrowType: 'none',
+        },
+      });
+
+      // 第三段：垂直线到终点
+      slide.addShape('line', {
+        x: end.x,
+        y: midY,
+        w: 0,
+        h: end.y - midY,
+        line: {
+          color: color,
+          width: width,
+          endArrowType: options.arrowType || 'triangle',
+        },
+      });
+    }
+  }
+}
+
 function layoutFlowchart(pptx, slideData, pageNo, ctx) {
   const slide = pptx.addSlide();
   addPageBrand(slide, pageNo);
@@ -1279,7 +1411,7 @@ function layoutFlowchart(pptx, slideData, pageNo, ctx) {
   const nodes = resolveFlowNodePositions((slideData.nodes || []).slice(0, 10), { x: 0.98, y: 1.7, w: 11.35, h: 4.48 });
   const byId = new Map(nodes.map((node, idx) => [node.id || String(idx + 1), node]));
 
-  // 如果定义了 connectors，使用真正的 Connector；否则使用传统的 edges
+  // 如果定义了 connectors，使用改进的连接线绘制；否则使用传统的 edges
   const useConnectors = slideData.connectors && slideData.connectors.length > 0;
 
   if (!useConnectors) {
@@ -1294,13 +1426,11 @@ function layoutFlowchart(pptx, slideData, pageNo, ctx) {
     });
   }
 
-  // 绘制节点并记录形状 ID
-  const shapeIdMap = new Map();
-  let currentShapeId = 2; // pptxgenjs 从 2 开始分配 ID
-
+  // 绘制节点
   nodes.forEach((node, idx) => {
     const accent = node.color || (idx % 2 === 0 ? theme.green : theme.darkGreen);
     const fill = node.fill || (node.emphasis ? "F1F8F4" : "FFFFFF");
+
     slide.addShape(node.shape || "roundRect", {
       x: node.x,
       y: node.y,
@@ -1311,10 +1441,6 @@ function layoutFlowchart(pptx, slideData, pageNo, ctx) {
       line: { color: accent, width: node.emphasis ? 1.35 : 0.95 },
     });
 
-    // 记录形状 ID（假设每个节点占用 1 个形状 ID）
-    shapeIdMap.set(node.id || String(idx + 1), currentShapeId);
-    currentShapeId += 1;
-
     addInlineMathText(slide, node.text || node.label || node.id || "", node.x + 0.16, node.y + 0.15, node.w - 0.32, 0.28, {
       fontSize: node.fontSize || 11.2,
       color: accent,
@@ -1322,16 +1448,12 @@ function layoutFlowchart(pptx, slideData, pageNo, ctx) {
       align: "center",
     }, ctx);
 
-    // 文本也会占用形状 ID
-    currentShapeId += 1;
-
     if (node.note) {
       addInlineMathText(slide, node.note, node.x + 0.18, node.y + 0.46, node.w - 0.36, 0.18, {
         fontSize: 7.5,
         color: theme.muted,
         align: "center",
       }, ctx);
-      currentShapeId += 1;
     }
   });
 
@@ -1339,42 +1461,18 @@ function layoutFlowchart(pptx, slideData, pageNo, ctx) {
     addInlineMathText(slide, slideData.note, 1.02, 6.02, 10.9, 0.28, { fontSize: 10, color: theme.muted, align: "center" }, ctx);
   }
 
-  // 如果使用 connectors，收集配置信息
+  // 如果使用 connectors，绘制改进的连接线
   if (useConnectors) {
-    const connectors = slideData.connectors.map(conn => {
-      const fromNodeId = conn.from.node;
-      const toNodeId = conn.to.node;
-      const fromShapeId = shapeIdMap.get(fromNodeId);
-      const toShapeId = shapeIdMap.get(toNodeId);
+    slideData.connectors.forEach(conn => {
+      const fromNode = byId.get(conn.from.node);
+      const toNode = byId.get(conn.to.node);
 
-      if (!fromShapeId || !toShapeId) {
-        console.warn(`警告: 无法找到节点 ${fromNodeId} 或 ${toNodeId} 的形状 ID`);
-        return null;
+      if (!fromNode || !toNode) {
+        console.warn(`警告: 无法找到节点 ${conn.from.node} 或 ${conn.to.node}`);
+        return;
       }
 
-      return {
-        from: {
-          shapeId: fromShapeId,
-          site: conn.from.site !== undefined ? conn.from.site : 1, // 默认右侧
-        },
-        to: {
-          shapeId: toShapeId,
-          site: conn.to.site !== undefined ? conn.to.site : 3, // 默认左侧
-        },
-        type: conn.type || 'elbow',
-        color: conn.color || '000000',
-        width: conn.width || 19050,
-        arrowType: conn.arrowType || 'triangle',
-        name: conn.label || conn.name,
-      };
-    }).filter(c => c !== null);
-
-    // 将 connector 配置添加到上下文中
-    // slideIndex 需要根据当前幻灯片数量计算
-    const slideIndex = pptx.slides.length;
-    ctx.connectors.push({
-      slideIndex,
-      connectors,
+      drawSmartConnector(slide, fromNode, toNode, conn);
     });
   }
 }
